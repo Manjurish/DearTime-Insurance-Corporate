@@ -1,0 +1,9 @@
+{% extends '../EmailTemplateBase.html' %}
+{% load static %}
+{% block content %}
+<p>Hi {{ owner }},</p>
+
+<p>{{ payor }} would like to buy DearTime insurance for you. If you accept, please complete the application process via DearTime App.</p>
+  
+<p>By accepting, please know that you need to re-take the medical survey.  Also, if the {{ payor }} discontinues paying your premium you will need to re-apply to be sponsored.</p>
+{% endblock %}

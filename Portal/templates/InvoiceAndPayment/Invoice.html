@@ -1,0 +1,13 @@
+{% extends "../InvoiceBase.html" %}
+{% block invoice %}
+<h4>INVOICE</h4>
+<p style="margin-bottom: 0pt; margin-top: 0pt;">Invoice Date: {{invoice_date}}</p>
+<p style="margin-bottom: 0pt; margin-top: 0pt;">Invoice Number: {{invoice_no}}</p>
+<p style="margin-bottom: 0pt; margin-top: 0pt;">Payor Reference: {{payor_ref}} </p>
+{% endblock %}
+
+{% block notes %}
+<p>1. All records and entries shown are deemed to be correct unless DearTime notifies on any discrepancy within 3 working days from the invoice date.</p>
+<p>2. For new coverage purchase, payment must be made within 15 working days from the invoice date. Failing to meet the payment will cause the cancellation of the purchase.</p>
+<p>3. DearTime Berhad receives FPX direct debit payment only.</p>
+{% endblock %}

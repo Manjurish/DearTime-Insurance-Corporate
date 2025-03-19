@@ -1,0 +1,10 @@
+{% extends '../EmailTemplateBase.html' %}
+{% load static %}
+{% block content %}
+<p>Hi {{ payor }},</p>
+
+<p>{{ owner }} has rejected your kind action in buying DearTime's insurance for {% if gender.upper == "MALE" or gender.upper == "M" %} him {% else %} her {% endif %}. We regret to inform you that this application is now cancelled. You may reapply if you wish to buy for {{ owner }} again.</p>
+
+<a href="{{ Url }}">Apply Again</a>
+    
+{% endblock %}

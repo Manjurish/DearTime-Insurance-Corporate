@@ -1,0 +1,8 @@
+{% extends "Error/Base.html" %}
+{% block title %}
+    <title>DearTime | Unauthorized</title>
+{% endblock %}
+{% block content %}
+    <h1 class="heading">401</h1>
+    <p class="subheading">Access is denied due to invalid credentials. Click <a href="{{host_address}}">here</a> to go back.</p>
+{% endblock %}

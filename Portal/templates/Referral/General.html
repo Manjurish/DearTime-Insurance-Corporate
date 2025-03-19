@@ -1,0 +1,645 @@
+{% extends "../Referral.html" %}
+
+{% block title %}
+    <title>DearTime | General</title>
+{% endblock %}
+
+{% block header %}
+<div class="col-3">
+    <h4>Account Settings</h4>
+</div>
+{% endblock %}
+
+{% block css %}
+<style>
+    .left_content{
+        /* width:40%; */
+        width: 37%;
+        position:relative;
+        display: block;
+        margin-right: 50px;
+    }
+    .right_content{
+        /* width:40%; */
+        width: 37%;
+        position:relative;
+        display: block;
+    }
+    .general_input,.general_input:focus{
+        border:none;
+        border-bottom: 1px solid;
+        width:446px;
+    }
+
+    #secondModalPart {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block sub_content %}
+<div class="content_overlay">
+    <div class="content-wrapper mt-3" style="display:inline-block;">
+        <div class="row" style="display: block;margin-bottom: 15px;">
+            <p style="font-weight: 100;font-size: 15px;margin-bottom: 5px;">Customer</p>
+            <p style="font-weight: 600;font-size: 25px;margin-bottom: 5px;color:black;">{{ company.company_name }}</p>
+            <p style="font-weight: 100;font-size: 15px;margin-bottom: 5px;">{{ company.registration_no }}</p>
+        </div>
+        <div style="display:flex;">
+            <div class="left_content">
+                <div class="card mb-3" style="width:auto">
+                    <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;
+                    align-items: center;padding:16px;border-top-left-radius: 15px;border-top-right-radius: 15px;">
+                      <h6>Company Email</h6>
+                      <p>Email address you want to use to login to DearTime and to be contacted.</p>
+                    </div>
+                    <div class="card-body pt-4" style="border: 1px solid #E7E0D6; background-color: #F8F4EE;
+                    align-items: center;padding:16px;border-bottom-left-radius: 15px;border-bottom-right-radius: 15px;margin:0;height:80px;">
+                        <div class="input-group input-group-dynamic mb-4 input-group-merge">
+                            <input class="form-control" type="text" placeholder="abc@companyname.com" value="{{company.email_address}}" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-3" style="width:auto;">
+                    <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;
+                    align-items: center;padding:16px;border-top-left-radius: 15px;border-top-right-radius: 15px;">
+                      <h6>Company Telephone Number</h6>
+                      <p>Your company land line.</p>
+                    </div>
+                    <div class="card-body pt-4" style="border: 1px solid #E7E0D6;background-color: #F8F4EE;
+                    align-items: center;padding:16px;border-bottom-left-radius: 15px;border-bottom-right-radius: 15px;margin:0;height:120px;">
+                        <div class="row">
+                            <div class="col-sm-1 input-group input-group-dynamic" style="width: 20%;">
+                               <select class="form-control" name="company_countrycode" id="companyCountryCode">
+                                   <option value="+60">(+60)</option>
+                               </select>
+                            </div>
+                            <div class="col-sm-1 input-group input-group-dynamic" style="width: 80%;">
+                                <input type="tel" class="form-control" name="company_mobile" id="companyMobileNo" placeholder="123456789" pattern="[0-9]{9,10}" value="{{company.contact1|slice:'1:' }}" onblur="populateHidden('phone')" required/>
+                            </div>
+                        </div>
+                        <form method="POST" action="{{host_address}}/general">
+                            {% csrf_token %}
+                            <input type="hidden" name="modified_countryCode" id="modified_countryCode" value="">
+                            <input type="hidden" name="modified_contact" id="modified_contact" value="">
+                            <button class="btn btn-outline-primary mx-3" style="width:100px;margin:5px;box-shadow: none;text-transform: none;padding:5px;
+                            position:absolute;right:0;top:78%;border-radius: 85px;" type="submit">Save</i></button>
+                        </form>
+                    </div>
+                </div>
+                <div class="card mb-3" style="width:auto;">
+                    <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;
+                    align-items: center;padding:16px;border-top-left-radius: 15px;border-top-right-radius: 15px;">
+                      <h6>Company Address</h6>
+                      <p>Your company address.</p>
+                    </div>
+                    <div class="card-body pt-4" style="border: 1px solid #E7E0D6;background-color: #F8F4EE;
+                    align-items: center;padding:16px;border-bottom-left-radius: 15px;border-bottom-right-radius: 15px;margin:0;height:450px;">
+                        <div class="input-group input-group-dynamic mb-4">
+                            <input id="companyAddress1" class="form-control" type="text" name="companyAddress1" placeholder="Address 1" value="{{company.address_line1}}"  onblur="populateHidden('address')" required>
+                        </div>
+                        <div class="input-group input-group-dynamic mb-4">
+                            <input id="companyAddress2" class="form-control" type="text" name="companyAddress2" placeholder="Address 2" value="{{company.address_line2}}"  onblur="populateHidden('address')">
+                        </div>
+                        <div class="input-group input-group-dynamic mb-4">
+                            <input id="companyAddress3" class="form-control" type="text" name="companyAddress3" placeholder="Address 3" value="{{company.address_line3}}"  onblur="populateHidden('address')">
+                        </div>
+                        <div class="input-group input-group-dynamic mb-4">
+                            <select id="companyState" class="form-control" name="companyState" value="{{company.state}}"  onchange="populateHidden('address'); getMapping('companyState', 'companyCity', /{{cities}}/);" required>
+                                {% for state in states %}
+                                {% if scp.0 == state %}
+                                    <option value="{{company.state}}" selected>{{company.state}}</option>
+                                {% else %}
+                                    <option value="{{state}}">{{state}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="input-group input-group-dynamic mb-4">
+                            <select id="companyCity" class="form-control" name="companyCity" value="{{company.city}}"  onchange="populateHidden('address');getMapping('companyCity', 'companyPostCode', /{{postal_codes}}/);" required>
+                                {% for city, state in cities.items %}
+                                {% if city == scp.1 and state == scp.0 %}
+                                    <option value="{{company.city}}" selected>{{company.city}}</option>
+                                {% elif city != scp.1 and state == scp.0 %}
+                                    <option value="{{city}}">{{city}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="input-group input-group-dynamic mb-4">
+                            <select id="companyPostCode" class="form-control" name="companyPostCode" onchange="populateHidden('address')" required>
+                                {% for pc, ct in postal_codes.items %}
+                                {% if pc == scp.2 and ct == scp.1 %}<option selected>{{company.postcode}}</option>
+                                {% elif pc != scp.2 and ct == scp.1 %}<option>{{pc}}</option>
+                                {% endif %}
+                            {% endfor %}          
+                            </select>
+                        </div>
+                        <form method="POST" action="{{host_address}}/general">
+                            {% csrf_token %}
+                            <input type="hidden" name="flag" value="">
+                            <input type="hidden" name="address1" id="address1" value="">
+                            <input type="hidden" name="address2" id="address2" value="">
+                            <input type="hidden" name="address3" id="address3" value="">
+                            <input type="hidden" name="state" id="state" value="">
+                            <input type="hidden" name="city" id="city" value="">
+                            <input type="hidden" name="postcode" id="postcode" value="">
+                            <button class="btn btn-outline-primary mx-3" style="width:100px;margin:5px;box-shadow: none;text-transform: none;padding:5px;
+                            position:absolute;right:0;top:90%;border-radius: 85px;" type="submit">Save</i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="right_content">
+                <div class="card mb-3" style="width:auto;">
+                    <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;
+                    align-items: center;padding:16px;border-top-left-radius: 15px;border-top-right-radius: 15px;">
+                      <h6>Bank Account</h6>
+                      <p>Your company bank account you want to use to receive referral gifts.</p>
+                    </div>
+                    <div class="card-body pt-4" style="border: 1px solid #E7E0D6;background-color: #F8F4EE;
+                    align-items: center;padding:16px;border-bottom-left-radius: 15px;border-bottom-right-radius: 15px;margin:0;min-height:200px;height:auto;">
+                        <div class="input-group input-group-dynamic mb-4 input-group-merge">
+                            {% if bank_account == None %}
+                            <div class="input-group input-group-dynamic mb-4">
+                                <select id="bankname" class="form-control" name="bankname" value="" onchange="populateHidden('bankName');" required>
+                                    <option style="color:lightgrey;" value="" selected hidden>Bank Name</option>
+                                    {% for bank in banks %}
+                                        <option value="{{bank}}">{{bank}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <input id="bank_account" class="form-control" type="text" placeholder="1234 1234 1234" value="" onblur="populateHidden('bank_account')" required>
+                            {% else %}
+                            <div class="input-group input-group-dynamic mb-4">
+                                <select id="bankname" class="form-control" name="bankname" value="{{bank_name}}" onchange="populateHidden('bankName');populateHidden('bank_account');">
+                                    {% for bank in banks %}
+                                    {% if bank_name == bank %}
+                                        <option value="{{bank_name}}" selected>{{bank_name}}</option>
+                                    {% else %}
+                                        <option value="{{bank}}">{{bank}}</option>
+                                    {% endif %}  
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <input id="bank_account" class="form-control" type="text" placeholder="1234 1234 1234" value="{{ bank_account }}" onblur="populateHidden('bank_account');populateHidden('bankName');">
+                            {% endif %}
+                        </div>
+                        <form method="POST" action="{{host_address}}/general">
+                            {% csrf_token %}
+                            <input type="hidden" name="bankName_post" id="bankName_post" value="">
+                            <input type="hidden" name="bankAccount_post" id="bankAccount_post" value="">
+                            <button class="btn btn-outline-primary mx-3" style="width:100px;margin:5px;box-shadow: none;text-transform: none;padding:5px;
+                            position:absolute;right:0;top:78%;border-radius: 85px;">Save</i></button>
+                        </form>
+                    </div>
+                </div>
+
+                {% comment %} <div class="card mb-3" style="width:auto;">
+                    <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;
+                    align-items: center;padding:16px;border-top-left-radius: 15px;border-top-right-radius: 15px;">
+                      <h6>Payment Due Date</h6>
+                      <p>This is the anniversary payment due date for all your members. This cannot be changed.</p>
+                    </div>
+                    <div class="card-body pt-4" style="border: 1px solid #E7E0D6;background-color: #F8F4EE;
+                    align-items: center;padding:16px;border-bottom-left-radius: 15px;border-bottom-right-radius: 15px;margin:0;height:auto;">
+                        <div class="input-group input-group-dynamic mb-4 input-group-merge">
+                            <!-- <input class="form-control" type="text" placeholder="3 January" id="enterPaymentDate" value="{{company.payment_due_date|date:'d F'}}" onchange="populateHidden('payYearly')"> -->
+                            {% comment %} <input class="form-control" type="date" id="enterPaymentDate" value="{{company.payment_due_date|date:'Y-m-d'}}" onchange="populateHidden('payYearly')"> {% endcomment %}
+                            <!-- <input class="form-control" type="date" id="enterPaymentDate" value="{{company.payment_due_date|date:'Y-m-d'}}" readonly> -->
+                        {% comment %} </div>
+                        <!-- <p>If you really need to change the date, please contact DearTime support.</p> -->
+                        <!-- <p style="width:100%">This is the anniversary payment due date for all your members.</p> -->
+                        {% comment %} <form method="POST" action="{{host_address}}/general">
+                            {% csrf_token %}
+                            <input type="hidden" name="paymentDueDate_post" id="paymentDueDate_post" value="">
+                            <button class="btn btn-outline-primary mx-3" style="width:30%;margin:5px;box-shadow: none;text-transform: none;padding:5px;
+                            position:absolute;right:0;top:78%;border-radius: 85px;" type="submit">Save</i></button>
+                        </form> {% endcomment %}
+                    {% comment %}</div> {% endcomment %}
+                
+                <div class="card mb-3" style="width:auto;">
+                    <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;
+                    align-items: center;padding:16px;border-top-left-radius: 15px;border-top-right-radius: 15px;">
+                      <h6>Payment</h6>
+                      <p>You can pay monthly or annually. This apply to all the policies you are paying for.</p>
+                    </div>
+                    <div class="card-body pt-4" style="border: 1px solid #E7E0D6;background-color: #F8F4EE;
+                    align-items: center;padding:16px;border-bottom-left-radius: 15px;border-bottom-right-radius: 15px;margin:0;height:auto;">
+                        <div class="col-12" style="display: inline-block;">
+                            {% if company.payment_mode == 'Monthly' %}
+                                <label class="btn btn-outline-primary me-1" style="margin-top: 15px; text-transform: none;">
+                                    <input type="radio" id="payMonthly" onclick="changePaymentMode('payMonthly');populateHidden('changePaymentMode');" checked>
+                                    <span>Pay Monthly</span>
+                                </label>
+                            {% else %}
+                                <label class="btn btn-outline-primary me-1" style="margin-top: 15px; text-transform: none;">
+                                    <input type="radio" id="payMonthly" onclick="changePaymentMode('payMonthly');populateHidden('changePaymentMode');">
+                                    <span>Pay Monthly</span>
+                                </label>
+                            {% endif %}
+                            <label class="btn btn-outline-primary me-1" style="margin-top: 15px; text-transform: none;">
+                                <input type="radio" id="payYearly" onclick="changePaymentMode('payYearly');populateHidden('changePaymentMode');" checked>
+                                <span>Pay Yearly</span>
+                            </label>
+                        </div>
+                        <div class="input-group input-group-dynamic mb-4" style="margin-top: 15px;">
+                            <select id="selectDayMonthly" class="form-control" name="selectDayMonthy" onchange="populatePaymentDue('monthly');populateHidden('payMonthly');">
+                                <option selected disabled hidden>Select Day</option>
+                            </select>
+                            <select id="selectDayYearly" class="form-control" name="selectDayYearly" style="display:none;"  onchange="populatePaymentDue('yearly');populateHidden('payYearly')">
+                                <option selected disabled hidden>Select Day</option>
+                            </select>
+                            <select id="selectMonth" class="form-control" name="selectMonth" style="margin-left: 10px;display:none;"  onchange="populatePaymentDue('yearly');populateHidden('payYearly')">
+                                <option selected disabled hidden>Select Month</option>
+                            </select>
+                        </div>
+                        <div style="width:70%" id="paymentDueDiv">This is the anniversary payment due date for all your members. </div>
+                        <form method="POST" action="{{host_address}}/general" id="paymentModeForm">
+                            {% csrf_token %}
+                            <input type="hidden" name="companyPaymentMode" id="companyPaymentMode" value="">
+                            <input type="hidden" name="paymentDueDate_post" id="paymentDueDate_post" value="">
+                            <input type="hidden" name="company_name" value="{{company.company_name}}">
+                            <button type="submit" id="showConfirmationModal"; class="btn btn-outline-primary mx-3" style="width:100px;margin:5px;box-shadow: none;text-transform: none;padding:5px;
+                            position:absolute;right:0;top:78%;border-radius: 85px;">Save</i></button>
+                        </form>
+                    </div>
+                </div>
+                <!-- Modal for change payment mode confirmation -->
+                <div id="confirmationModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
+                                <button type="button" class="close" data-bs-dismiss="modal">
+                                    X
+                                </button>
+                            </div>
+                            <div class="modal-body text-center" id="modalBody">
+                                <!-- Modal content will be dynamically updated here -->
+                                <div id = "modalSubject"></div>
+                                <br>
+                                <div id = "firstModalContent"></div>
+                                <br>
+                                <div id = "secondModalContent"></div>
+                            </div>
+                            <div id="modalFooter" class="modal-footer" style="justify-content: center;">
+                                <button type="button" class="btn btn-primary" id="confirmButton">Yes</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    function changePaymentMode(mode){
+        if(mode=='payMonthly'){
+            document.getElementById('payMonthly').checked=true;
+            document.getElementById('payYearly').checked=false;
+            document.getElementById('selectDayMonthly').style.display='block';
+            document.getElementById('selectDayYearly').style.display='none';
+            document.getElementById('selectMonth').style.display='none';
+            document.getElementById('paymentDueDiv').innerText='This is the anniversary payment due date for all your members. ';
+        }else{
+            document.getElementById('payMonthly').checked=false;
+            document.getElementById('payYearly').checked=true;
+            document.getElementById('selectDayMonthly').style.display='none';
+            document.getElementById('selectDayYearly').style.display='block';
+            document.getElementById('selectMonth').style.display='block';
+            document.getElementById('paymentDueDiv').innerText='This is the anniversary payment due date for all your members. ';
+        }
+    }
+    //show the text after choosing payment due option
+    function populatePaymentDue(mode){
+        if(mode=='monthly'){
+            day = document.getElementById('selectDayMonthly').value
+            var text = document.createElement('b');
+            text.setAttribute('id','paymentdue_p');
+            
+            p = document.getElementById('paymentdue_p')
+            if(p){
+                p.innerText = 'Your payment due date is on '+day+' of every month.'
+            }else{
+                text.innerText = 'Your payment due date is on '+day+' of every month.'
+                document.getElementById('paymentDueDiv').appendChild(text);
+            }
+        }else{
+            day = document.getElementById('selectDayYearly').value
+            month = document.getElementById('selectMonth').value
+            if(day>0&&month>0){
+                month = getMonthName(month)
+                var nextYear = new Date();
+                nextYear.setFullYear(nextYear.getFullYear() + 1);
+                
+                p = document.getElementById('paymentdue_p')
+                if(p){
+                    p.innerText = 'Your policies Next Due Date (NDD) will be on '+day+' '+month+' '+nextYear.getFullYear()
+                }else{
+                    var text = document.createElement('b');
+                    text.setAttribute('id','paymentdue_p');
+                    text.innerText = 'Your policies Next Due Date (NDD) will be on '+day+' '+month+' '+nextYear.getFullYear()
+                    document.getElementById('paymentDueDiv').appendChild(text);
+                }
+            }
+        } 
+    }
+    function getMonthName(monthNumber){
+        const date = new Date();
+        date.setMonth(monthNumber - 1)
+        return date.toLocaleString('en-US',{month:'long',
+        });
+    }
+
+    function populateHidden(module){
+        var year = paymentDueDate.getUTCFullYear();
+        if(module=='phone'){
+            value = document.getElementById('companyMobileNo').value;
+            document.getElementById('modified_contact').value=value;
+            value2 = document.getElementById('companyCountryCode').value;
+            document.getElementById('modified_countryCode').value=value2;
+        }else if(module=='address'){
+            value = document.getElementById('companyAddress1').value;
+            document.getElementById('address1').value=value;
+
+            value = document.getElementById('companyAddress2').value;
+            document.getElementById('address2').value=value;
+
+            value = document.getElementById('companyAddress3').value;
+            document.getElementById('address3').value=value;
+
+            var selectField   = document.getElementById('companyState');
+            var selectedValue = selectField.options[selectField.selectedIndex].value;
+            document.getElementById('state').value = selectedValue;
+
+            var selectField   = document.getElementById('companyCity');
+            var selectedValue = selectField.options[selectField.selectedIndex].value;
+            document.getElementById('city').value = selectedValue;
+
+            var selectField   = document.getElementById('companyPostCode');
+            var selectedValue = selectField.options[selectField.selectedIndex].value;
+            document.getElementById('postcode').value = selectedValue;
+        }else if(module=='changePaymentMode'){
+            getPaymentMode1 = document.getElementById('payMonthly');
+            getPaymentMode2 = document.getElementById('payYearly');
+            if(getPaymentMode1.checked==true){
+                document.getElementById('companyPaymentMode').value='Monthly';
+            }else{
+                document.getElementById('companyPaymentMode').value='Yearly';
+            }
+            
+        // }else if(module=='payYearly'){
+        //     var todayDate = new Date();
+        //     var year = todayDate.getFullYear();
+        //     var selectField   = document.getElementById('selectMonth');
+        //     var selectedMonth = selectField.options[selectField.selectedIndex].value;
+
+        //     var selectField   = document.getElementById('selectDayYearly');
+        //     var selectedDay = selectField.options[selectField.selectedIndex].value;
+
+        //     formatYearlyFieldValue = year + '-' + selectedMonth + '-' + selectedDay;
+        //     document.getElementById('paymentDueDate_post').value = formatYearlyFieldValue;
+        }else if(module=='payYearly'){
+            // dateValue = document.getElementById('enterPaymentDate').value;
+            // document.getElementById('paymentDueDate_post').value = dateValue;
+            getMonthFieldValue = document.getElementById('selectMonth').value;
+            getDayFieldValue = document.getElementById('selectDayYearly').value;
+            formatYearlyFieldValue = year + '-' + getMonthFieldValue + '-' + getDayFieldValue;
+            document.getElementById('paymentDueDate_post').value = formatYearlyFieldValue;
+        }else if(module=='payMonthly'){
+            getDayFieldValue = document.getElementById('selectDayMonthly').value;
+            formatMonthlyFieldValue = year + '-' + monthNum + '-' + getDayFieldValue;
+            document.getElementById('paymentDueDate_post').value = formatMonthlyFieldValue;
+        }else if(module=='bank_account'){
+            bankAccount = document.getElementById('bank_account').value;
+            document.getElementById('bankAccount_post').value = bankAccount;
+        }else if(module=='bankName'){
+            bankName = document.getElementById('bankname').value;
+            document.getElementById('bankName_post').value = bankName;
+        }
+    }
+    
+    function removeOptions(fieldName) {
+        var l_city = document.getElementById('companyCity').options.length - 1;
+        var l_post = document.getElementById('companyPostCode').options.length - 1;
+        if (fieldName == 'companyState') {
+            for (var i = l_city; i >= 1; i--) {
+                document.getElementById('companyCity').remove(i);
+            }
+
+            for (var j = l_post; j >= 1; j--) {
+                document.getElementById('companyPostCode').remove(j);
+            }
+        } else if (fieldName == 'companyCity') {
+            for (var j = l_post; j >= 1; j--) {
+                document.getElementById('companyPostCode').remove(j);
+            }
+        }
+    }
+    //mapping city or postcode selection
+    function getMapping(fieldName, targetField, dict){
+        var selectField = document.getElementById(fieldName);
+        var addField = document.getElementById(targetField);
+
+        var stringDict = dict.toString().replaceAll('/','');
+        var formattedDict = stringDict.replaceAll("'",'"');
+        var jsonDict = JSON.parse(formattedDict);
+
+        removeOptions(fieldName);
+
+        for (const key in jsonDict) {
+            if (jsonDict[key] == selectField.options[selectField.selectedIndex].value) {
+                var option = document.createElement('option');
+                option.text = key;
+                addField.add(option);
+            }
+        }
+    }
+    //populate months in yearly select
+    var addField = document.getElementById('selectMonth');
+    for(i=1;i<13;i++){
+        monthName = getMonthName(i);
+        var option = document.createElement('option');
+        option.text = monthName;
+        option.value = i
+        addField.add(option);
+    }
+    //populate days in monthly select
+    var addField = document.getElementById('selectDayMonthly');
+    for(i=1;i<32;i++){
+        var option = document.createElement('option');
+        option.text = i;
+        option.value = i
+        addField.add(option);
+    }
+    //populate payment mode
+    var paymentMode = '{{ company.payment_mode|escapejs }}'.replace("[", "").replace("]", "").replaceAll("'", "\"").split(", ");
+    var paymentDueDate = '{{ company.payment_due_date|escapejs }}'
+    var paymentDueDate = new Date(paymentDueDate)
+    var monthNum = paymentDueDate.getUTCMonth()+1;
+    var getMonth = getMonthName(monthNum)
+    var getDay = paymentDueDate.getUTCDate();
+    if (paymentMode[0] == 'Monthly'){
+        document.getElementById('payMonthly').checked=true;
+        document.getElementById('payYearly').checked=false;
+        document.getElementById('selectDayMonthly').style.display='block';
+        document.getElementById('selectDayYearly').style.display='none';
+        document.getElementById('selectMonth').style.display='none';
+        document.getElementById('selectDayMonthly').value=getDay;
+        document.getElementById('companyPaymentMode').value='Monthly';
+    }else{
+        document.getElementById('payMonthly').checked=false;
+        document.getElementById('payYearly').checked=true;
+        document.getElementById('selectDayMonthly').style.display='none';
+        document.getElementById('selectDayYearly').style.display='block';
+        document.getElementById('selectMonth').style.display='block';
+        document.getElementById('companyPaymentMode').value='Yearly';
+
+        var getSelectValue = document.getElementById('selectMonth')
+        for(i=0;i<getSelectValue.options.length;i++){
+            if(getSelectValue.options[i].text==getMonth){
+                getSelectValue.options[i].selected = true;
+            }
+        }
+        //show text
+        var nextYear = new Date();
+        nextYear.setFullYear(nextYear.getFullYear() + 1);
+        
+        p = document.getElementById('paymentdue_p')
+        if(p){
+            p.innerText = 'Your policies Next Due Date (NDD) will be on '+getDay+' '+getMonth+' '+nextYear.getFullYear()
+        }else{
+            var text = document.createElement('b');
+            text.setAttribute('id','paymentdue_p');
+            text.innerText = 'Your policies Next Due Date (NDD) will be on '+getDay+' '+getMonth+' '+nextYear.getFullYear()
+            document.getElementById('paymentDueDiv').appendChild(text);
+        }
+    }
+    //populate days based on month selection in pay yearly
+    var nDays = '{{ day_in_a_month|escapejs }}'.replace("[", "").replace("]", "").replaceAll("'", "\"").split(", ");
+    $('#selectMonth').on('change',function(){
+        var selectValue = $(this).val();
+        // $('#selectDayYearly').empty();
+        for(i=0;i<nDays.length;i++){
+            var month=i+1;
+            obj = JSON.parse(nDays[i])
+            var getSelectValue = document.getElementById('selectMonth').value
+            if(getSelectValue==month){
+                for(j=0;j<parseInt(obj.days);j++){
+                    day=j+1;
+                    $('#selectDayYearly').append("<option value='" + day + "'>" + day + "</option>");
+                }
+            }
+        }
+        populateHidden('payYearly')
+    })
+    //populate after detect the month in payment due date in database
+    $(document).ready(function(){
+        // $('#selectDayYearly').empty();
+        var selectMonth=document.getElementById('selectMonth')
+        var text = selectMonth.options[selectMonth.selectedIndex].text;
+        for(i=0;i<nDays.length;i++){
+            obj = JSON.parse(nDays[i])
+            if(getMonth==text && parseInt(monthNum)==(i+1)){
+                for(j=0;j<parseInt(obj.days);j++){
+                    day=j+1;
+                    $('#selectDayYearly').append("<option value='" + day + "'>" + day + "</option>");
+                }
+            }
+        }
+        var getSelectValue = document.getElementById('selectDayYearly')
+        for(i=0;i<getSelectValue.options.length;i++){
+            if(getSelectValue.options[i].text==getDay){
+                getSelectValue.options[i].selected = true;
+            }
+        }
+    })
+
+    function detectPaymentModeChanged() {
+        return paymentMode != document.getElementById('companyPaymentMode').value;
+    }    
+
+    // Function to update the modal content based on the payment mode
+    function updateModalContent() {
+        var modalSubject = document.getElementById('modalSubject');
+        var firstModalContent = document.getElementById('firstModalContent');
+        var secondModalContent = document.getElementById('secondModalContent');
+        var companyPaymentMode = document.getElementById('companyPaymentMode').value;
+        var nextPaymentDD = document.getElementById('paymentDueDate_post').value;
+        var modalFooter = document.getElementById('modalFooter');
+
+        if (companyPaymentMode === 'Monthly') {
+            if (nextPaymentDD == "") {
+                modalSubject.innerHTML = `<strong>Please select a day to proceed.</strong>`
+                //hide modal footer
+                modalFooter.style.display = 'none';
+            } else {
+                if (detectPaymentModeChanged()){
+                    var displHeader = `<strong>Changing From Yearly mode to Monthly mode</strong>`
+                }else{
+                    var displHeader = `<strong>You are changing the Premium Due Date</strong>`
+                }
+                modalSubject.innerHTML = displHeader
+                firstModalContent.innerHTML = `This change(s) shall take effect on <span id="paymentDueMonth"><strong>${paymentDueDate}</strong></span>.`;
+                secondModalContent.innerHTML = `Do you agree with the changes?`;
+                modalFooter.style.display = 'block';
+            }
+        } else if (companyPaymentMode === 'Yearly') {
+            if (nextPaymentDD == "") {
+                modalSubject.innerHTML = `<strong>Please select a day and month to proceed.</strong>`
+                //hide modal footer
+                modalFooter.style.display = 'none';
+                console.log("Error select")
+            } 
+            
+            else {
+                if (detectPaymentModeChanged())
+                {
+                    var displHeader = `<strong>Changing From Monthly mode to Yearly mode</strong>`
+                }
+                else
+                {
+                    var displHeader = `<strong>You are changing the Premium Due Date</strong>`
+                }
+                nextPaymentDD = new Date(nextPaymentDD)
+                nextPaymentDD.setFullYear(nextPaymentDD.getFullYear() + 1);
+                modalSubject.innerHTML = displHeader
+                firstModalContent.innerHTML = `This change shall take effect on <span id="paymentDueYear"><strong>${paymentDueDate}</strong></span> and the remaining yearly premium received.`;
+                secondModalContent.innerHTML = `Do you agree with the changes?`;
+                modalFooter.style.display = 'block';
+            }
+        }
+        
+    }
+
+
+    // When the "Save" button is clicked, show the modal
+    document.getElementById('showConfirmationModal').addEventListener('click', function () {
+        event.preventDefault();
+        // if (detectPaymentModeChanged()) {
+        updateModalContent();
+        $('#confirmationModal').modal('show');
+        // } else {
+        //     document.getElementById('paymentModeForm').submit();
+        // }
+    });
+
+    // When the "Yes" button in the modal is clicked, submit the form
+    document.getElementById('confirmButton').addEventListener('click', function () {
+        // Submit the form
+        document.getElementById('paymentModeForm').submit();
+    });
+    
+
+</script>
+{% endblock %}

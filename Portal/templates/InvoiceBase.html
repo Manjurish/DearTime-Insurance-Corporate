@@ -1,0 +1,284 @@
+{% load static %}
+<!DOCTYPE html>
+
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+<html
+  lang="en"
+  class="light-style customizer-hide"
+  dir="ltr"
+  data-theme="theme-default"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>{% if flag == 'invoice' %}DearTime | Invoice{% elif flag == 'receipt' %}DearTime | Receipt{% endif %}</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static "portal/img/favicon.png" %}" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+    />
+
+    <!-- Icons. Uncomment required icon fonts -->
+    <link rel="stylesheet" href="{% static "portal/fonts/boxicons.css" %}" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{% static "portal/css/core.css" %}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{% static "material/css/material-kit.css" %}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{% static "portal/css/toastr.css" %}">
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{% static "portal/libs/perfect-scrollbar.css" %}" />
+
+    <!-- Page CSS -->
+    <!-- Page -->
+    <link rel="stylesheet" href="{% static "portal/css/page-auth.css" %}" />
+    <!-- Helpers -->
+    <script src="{% static "portal/js/helpers.js" %}"></script>
+
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="{% static "material/js/material-kit.js" %}"></script>
+    <script src="{% static "external/js/jquery-3.6.4.min.js" %}"></script>
+    <script src="{% static "portal/js/toastr.js" %}"></script>
+    <style>
+        /* @media print {
+            * { -webkit-print-color-adjust: exact; }
+            html { background: none; padding: 0; }
+            body { box-shadow: none; margin: 0; }
+            span:empty { display: none; }
+            .add, .cut { display: none; }
+        } */
+        @page { 
+            margin: 50px;
+            @frame header_frame {           /* Static Frame */
+                -pdf-frame-content: frame_header_left;
+                left: 60pt; width: 200pt; top: 30pt; height: 60pt;
+                margin-top: 0pt;
+            }
+            @frame header_frame {           /* Static Frame */
+                -pdf-frame-content: frame_header_right;
+                left: 280pt; width: 290pt; top: 30pt; height: 60pt;
+            }
+            @frame col1_frame {           /* Content frame 1 */
+                left: 50pt; width: 245pt; top: 100pt; height: 100pt;
+            }
+
+            @frame col2_frame {  
+                left: 300pt; width: 245pt; top: 100pt; height: 100pt;
+            }
+
+            @frame receipt_message {
+                left: 50pt; width: 512pt; top: 210pt; height: 50pt;
+            }
+
+            @frame table_frame {  /* Content frame 2 */
+                left: 50pt; width: 512pt; top: 260pt; height: 300pt;
+            }
+
+            @frame footer_frame {           /* Static Frame */
+                -pdf-frame-content: footer_content;
+                left: 50pt; width: 512pt; top: 680pt; height: 150pt;
+            }
+        }
+        table { -pdf-keep-with-next: true;}
+
+        .right{
+            font-size: 10px;
+            text-align: start;
+
+        }
+        .left{
+            text-align: left;
+        }
+        table {
+            width: 100%;
+            border: 1px solid black;
+        }
+
+        table th {
+            text-align: left;
+            padding: 3px;
+            padding-bottom: 0;
+        }
+
+        table tr{
+            page-break-inside: avoid;
+        }
+
+        table td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 3px;
+            padding-bottom: 0;
+        }
+
+
+        /* p{
+            font-size: 10pt;
+        } */
+    </style>
+    {% block style %} {% endblock %}
+  </head>
+  <body>
+               
+                <div id="frame_header_left" class="left">
+                    <img src="{{ image_url }}" width="300px" height="50px" alt="logo">
+                </div>
+               
+                <div id="frame_header_right" class="right">
+                    <p style="margin-bottom: 0pt; margin-top: 0pt;">2-7-1 Plaza Bukit Jalil, 1 Persiaran Jalil 1, Bukit Jalil, </p>
+                    <p style="margin-bottom: 0pt; margin-top: 0pt;">57000 Kuala Lumpur, Malaysia.</p>
+                    <p style="margin-bottom: 0pt; margin-top: 0pt;">P: +603-86053511     E: help@deartime.com</p>
+                </div>
+                
+                <div id="col1_frame" class="left">
+                    <h4>NAME OF PAYOR :</h4>
+                    <p style="margin-bottom: 0pt; margin-top: 0pt;">{{company.company_name}}</p>
+                    <p style="margin-bottom: 0pt; margin-top: 0pt;">{{company.address_line1}}{{company.address_line2}}{{company.address_line3}}</p>
+                    <p style="margin-bottom: 0pt; margin-top: 0pt;">P : {{company.contact1}}</p>
+                    <p style="margin-bottom: 0pt; margin-top: 0pt;">E : {{company.email_address}}</p>
+                </div>
+                
+                <div id="col2_frame" class="right">
+                    {% block invoice %}
+                    {% endblock %}
+                </div>
+
+                <div id="receipt_message">
+                    <pdf:nextframe>
+                    {% if flag == 'receipt' %}
+                        <p>Thank you for choosing DearTime Berhad.</p>
+                        <p>We acknowledged receipt for Invoice Number: {{ payment_for }}</p>
+                    {% endif %}                  
+                    <pdf:nextframe>
+                </div>
+
+                <div id="table_frame">
+                    {% for page in tables %}
+                        {% if page.has_next %}
+                            <table style="table-layout: fixed; page-break-after: always;">
+                                <thead>
+                                    <tr>
+                                        <th><span>No</span></th>
+                                        <th><span >Name of Insured (Employee/Member)</span></th>
+                                        <th><span >Employee/Member Number</span></th>
+                                        <th><span >NRIC</span></th>
+                                        <th style="text-align: right;"><span>Premium Amount (RM)</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for data in page %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{data.name}}</td>
+                                            <td>{{data.employment_no}}</td>
+                                            <td>{{data.mykad}}</td>
+                                            {% if data.ad_premium %}
+                                                <td style="text-align: right;">{{data.ad_premium|floatformat:2}}</td>
+                                            {% else %}
+                                                <td style="text-align: right;">{{data.tentative_premium|floatformat:2}}</td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <table style="table-layout: fixed; page-break-after: avoid;">
+                                <thead>
+                                    <tr>
+                                        <th><span>No</span></th>
+                                        <th><span >Name of Insured (Employee/Member)</span></th>
+                                        <th><span >Employee/Member Number</span></th>
+                                        <th><span >NRIC</span></th>
+                                        <th style="text-align: right;"><span>Premium Amount (RM)</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for data in page %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{data.name}}</td>
+                                            <td>{{data.employment_no}}</td>
+                                            <td>{{data.mykad}}</td>
+                                            {% if data.ad_premium %}
+                                                <td style="text-align: right;">{{data.ad_premium|floatformat:2}}</td>
+                                            {% else %}
+                                                <td style="text-align: right;">{{data.tentative_premium|floatformat:2}}</td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <p class="left">(Ringgit Malaysia: {{total_payables_text}})</p>
+                
+                            <p class="right">TOTAL PAYABLES {{total_payables}} </p>
+                        {% endif %}
+
+                        <pdf:nextframe><pdf:nextframe>
+                    {% endfor %}
+                    
+                </div>
+               
+                
+               
+                
+            <div id="footer_content">
+
+                <div>
+                    <p>Notes :</p>
+                    {% block notes %}
+                    {% endblock %}
+                </div>
+                <div>
+                    <p>Should you need further assistance, do contact us at 03-86053511.</p>
+                </div>
+                <hr>
+                <p style="font-style:italic;">This is a computer-generated invoice. No signature is required.</p>
+            </div>
+        
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="{% static "portal/js/jquery.js" %}"></script>
+    <script src="{% static "portal/js/popper.js" %}"></script>
+    <script src="{% static "portal/js/bootstrap.js" %}"></script>
+    <script src="{% static "portal/js/perfect-scrollbar.js" %}"></script>
+
+    <script src="{% static "portal/js/menu.js" %}"></script>
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
+
+    <!-- Main JS -->
+    <script src="{% static "portal/js/main.js" %}"></script>
+
+    <!-- Page JS -->
+
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script>
+        window.addEventListener && document.addEventListener('DOMContentLoaded', onContentLoad);
+
+    </script>
+    {% block javascript %}{% endblock %}
+  </body>
+</html>

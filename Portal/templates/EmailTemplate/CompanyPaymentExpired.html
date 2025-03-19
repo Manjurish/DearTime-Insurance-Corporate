@@ -1,0 +1,10 @@
+{% extends '../EmailTemplateBase.html' %}
+{% load static %}
+{% block content %}
+<p>Hi {{ payor }},</p>
+
+<p> Sorry to inform that your payment is expired. </p>
+
+<a href="{{url}}">Re-offer the coverage and send invitation</a>
+    
+{% endblock %}

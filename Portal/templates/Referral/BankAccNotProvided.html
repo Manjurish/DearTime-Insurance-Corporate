@@ -1,0 +1,29 @@
+{% extends "../Referral.html" %}
+
+{% block title %}
+    <title>DearTime | Referral</title>
+{% endblock %}
+
+{% block header %}
+<div class="col-8" style="margin-top: 10px;">
+    <h4>Referral</h4>
+    <div style="width:60%">
+      <p>Refer individuals and legal entities to DearTime and receive up to 10% of your referees' premium as Thanksgiving gifts whenever the premium are paid.<a href="{{host_address}}/static/referral/Terms and Conditions.pdf" target="_blank"> See Terms & Conditions</a>.</p>
+    </div>
+  </div>
+{% endblock %}
+
+{% block sub_content %}
+<div class="content_overlay">
+    <div class="content_area">
+        <br>
+        <h5>DearTime Referral Program</h5>
+        <iframe width="560" height="315" 
+        src="https://www.youtube.com/embed/uKkFEyR3hlg">
+        </iframe>
+        <p>Thank you for your interest in being our Referrer and receive up to 10% of your Referees' premiums as Thanksgiving gifts whenever the premiums are paid.<br><br>Before we begin, please provide your company's bank account details so that you may receive your referral gifts.</p>
+        <br><br>
+        <a class="btn" style="border-radius: 15px;box-shadow: none;color:white;text-transform: none;background-color: #836E49;" href="{{ host_address }}/general">Bank Account Information <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+</div>
+{% endblock %}

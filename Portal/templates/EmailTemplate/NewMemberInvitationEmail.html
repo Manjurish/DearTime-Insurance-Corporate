@@ -1,0 +1,39 @@
+{% extends '../EmailTemplateBase.html' %}
+{% load static %}
+{% block content %}
+
+{% if last_reminder %}
+<h3>Follow Up on DearTime Insurance Corporate Purchase</h3>
+
+<p>Hi {{ payor }},</p>
+
+<p>We have not received any response from {{ owner }} regarding your interest in buying DearTime's insurance for {{ pronouns }}.</p>
+
+<p>We have sent email reminders to {{ owner }} for the past month, with no response. Kindly confirm with {{ owner }} on acceptance followed by action to download DearTime app to complete the application process.</p>
+
+{% else %}
+{% if reminder_no %}
+<h3>BUY FOR OTHERS - {{ payor }} Would Like To Purchase Insurance For You - Reminder {{ reminder_no }}</h3>
+{% else %}
+<h3>BUY FOR OTHERS - {{ payor }} Would Like To Purchase Insurance For You</h3>
+{% endif %}
+
+<p>Hi {{ owner }},</p>
+
+<p>{{ payor }} would like to buy DearTime's insurance for you. If you accept, please download DearTime app and complete the application process.</p>
+
+<br>
+<br>
+<label>Download Now:</label>
+<br>
+
+<div style="display: flex;">
+    <div>
+        <a href=" {{ referral_link }} ">
+            <img src="cid:referralQR" alt="dynamic_referral_link" width ="214" height="214">
+        </a>
+    </div>
+</div>
+
+{% endif %}
+{% endblock %}

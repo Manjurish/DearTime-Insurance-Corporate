@@ -1,0 +1,19 @@
+{% extends "../LoginBase.html" %}
+{% block style %}
+{% endblock %}
+{% block quote %}
+<h2 style="color: #000;">For your employees,</h2>
+<h2 style="color: #000;"> members and customers.</h2>
+{% endblock %}
+{% block content %}
+<div class="text-center">
+    <h5 class="text-large" style="color: black;">{% if flag == 1 %}E-mail sent successfully!{% elif flag == 2 %}Thank you for signing up!{% endif %}</h5>
+    <p>We have sent a {% if flag == 1 %}new{% endif %} validation email to <br><span style="color: #3498DB; margin: 0px; font-weight: bold;">{{ email }}</span></p>
+    <p>Please check your inbox and follow the instructions in the email to complete your registration.</p>
+</div>
+{% if flag == 2 %}
+    <div class="d-flex justify-content-center">
+        <a style="border: 0px; border-radius:15px; padding: 8px 16px; background: #E7E5E4;" href="{{host_address}}/">Done<i class='bx bx-check'></i></a>
+    </div>
+{% endif %}
+{% endblock %}

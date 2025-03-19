@@ -1,0 +1,710 @@
+{% load static %}
+
+<head>
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="{% static "portal/img/favicon.png" %}" />
+<title>DearTime | Invoice List</title>
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+  rel="stylesheet"
+/>
+
+<!-- Icons. Uncomment required icon fonts -->
+<link rel="stylesheet" href="{% static "fontawesome-free-6.2.1-web/css/all.css" %}" />
+<link rel="stylesheet" href="{% static "fontawesome-free-6.2.1-web/css/fontawesome.css" %}" />
+<link rel="stylesheet" href="{% static "fontawesome-free-6.2.1-web/css/regular.css" %}" />
+<link rel="stylesheet" href="{% static "portal/fonts/boxicons.css" %}" />
+
+<!-- Core CSS -->
+<link rel="stylesheet" href="{% static "external/css/dropzone.css" %}" class="template-customizer-core-css" />
+<link rel="stylesheet" href="{% static "portal/css/core.css" %}" class="template-customizer-core-css" />
+<link rel="stylesheet" href="{% static "portal/css/theme-default.css" %}" class="template-customizer-theme-css" />
+<link rel="stylesheet" href="{% static "material/css/material-kit.css" %}" class="template-customizer-core-css" />
+<!-- <link rel="stylesheet" href="../assets/css/demo.css" /> -->
+
+<!-- Vendors CSS -->
+<link rel="stylesheet" href="{% static "portal/libs/perfect-scrollbar.css" %}" />
+
+<link rel="stylesheet" href="{% static "portal/css/toastr.css" %}">
+
+<!-- Page CSS -->
+<script src="https://kit.fontawesome.com/c3c32dbdee.js" crossorigin="anonymous"></script>
+<!-- Helpers -->
+<script src="{% static "fontawesome-free-6.2.1-web/js/all.js" %}"></script>
+<script src="{% static "fontawesome-free-6.2.1-web/js/fontawesome.js" %}"></script>
+<script src="{% static "fontawesome-free-6.2.1-web/js/regular.js" %}"></script>
+<script src="{% static "portal/js/helpers.js" %}"></script>
+
+<!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+<!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+<script src="{% static "portal/js/config.js" %}"></script>
+<script src="{% static "material/js/material-kit.js" %}"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="{% static "external/js/dropzone.js" %}"></script>
+<script src="{% static "portal/js/toastr.js" %}"></script>
+
+<style>
+    .break {
+            flex-basis: 100%;
+            height: 0;
+    }
+    .pclassCustom{
+          color: #78716C;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 20px;
+    }
+    .bottomButton{
+            position: absolute; 
+            bottom: 0;
+            width: 100%; 
+            background: #E7E0D6;
+            width: 100%;
+            height: 75px;
+    }
+    .containerCustom {
+          border : 1px solid #CBC2B2;
+          border-radius: 15px;
+          background: #F8F4EE;
+          color: #000;
+      }
+      .form-range{
+          background: #DBEAFE;
+          border-radius: 15px;
+          width: 350px;
+          height: 52px;
+          padding: 10px 16px;
+          color: #BFDBFE;
+      }
+      .buttonClose{
+        border-radius: 50%;
+        padding: 0.5em;
+        width: 30px;
+        height: 30px;
+        border: 1.5px solid #000000;
+        color: #000000;
+        position: relative;
+      }
+      .buttonClose::before {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #000000;
+        width: 2px;
+        left: 12px;
+        top: 5px;
+        bottom: 5px;
+        transform: rotate(45deg);
+    }
+    .buttonClose::after {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #000000;
+        height: 2px;
+        top:12px;
+        left: 5px;
+        right: 5px;
+        transform: rotate(45deg);
+    }
+    .buttonCloseSecondary{
+        border-radius: 50%;
+        padding: 0.5em;
+        width: 30px;
+        height: 30px;
+        border: 1.5px solid #2563EB;
+        color: #000000;
+        position: relative;
+    }
+    .buttonCloseSecondary::before {
+      content: " ";
+      position: absolute;
+      display: block;
+      background-color: #2563EB;
+      width: 2px;
+      left: 12px;
+      top: 5px;
+      bottom: 5px;
+      transform: rotate(45deg);
+    }
+    .buttonCloseSecondary::after {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #2563EB;
+        height: 2px;
+        top:12px;
+        left: 5px;
+        right: 5px;
+        transform: rotate(45deg);
+    }
+    .dropdown .dropdown-toggle.collapsed:after {
+        transform: rotate(180deg);
+        float:right;
+    }
+    .dropdown .dropdown-toggle:after
+    {
+        content: "\f106";
+        font: normal normal normal 14px/1 FontAwesome;
+        border: none;
+        vertical-align: middle;
+        font-weight: 600;
+        float:right;
+    }
+    .tableCustom {
+      --bs-table-bg: transparent;
+      --bs-table-accent-bg: transparent;
+      --bs-table-striped-color: #697a8d;
+      --bs-table-striped-bg: #f9fafb;
+      --bs-table-active-color: #697a8d;
+      --bs-table-active-bg: rgba(67, 89, 113, 0.1);
+      --bs-table-hover-color: #697a8d;
+      --bs-table-hover-bg: rgba(67, 89, 113, 0.06);
+      width: auto;
+      margin-bottom: 1rem;
+      color: #697a8d;
+      vertical-align: middle;
+      border : 2px solid #2563EB;
+      border-radius: 15px;
+      background: #EFF6FF;
+      border-collapse:unset; 
+    }
+    .tableCustom > :not(caption) > * > * {
+      padding: 0.625rem 1.25rem;
+      background-color: var(--bs-table-bg);
+      border-bottom-width: 1px;
+      box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+    }
+    .tableCustom > tbody {
+      vertical-align: inherit;
+    }
+    .tableCustom > thead {
+      vertical-align: bottom;
+    }
+    .tableCustom > :not(:first-child) {
+      border-top: 2px solid #d9dee3;
+    }
+    .tableCustom tr:last-child > td {
+      border-bottom-width: 0px;
+    }
+    .tableCustom:not(.table-dark) th{
+        color: #60A5FA;
+    }
+    .customCheckbox {
+        width: 1.23em;
+        height: 1.23em;
+        margin-top: 0.135em;
+        vertical-align: top;
+    }
+    .overlay {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background-color: #000000;
+        overflow: hidden;
+        width: 40%;
+        height: 100%;
+        opacity: 0.3;
+        transition: .5s linear;
+        display: none;
+        z-index: 4;
+    }
+
+    .overlayRight {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        background-color: #fff;
+        overflow: hidden;
+        width: 60%;
+        height: 100%;
+        opacity: 1;
+        transition: .5s linear;
+        display: none;
+        z-index: 4;
+    }
+
+</style>
+</head>
+<body>
+  {% if messages %}
+    {% for message in messages %}
+        <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+    {% endfor %}
+  {% endif %}
+  <div class="layout-wrapper layout-content-navbar" style="overflow-x:hidden;background: #F8F4EE;">
+    <div class="layout-container">
+      <div class="content-wrapper">
+        <div class="container-xxl flex-shrink-1" style="padding: 0px;">
+          <nav class="navbar navbar-example navbar-expand-lg bg-light" style="padding: 0px;">
+            <div class="container-fluid">
+              <div class="navbar-brand">
+                <a href="{{ host_address }}/member-list">
+                  <h5 class="fw-bold text-uppercase">{{ company.company_name }}</h5>
+                </a> 
+              </div>
+              <ul class="navbar-nav flex-row align-items-center ms-auto">
+                <li>
+                  <a style="color:black; padding:10px;" href="{{ host_address }}/package-list/{{ companySalt }}">Packages</a>
+                </li>
+                <li style="align-items:left">
+                  <a style="color:black;padding:10px;" href="{{ host_address }}/invoice-list">Invoices</a>
+                </li>
+                <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                  <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                      <img src="{% static "portal/img/user-icon.png" %}" alt class="w-px-30 h-auto rounded-circle">
+                    </div>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <a class="dropdown-item" href="{{host_address}}/change-password">
+                        <i class="bx bx-lock-open-alt me-2"></i>
+                        <span class="align-middle">Change Password</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{{host_address}}/general">
+                        <i class="bx bx-cog me-2" aria-hidden="true"></i>
+                        <span class="align-middle">Settings</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{{host_address}}/logout">
+                        <i class="bx bx-power-off me-2"></i>
+                        <span class="align-middle">Log Out</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+        {% block content %}
+        <div class="container-xxl flex-grow-1">
+            <div class="content-wrapper mt-3">
+              <div class="container mb-4" style="margin: 0px; max-width: 1920px;">
+                <div class="row">
+                  <div>
+                    <div class="row">
+                        <div class="col-3">
+                            <h3>Invoice List</h3>
+                        </div>
+                        <div class="col-2">
+                            <a href="{{host_address}}/member-list" role="button" class="btn btn-outline-primary" style="margin: 0px; text-transform: none;">
+                                Back
+                            </a>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="container" style="margin: 0px; max-width: 1920px;" >
+                      <div class="card-header">
+                        <div class="navbar-nav">
+                          <div class="row">
+                            <form method="POST" id="formInvoiceList" action="{{host_address}}/invoice-list">
+                              {% csrf_token %}
+                              <div class="col-8">
+                                <div class="nav-item d-flex align-items-center">
+                                  <label class="col-2 my-0 mx-0" style="font-size:small;text-align:right">Select invoice month:</label>
+                                  <div class="col-4 mx-1" style="border:thin solid darkgray; border-radius:5px;">
+                                    <input
+                                      id="searchInvoiceDate"
+                                      name="searchInvoiceDate"
+                                      type="month"
+                                      class="form-control border-0 shadow-none"
+                                      style="border:thin solid #000; border-radius:5px;"
+                                      value="{% if filterDate %}{{filterDate}}{% endif %}"
+                                    >
+                                  </div>
+                                  <div class="col-4 mx-1">
+                                    <select id="searchInvoiceStatus" name="searchInvoiceStatus" class="form-control" style="border:thin solid darkgray">
+                                      <option value="">----Select Invoice Status----</option>
+                                      {% if filterStatus %}
+                                        {% if filterStatus == 'Paid' %}
+                                          <option selected>Paid</option>
+                                          <option>Pending Payment</option>
+                                        {% elif filterStatus == 'Pending Payment' %}
+                                          <option>Paid</option>
+                                          <option selected>Pending Payment</option>
+                                        {% endif %}
+                                      {% else %}
+                                        <option>Paid</option>
+                                        <option>Pending Payment</option>
+                                      {% endif %}
+                                    </select>
+                                  </div>
+                                  <div class="nav-item d-flex align-items-center">
+                                    <button type="submit" class="btn btn-outline-primary me-1" style="margin: 0px; text-transform: none; color: #9B8A6C;">
+                                      Filter
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary me-1" onclick="clearFilter()" style="margin: 0px; text-transform: none; color: #9B8A6C;">Clear</button> 
+                                    <!-- <a href="#" class="me-1" style="margin: 0px; text-transform: none; color: #3498DB;">
+                                      Quick Invoice
+                                    </a>  -->
+                                  </div>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                          <br>
+                        </div>
+                      </div>
+                    <div class="text-wrap" style="overflow-x: scroll;">
+                      <table class="table col-12">
+                        <thead>
+                          <tr>
+                            <th class="text-uppercase text-muted" style="vertical-align : middle;text-align:center;">No.</th>
+                            <th class="text-uppercase text-muted" style="vertical-align : middle;text-align:center;">Invoice No</th>
+                            <th class="text-uppercase text-muted" style="vertical-align : middle;text-align:center;">SenangPay Reference No.</th>
+                            <th class="text-uppercase text-muted" style="vertical-align : middle;text-align:right;">Amount</th>
+                            <th class="text-uppercase text-muted" style="vertical-align : middle;text-align:left;">Status</th>
+                            <th class="text-uppercase text-muted" style="vertical-align : middle;text-align:left;">Remarks</th>
+                            <th class="text-uppercase text-muted" style="vertical-align : middle;text-align:center;">Cancellation Date</th>
+                            <th class="text-uppercase text-muted" style="vertical-align : middle;text-align:center;">Action</th>
+                          </tr>
+                        </thead>
+                        {% for page in invoices %}
+                        {% if not page.has_previous %}
+                        <tbody id="1_invoiceList">
+                          {% for inv in page %}
+                            <tr>
+                                <td style="vertical-align : middle;text-align:center;">{{forloop.counter}}</td>
+                                <td style="vertical-align : middle;text-align:center;">{{inv.invoice_no}}</td>
+                                <td style="vertical-align : middle;text-align:center;">{{inv.ref_no|default_if_none:"-"}}</td>
+                                <td style="vertical-align : middle;text-align:right;">{{inv.amount}}</td>
+                                <td style="vertical-align : middle;text-align:left;">{{inv.status}}</td>
+                                <td style="vertical-align : middle;text-align:left;">{{inv.remarks|default_if_none:"-"}}</td>
+                                <td style="vertical-align : middle;text-align:center;">{{inv.cancellation_date|date:"d/m/Y"|default:"-"}}</td>
+                                <td style="vertical-align : middle;text-align:center;">
+                                    {% if inv.status == 'Pending Payment' or inv.status == 'Payment In Progress' %}
+                                        <div class="row">
+                                          <div class="col-3">
+                                          <a class="btn btn-link text-info text-gradient px-3 mb-0 " href="{{host_address}}/view-invoice/{{inv.invoiceSalt}}/invoice" style="font-size: 20px; padding: 0px !important;" data-toggle="tooltip" data-placement="top" title="View Invoice">
+                                              <i class="fas fa-eye"></i>
+                                          </a>
+                                          </div>
+                                          <div class="col-3">
+                                            <button type="button" class="btn btn-link text-info text-gradient px-3 mb-0 float-start" style="font-size: 20px; padding: 0px !important;" data-bs-toggle="modal" data-bs-target="#confirmationCancelInvoiceModal" onclick="populateInvoice('{{inv.invoice_no}}')" title="Cancel Invoice">
+                                              <i class="fas fa-xmark"></i>
+                                            </button>
+                                          </div>
+                                          <input type="hidden" name="invoiceNo" id="invoiceNo_payment" value="{{ inv.invoice_no }}">
+                                          <div class="col-3">
+                                            <form name="order" method="post" action="{{ senangpay_url }}">
+                                              <input type="hidden" name="detail" value="{{ inv.invoiceNo }}">
+                                              <input type="hidden" name="amount" value="{{ inv.amount }}">
+                                              <input type="hidden" name="order_id" value="{{ inv.invoiceNo }}">
+                                              <input type="hidden" name="name" value="{{ company.company_name }}">
+                                              <input type="hidden" name="email" value="{{ company.email_address }}">
+                                              <input type="hidden" name="phone" value="{{ company.contact1 }}">
+                                              <input type="hidden" name="hash" value="{{ inv.hash_value }}">
+                                              <button type="submit" class="btn btn-link text-info text-gradient px-3 mb-0" style="font-size: 20px; padding: 0px !important;" title="SenangPay" onclick="updateInvoiceStatus('{{inv.invoice_no}}')">
+                                                <i class="fas fa-money-check"></i>
+                                              </button>
+                                            </form>
+                                          </div>
+                                          <!-- <div class="col-6">
+                                          <a class="btn btn-link text-info text-gradient px-3 mb-0" href="{{host_address}}/view-invoice/{{inv.id}}/invoice" style="font-size: 20px; padding: 0px !important;" data-toggle="tooltip" data-placement="top" title="View Invoice">
+                                              <i class="fas fa-eye"></i>
+                                          </a>
+                                          </div>
+                                          <div class="col-6">
+                                            <button type="button" class="btn btn-outline-primary" style="margin: 0px; text-transform: none;" data-bs-toggle="modal" data-bs-target="#confirmationModal" onclick="populateInvoice('{{inv.invoice_no}}')">
+                                              Pay
+                                            </button>
+                                          </div> -->
+                                        </div>
+                                    {% elif inv.status == 'Paid' %}
+                                    <div class="row">
+                                      <div class="col-3"></div>
+                                      <div class="col-3"></div>
+                                      <div class="col-3">
+                                        <a class="btn btn-link text-info text-gradient px-3 mb-0" href="{{host_address}}/view-invoice/{{inv.invoiceSalt}}/receipt" style="font-size: 20px; padding: 0px !important;" data-toggle="tooltip" data-placement="top" title="View Receipt">
+                                            <i class="fas fa-receipt"></i>
+                                        </a>
+                                      </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="row">
+                                      <div class="col-3">
+                                        <a class="btn btn-link text-info text-gradient px-3 mb-0" href="{{host_address}}/view-invoice/{{inv.invoiceSalt}}/invoice" style="font-size: 20px; padding: 0px !important;" data-toggle="tooltip" data-placement="top" title="View Invoice">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                      </div>
+                                      <div class="col-3"></div>
+                                      <div class="col-3"></div>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                        {% else %}
+                        <tbody id="{{page.number}}_invoiceList" hidden>
+                            {% for inv in page %}
+                                <tr>
+                                    {% widthratio 10 1 page.previous_page_number as count %}
+                                    <td style="vertical-align : middle;text-align:center;">{{forloop.counter|add:count}}</td>
+                                    <td style="vertical-align : middle;text-align:center;">{{inv.invoice_no}}</td>
+                                    <td style="vertical-align : middle;text-align:center;">{{inv.ref_no|default_if_none:"-"}}</td>
+                                    <td style="vertical-align : middle;text-align:right;">{{inv.amount}}</td>
+                                    <td style="vertical-align : middle;text-align:left;">{{inv.status}}</td>
+                                    <td style="vertical-align : middle;text-align:left;">{{inv.remarks|default_if_none:"-"}}</td>
+                                    <td style="vertical-align : middle;text-align:center;">{{inv.cancellation_date|date:"d/m/Y"|default:"-"}}</td>
+                                    <td style="vertical-align : middle;text-align:center;">
+                                        {% if inv.status == 'Pending Payment' or inv.status == 'Payment In Progress' %}
+                                            <div class="row">
+                                              <div class="col-3">
+                                                <a class="btn btn-link text-info text-gradient px-3 mb-0" href="{{host_address}}/view-invoice/{{inv.invoiceSalt}}/invoice" style="font-size: 20px; padding: 0px !important;" data-toggle="tooltip" data-placement="top" title="View Invoice">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                </div>
+                                                <div class="col-3">
+                                                  <button type="button" class="btn btn-link text-info text-gradient px-3 mb-0 float-start" style="font-size: 20px; padding: 0px !important;" data-bs-toggle="modal" data-bs-target="#confirmationCancelInvoiceModal" onclick="populateInvoice('{{inv.invoice_no}}')" title="Cancel Invoice">
+                                                    <i class="fas fa-xmark"></i>
+                                                  </button>
+                                                </div>
+                                                <input type="hidden" name="invoiceNo" id="invoiceNo" value="{{ inv.invoice_no }}">
+                                                <div class="col-3">
+                                                  <form name="order" method="post" action="{{ senangpay_url }}">
+                                                    <input type="hidden" name="detail" value="{{ inv.invoiceNo }}">
+                                                    <input type="hidden" name="amount" value="{{ inv.amount }}">
+                                                    <input type="hidden" name="order_id" value="{{ inv.invoiceNo }}">
+                                                    <input type="hidden" name="name" value="{{ company.company_name }}">
+                                                    <input type="hidden" name="email" value="{{ company.email_address }}">
+                                                    <input type="hidden" name="phone" value="{{ company.contact1 }}">
+                                                    <input type="hidden" name="hash" value="{{ inv.hash_value }}">
+                                                    <button type="submit" class="btn btn-link text-info text-gradient px-3 mb-0" style="font-size: 20px; padding: 0px !important;" title="SenangPay" onclick="updateInvoiceStatus('{{inv.invoice_no}}')">
+                                                      <i class="fas fa-money-check"></i>
+                                                    </button>
+                                                  </form>
+                                                </div>
+                                              </div>
+                                              <!-- <div class="col-6">
+                                                <a class="btn btn-link text-info text-gradient px-3 mb-0" href="{{host_address}}/view-invoice/{{inv.id}}/invoice" style="font-size: 20px; padding: 0px !important;" data-toggle="tooltip" data-placement="top" title="View Invoice">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                </div>
+                                                <div class="col-6">
+                                                  <button type="button" class="btn btn-outline-primary" style="margin: 0px; text-transform: none;" data-bs-toggle="modal" data-bs-target="#confirmationModal" onclick="populateInvoice('{{inv.invoice_no}}')">
+                                                    Pay
+                                                  </button>
+                                                </div> -->
+                                            </div>
+                                        {% elif inv.status == 'Paid' %}
+                                        <div class="row">
+                                          <div class="col-3"></div>
+                                          <div class="col-3"></div>
+                                          <div class="col-3">
+                                            <a class="btn btn-link text-info text-gradient px-3 mb-0" href="{{host_address}}/view-invoice/{{inv.invoiceSalt}}/receipt" style="font-size: 20px; padding: 0px !important;" data-toggle="tooltip" data-placement="top" title="View Receipt">
+                                                <i class="fas fa-receipt"></i>
+                                            </a>
+                                          </div>
+                                        </div>
+                                        {% else %}
+                                        <div class="row">
+                                          <div class="col-3">
+                                            <a class="btn btn-link text-info text-gradient px-3 mb-0" href="{{host_address}}/view-invoice/{{inv.invoiceSalt}}/invoice" style="font-size: 20px; padding: 0px !important;" data-toggle="tooltip" data-placement="top" title="View Invoice">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                          </div>
+                                          <div class="col-3"></div>
+                                          <div class="col-3"></div>
+                                        </div>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        {% endif %}
+                        {% endfor %}
+                      </table>
+                      <div class="d-flex align-items-center justify-content-center">
+                        <nav aria-label="Page navigation">
+                          <ul class="pagination">
+                            <li class="page-item first" id="first_invoiceListBtn">
+                              <button class="page-link" onclick="first('invoiceList')"><i class="bx bx-chevrons-left"></i></button>
+                            </li>
+                            <li class="page-item prev" id="prev_invoiceListBtn">
+                              <button class="page-link" onclick="prev('invoiceList')"><i class="bx bx-chevron-left"></i></button>
+                            </li>
+                            <div id="divInvoiceList" style="display:inline-flex">
+                            {% for page in invoices.page_range %}
+                              <li class="page-item {% if page == 1 %}active{% endif %}" id="{{page}}_invoiceListBtn">
+                                <button class="page-link" onclick="pageInvoiceList('{{page}}')">{{page}}</button>
+                              </li>
+                            {% endfor %}
+                            </div>
+                            <li class="page-item next" id="next_invoiceListBtn">
+                              <button class="page-link" onclick="next('invoiceList', '{{invoices.num_pages}}')"><i class="bx bx-chevron-right"></i></button>
+                            </li>
+                            <li class="page-item last" id="last_invoiceListBtn">
+                              <button class="page-link" onclick="last('invoiceList', '{{invoices.num_pages}}')"><i class="bx bx-chevrons-right"></i></button>
+                            </li>
+                          </ul>
+                        </nav>
+                      </div>
+                      <div class="modal fade" style="z-index: 5;" id="confirmationModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <form method="POST" action="{{host_address}}/invoice-payment">
+                            {% csrf_token %}
+                            <input type="hidden" name="invoiceNo" id="invoiceNo_payment">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel" style="color: black;">Payment Confirmation</h5>
+                              </div>
+                              <div class="modal-body">
+                                <p>Enter transaction reference number:</p>
+                                <input type="text" id="refno_POST" name="refno_POST" class="form-control" style="border:thin solid darkgrey" required>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Confirm Payment</button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal fade" style="z-index: 5;" id="confirmationCancelInvoiceModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <form method="POST" action="{{host_address}}/cancel-invoice">
+                            {% csrf_token %}
+                            <input type="hidden" name="invoiceNo" id="invoiceNo_cancel">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel" style="color: black;">Cancel Invoice Confirmation</h5>
+                              </div>
+                              <div class="modal-body">
+                                <p>Enter reason to cancel the invoice:</p>
+                                <input type="text" id="cancelInvoiceReason" name="cancelInvoiceReason" class="form-control" style="border:thin solid darkgrey" required>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Confirm Cancel</button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        {% endblock %}
+    <script src="{% static "portal/js/jquery.js" %}"></script>
+    <script src="{% static "portal/js/popper.js" %}"></script>
+    <script src="{% static "portal/js/bootstrap.js" %}"></script>
+    <script src="{% static "portal/js/perfect-scrollbar.js" %}"></script>
+
+    <script src="{% static "portal/js/menu.js" %}"></script>
+    <!-- endbuild -->
+
+    <!-- Main JS -->
+    <script src="{% static "portal/js/main.js" %}"></script>
+
+    <!-- Page JS -->
+    <script src="{% static "portal/js/dashboards-analytics.js" %}"></script>
+
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>
+<script>
+    function pageInvoiceList(p) {
+      var button = document.getElementById(p+"_invoiceListBtn");
+      var div = document.getElementById('divInvoiceList');
+  
+      for (let i = 0; i < div.children.length; i++) {
+        div.children[i].classList.remove("active");
+        document.getElementById((i+1)+'_invoiceList').hidden = true;
+      }
+      button.classList.add("active");
+      document.getElementById(p+"_invoiceList").hidden = false;
+    }
+  
+    function first(t) {
+      table = document.getElementById('1_'+t);
+      button = document.getElementById('1_'+t+'Btn');
+      div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+      for (let i = 0; i < div.children.length; i++) {
+        div.children[i].classList.remove('active');
+        document.getElementById((i+1)+'_'+t).hidden = true;
+      }
+      button.classList.add('active');
+      table.hidden = false;
+    }
+  
+    function last(t, num_pages) {
+      table = document.getElementById(num_pages+'_'+t);
+      button = document.getElementById(num_pages+'_'+t+'Btn');
+      div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+      for (let i = 0; i < div.children.length; i++) {
+        div.children[i].classList.remove('active');
+        document.getElementById((i+1)+'_'+t).hidden = true;
+      }
+      button.classList.add('active');
+      table.hidden = false;
+    }
+  
+    function prev(t) {
+      div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+      for (let i = 0; i < div.children.length; i++) {
+        if (div.children[i].classList.contains('active') && i+1!=1) {
+          div.children[i].classList.remove('active');
+          div.children[i-1].classList.add('active');
+          document.getElementById((i+1)+'_'+t).hidden = true;
+          document.getElementById(i+'_'+t).hidden = false;
+          break
+        }
+      }
+    }
+  
+    function next(t, num_pages) {
+      div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+      for (let i = 0; i < div.children.length; i++) {
+        if (div.children[i].classList.contains('active') && i+1!=num_pages) {
+          div.children[i].classList.remove('active');
+          div.children[i+1].classList.add('active');
+          document.getElementById((i+1)+'_'+t).hidden = true;
+          document.getElementById((i+2)+'_'+t).hidden = false;
+          break
+        }
+      }
+    }
+
+    function populateInvoice(invoiceNo){
+        var invoicePayment = document.getElementById('invoiceNo_payment')
+        var invoiceCancel  = document.getElementById('invoiceNo_cancel')
+        invoicePayment.value = invoiceNo
+        invoiceCancel.value = invoiceNo
+    }
+
+    function clearFilter() {
+      document.getElementById('searchInvoiceDate').value = "";
+      document.getElementById('searchInvoiceStatus').options[0].selected = true;
+    }
+
+    function updateInvoiceStatus(invoice_no){
+      dataDict = {
+        'invoiceNo': invoice_no.replace("/", "\/"),
+        csrfmiddlewaretoken : '{{ csrf_token }}'
+      }
+      var storageData = JSON.stringify(dataDict);
+      $.ajax({                       // initialize an AJAX request
+            url     : '{{host_address}}' + '/invoice-payment',
+            data    : dataDict,
+            method  : 'POST',
+            success : function (data) { 
+                return true;
+            },
+            error   : function(XMLHttpRequest, textStatus, errorThrown) {
+              alert(textStatus);
+            }
+      });
+    }
+</script>

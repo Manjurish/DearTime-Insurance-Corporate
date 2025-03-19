@@ -1,0 +1,54 @@
+{% extends "../BaseNew.html" %}
+{% block title %}
+<title>DearTime | Dashboard</title>
+{% endblock %}
+{% block css %}
+<style>
+    .blankStateButton {
+        width: 250px;
+        height: 60px;
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        color: #9B8A6C;
+    }
+</style> 
+{% endblock %}
+{% block page_title %}
+<div class="navbar-brand"><h5 class="fw-bold">{{ company.company_name }}</h5></div>
+{% endblock %}
+{% block content %}
+<div class="container-xxl flex-grow-1">
+    <div class="d-flex align-items-center justify-content-center" style="height: 100%;">
+        <div class="content-wrapper">
+            <div class="container text-center mb-4">
+                <h3>Get Started with DearTime</h3>s
+            </div>
+            <div class="container text-center">
+                <button class="btn btn-outline-primary text-start" style="text-transform: none;" onclick="return MemberAction('AddPackage')">
+                    Add package <i class='bx bx-chevron-right float-end'></i>
+                    <div class="blankStateButton mt-1">You can manage members by using packages. </div>
+                </button>
+                <button class="btn btn-outline-primary text-start" style="text-transform: none;" onclick="return MemberAction('ImportMember')" disabled>
+                    Import members <i class='bx bx-chevron-right float-end'></i>
+                    <div class="blankStateButton mt-1">Import multiple members by using our excel file. Download, fill up, then upload to our system.</div>
+                </button>
+                <button class="btn btn-outline-primary text-start" style="text-transform: none;" onclick="return MemberAction('AddMember')" disabled>
+                    Add a member <i class='bx bx-chevron-right float-end'></i>
+                    <div class="blankStateButton mt-1">Do it manually by filling up the provided form.</div>
+                </button>
+                <!-- <a class="btn btn-outline-primary text-start" style="text-transform: none;" href="{{host_address}}/member-list">
+                    Add package <i class='bx bx-chevron-right float-end'></i>
+                    <div class="blankStateButton mt-1">You can manage members by using packages. </div>
+                </a> -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script>
+</script>
+{% endblock %}

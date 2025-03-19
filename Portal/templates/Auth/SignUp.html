@@ -1,0 +1,196 @@
+{% extends "../LoginBase.html" %}
+{% block style %}
+<style>
+    .customCheckbox {
+        width: 1.23em;
+        height: 1.23em;
+        margin-top: 0.135em;
+        vertical-align: top;
+    }
+
+    .valid{
+        color: green;
+    }
+
+    .invalid{
+        color: red;
+    }
+</style>
+{% endblock %}
+{% block quote %}
+<h2 style="color: #000;">For your employees,</h2>
+<h2 style="color: #000;"> members and customers.</h2>
+{% endblock %}
+{% block content %}
+<h5 class="text-large" style="color: black;">Registration</h5>
+<p>Already a member? <a href="{{host_address}}" style="color: #3498DB;"><u>Sign in here.</u></a></p>
+
+<form method="POST">
+    {% csrf_token %}
+    <h6 class="text-uppercase">Account Information</h6>
+    <br>
+    <div class="input-group input-group-dynamic mb-3">
+        <label class="form-label text-capitalize">Company Name <b style="color: red;">*</b></label>
+        <input id="companyName" name="companyName" type="text" class="form-control" required>
+    </div>
+    <div class="input-group input-group-dynamic mb-3">
+        <label class="form-label text-capitalize">Company Registration Number <b style="color: red;">*</b></label>
+        <input id="registrationNumber" name="registrationNumber" type="text" class="form-control" required>
+    </div>
+    <div class="input-group input-group-dynamic mb-3">
+        <label class="form-label text-capitalize">Company Email <b style="color: red;">*</b></label>
+        <input id="companyEmail" name="companyEmail" class="form-control" type="email" required>
+    </div>
+    <div class="mb-3 form-password-toggle">
+        <div class="input-group input-group-dynamic mb-3 input-group-merge">
+            <label class="form-label text-capitalize">Password <b style="color: red;">*</b></label>
+            <input id="password" name="password" class="form-control" name="password" type="password" oninput="validatePassword()" required>
+            <span role="button" onclick="toggleIcon()"><i class="bx bx-hide" onclick="toggleIcon()" aria-hidden="true" id="icon"></i></span>
+        </div>
+        <div class="input-group input-group-dynamic mb-3 input-group-merge">
+            <label class="form-label text-capitalize">Confirm Password <b style="color: red;">*</b></label>
+            <input id="confirm-password" name="password" class="form-control" name="password" type="password" oninput="confirmPassword()" required>
+        </div>
+        <div>
+            <label id="confirm" class="invalid" style="display:none;">"Confirm Password" does not match with "Password" field.</label>
+        </div>
+        <div id="message">
+            <h10>Password must contain the following:</h10><br>
+            <label id="length" class="invalid">Minimum of 8 characters</label><br>
+            <label id="digit" class="invalid">At least one digit</label><br>
+            <label id="lowercase" class="invalid">At least one lowercase</label><br>
+            <label id="uppercase" class="invalid">At least one uppercase</label><br>
+            <label id="special" class="invalid">At least one non-alphanumeric character</label><br>
+        </div>
+    </div>
+    <div class="form-check" style="padding-left:0px; display: inline-flex;">
+        <input class="customCheckbox" type="checkbox" id="termOfUseID" name="termOfUseID" onchange="criteriaCheck()">
+        <label class="custom-control-label" for="register">I have read the <a onclick="NewTab('TOU')" style="color: #3498DB;cursor:pointer;"><u>Terms of Use</u></a> and <a onclick="NewTab('PS')" style="color: #3498DB;cursor:pointer;"><u>Privacy Statement</u></a>.</label>
+    </div>
+    <button type="submit" class=" input-group btn btn-primary btn-block text-capitalize mt-3 mb-2 rounded-pill shadow-sm" id="registerBtn" disabled>Register</button>
+</form>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    function toggleIcon(){
+        var iconType = document.getElementById("password");
+        var iconType2 = document.getElementById("confirm-password");
+        if (iconType.type == "password") {
+            iconType.type = "text";
+            iconType2.type = "text";
+        } else {
+            iconType.type = "password";
+            iconType2.type = "password";
+        }
+    }
+
+    function validatePassword(){
+        var inputPassword = document.getElementById("password");
+
+        var confirm = document.getElementById("confirm-password");
+        if(confirm.value != "") {
+            if(confirm.value == inputPassword.value) {
+                document.getElementById("confirm").style.display = "none";
+            } else {
+                document.getElementById("confirm").style.display = "block";
+            }
+        }
+
+        var Digit = /[0-9]/g;
+        var Lowercase = /[a-z]/g;
+        var Uppercase = /[A-Z]/g;
+        var Special = /[!@#\$%\^&\*\(\)\[\]\.\|\+\?\{\}\\\/_\,\<\>`\~ ]/g;
+
+        var length = document.getElementById("length");
+        var digit = document.getElementById("digit");
+        var lowercase = document.getElementById("lowercase");
+        var uppercase = document.getElementById("uppercase");
+        var special = document.getElementById("special");
+        
+        if(inputPassword.value.match(Digit)) {
+            digit.classList.remove("invalid");
+            digit.classList.add("valid");
+        } else {
+            digit.classList.remove("valid");
+            digit.classList.add("invalid");
+        }
+
+        if(inputPassword.value.match(Lowercase)) {
+            lowercase.classList.remove("invalid");
+            lowercase.classList.add("valid");
+        } else {
+            lowercase.classList.remove("valid");
+            lowercase.classList.add("invalid");
+        }
+
+        if(inputPassword.value.match(Uppercase)) {
+            uppercase.classList.remove("invalid");
+            uppercase.classList.add("valid");
+        } else {
+            uppercase.classList.remove("valid");
+            uppercase.classList.add("invalid");
+        }
+
+        if(inputPassword.value.match(Special)) {
+            special.classList.remove("invalid");
+            special.classList.add("valid");
+        } else {
+            special.classList.remove("valid");
+            special.classList.add("invalid");
+        }
+
+        if(inputPassword.value.length >= 8) {
+            length.classList.remove("invalid");
+            length.classList.add("valid");
+        } else {
+            length.classList.remove("valid");
+            length.classList.add("invalid");
+        }
+        
+        criteriaCheck();
+    }
+
+    function confirmPassword() {
+        var password = document.getElementById("password");
+        var confirm = document.getElementById("confirm-password");
+
+        if(confirm.value == password.value) {
+            document.getElementById("confirm").style.display = "none";
+        } else {
+            document.getElementById("confirm").style.display = "block";
+        }
+
+        criteriaCheck();
+    }
+
+    function criteriaCheck() {
+        if( document.getElementById("digit").classList.contains("valid") && 
+        document.getElementById("lowercase").classList.contains("valid") && 
+        document.getElementById("uppercase").classList.contains("valid") && 
+        document.getElementById("special").classList.contains("valid") && 
+        document.getElementById("length").classList.contains("valid")) {
+            if(document.getElementById("password").value == document.getElementById("confirm-password").value) {
+                if(document.getElementById("termOfUseID").checked == true) {
+                    document.getElementById("registerBtn").disabled = false;
+                } else {
+                    document.getElementById("registerBtn").disabled = true;
+                }
+            } else {
+                document.getElementById("registerBtn").disabled = true;
+            }
+        } else {
+            document.getElementById("registerBtn").disabled = true;
+        }
+    }
+
+    function NewTab(doc){
+        if(doc == 'TOU'){
+            window.open("https://www.deartime.com/terms-of-use/");
+        }
+        else{
+            window.open("https://www.deartime.com/privacy-statement/");
+        }
+    }
+</script>
+{% endblock %}

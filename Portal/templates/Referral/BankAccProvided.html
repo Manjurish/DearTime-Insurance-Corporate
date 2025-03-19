@@ -1,0 +1,807 @@
+{% extends "../Referral.html" %}
+{% load static %}
+
+{% block title %}
+    <title>DearTime | Referral</title>
+{% endblock %}
+
+{% block css %}
+<style>
+  .page-link {
+    position: relative;
+    display: block;
+    padding: var(--bs-pagination-padding-y) var(--bs-pagination-padding-x);
+    font-size: var(--bs-pagination-font-size);
+    background-color: var(--bs-pagination-bg);
+    border: var(--bs-pagination-border-width) solid var(--bs-pagination-border-color);
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-link {
+      transition: none;
+    }
+  }
+    
+  .page-link:hover {
+    z-index: 2;
+    color: var(--bs-pagination-hover-color);
+    background-color: var(--bs-pagination-hover-bg);
+    border-color: var(--bs-pagination-hover-border-color);
+  }
+
+  .page-link:focus {
+    z-index: 3;
+    color: var(--bs-pagination-focus-color);
+    background-color: var(--bs-pagination-focus-bg);
+    outline: 0;
+    box-shadow: var(--bs-pagination-focus-box-shadow);
+  }
+
+  .page-link.active,
+  .active>.page-link {
+    z-index: 3;
+    color: var(--bs-pagination-active-color);
+    background-color: var(--bs-pagination-active-bg);
+    border-color: var(--bs-pagination-active-border-color);
+  }
+
+  .page-link.disabled,
+  .disabled>.page-link {
+    color: var(--bs-pagination-disabled-color);
+    pointer-events: none;
+    background-color: var(--bs-pagination-disabled-bg);
+    border-color: var(--bs-pagination-disabled-border-color);
+  }
+
+  .page-item:first-child .page-link {
+    border-top-left-radius: var(--bs-pagination-border-radius);
+    border-bottom-left-radius: var(--bs-pagination-border-radius);
+  }
+
+  .page-item:last-child .page-link {
+    border-top-right-radius: var(--bs-pagination-border-radius);
+    border-bottom-right-radius: var(--bs-pagination-border-radius);
+  }
+
+  .page-item.active .page-link {
+    box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.09), 0 2px 3px -1px rgba(0, 0, 0, 0.07);
+  }
+
+  .page-item .page-link,
+  .page-item span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7b809a;
+    padding: 0;
+    margin: 0 3px;
+    border-radius: 20% !important;
+    width: 36px;
+    height: 36px;
+    font-size: 0.875rem;
+  }
+  .dropdownStatement {
+    position: relative;
+    display: inline-block;
+    width:150px;
+    height: auto;
+  }
+  .dropdown-content{
+    display:none;
+    border-radius: 15px;
+    position:absolute;
+    top: 0%;
+    width:100%;
+    background-color: #f1f1f1;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index:1;
+    float:right;
+  }
+  .dropdown-content a{
+    color:black;
+    padding:12px 16px;
+    text-decoration: none;
+    display:block;
+  }
+  .dropdown-content a:hover {background-color: #ddd;cursor: pointer;border-radius: 10%;}
+  .show {display:block;}
+
+  .overlayPayment {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #000000;
+    overflow: hidden;
+    width: 65%;
+    height: 100%;
+    opacity: 0.3;
+    transition: .5s linear;
+    display: none;
+    z-index: 4;
+  }
+
+  .overlayPaymentRight {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #fff;
+    overflow: hidden;
+    width: 35%;
+    height: 100%;
+    opacity: 1;
+    transition: .5s linear;
+    display: none;
+    z-index: 4;
+  }
+
+  .buttonClose{
+    border-radius: 50%;
+    padding: 0.5em;
+    width: 30px;
+    height: 30px;
+    border: 1.5px solid #000000;
+    color: #000000;
+    position: relative;
+  }
+
+  .buttonClose::before {
+    content: " ";
+    position: absolute;
+    display: block;
+    background-color: #000000;
+    width: 2px;
+    left: 12px;
+    top: 5px;
+    bottom: 5px;
+    transform: rotate(45deg);
+  }
+
+  .buttonClose::after {
+    content: " ";
+    position: absolute;
+    display: block;
+    background-color: #000000;
+    height: 2px;
+    top:12px;
+    left: 5px;
+    right: 5px;
+    transform: rotate(45deg);
+  }
+
+  @media print {
+    @page {
+      size: A4;
+      margin: 24px;
+    }
+    html,body{
+      height: 99%;  /* avoid print empty page */
+    }
+    h4{
+      font-size: 24px;
+    }
+    p{
+      font-size: 16px;
+    }
+    td{
+      font-size: 14px;
+    }
+    img{
+      width  : 155px;
+      height : 40px;
+    }
+    #overlay_header{
+      position:fixed;
+      height: 80px;
+    }
+    #content_div{
+      padding-top: 50px;
+    }
+  }
+
+  @media print and (orientation: portrait){
+    .imageQR {
+      position: absolute;
+      top: 34%;
+      left: 8%;
+      width: 32%;
+      height: 22%;
+    }
+    .bgQR {
+      width: 100%;
+      height: 100%;
+    }
+    .whiteBackground{
+      display: none;
+    }
+  }
+
+  @media print and (orientation: landscape){
+    .imageQR {
+      position: absolute;
+      top: 34%;
+      left: 12%;
+      width: 23%;
+      height: 23%;
+    }
+    .bgQR {
+      width: 100%;
+      height: 100%;
+    }
+    .whiteBackground{
+      position: absolute;
+      background-color: white;
+      top: 34%;
+      left: 9%;
+      width: 32%;
+      height: 22%;
+    }
+  }
+
+</style>
+{% endblock %}
+
+{% block header %}
+<div class="col-8" style="margin-top: 10px;">
+  <h4>Referral</h4>
+  <div style="width:60%">
+    <p>Refer individuals and legal entities to DearTime and receive up to 10% of your referees' premium as Thanksgiving gifts whenever the premium are paid.<a href="{{host_address}}/static/referral/Terms and Conditions.pdf" target="_blank"> See Terms & Conditions</a>.</p>  </div>
+</div>
+{% endblock %}
+
+{% block sub_content %}
+<div class="content_overlay">
+  <div style="display:flex">
+    <div class="content_area">
+      <div class="col-8" style="width: auto;">
+        <a id="refereesButton" class="btn" style="margin:5px;border-radius: 99px;box-shadow: none;color:white;text-transform: none;background-color: #836E49;" onclick="displayRefereesPayments('referees')">Referees</a>
+        <a id="paymentButton" class="btn btn-primary" style="margin:5px;background-color:#E7E0D6;border-radius: 99px;box-shadow: none;color:#836E49;text-transform: none;" onclick="displayRefereesPayments('payment')">Payments</a>
+      </div>
+      <p></p>
+      <div id="referees_table" style="display:block"> 
+        <p>List of Thanksgiving your Referees allocate to you:</p>
+        <table class="table">
+          <thead>
+            <th class="text-uppercase text-muted letter-spacing-2" style="text-align: left;width: 10px;">Joined</th>
+            <th class="text-uppercase text-muted letter-spacing-2" style="text-align: left;width: 15px;">Name</th>
+            <th class="text-uppercase text-muted letter-spacing-2" style="text-align: right;width: 10px">Thanksgiving</th>
+          </thead>
+          {% for page in referralList %}
+          {% if not page.has_previous %}
+          <tbody id="1_referralTable">
+            {% for referee in page %}
+            <tr style="height:48px;">
+              <td style="text-align: left;width: 10px;font-size:14px;line-height: 20px;font:bold">{{referee.created_at | date:"d/m/Y" }}</td>
+              <td style="text-align: left;width: 15px;font-size:14px;line-height: 20px;"><span style="font-weight: 400;">{{referee.referee_name}}</span></td>
+              {% if referee.thanksgiving == 0 %}
+                <td style="text-align: right;width: 10px;font-size:14px;line-height: 20px;">-</td>
+              {% else %}
+                <td style="text-align: right;width: 10px;font-size:14px;line-height: 20px;"><span style="font-weight: 600;">{{referee.thanksgiving}}%</span></td>
+              {% endif %}
+            </tr> 
+            {% endfor %}
+          </tbody>
+          {% else %}
+          <tbody id="{{page.number}}_referralTable" hidden>
+            {% for referee in page %}
+            <tr style="height:48px;">
+              <td style="text-align: left;width: 10px;font-size:14px;line-height: 20px;font:bold">{{referee.created_at | date:"d/m/Y" }}</td>
+              <td style="text-align: left;width: 15px;font-size:14px;line-height: 20px;"><span style="font-weight: 400;">{{referee.referee_name}}</span></td>
+              {% if referee.thanksgiving == 0 %}
+                <td style="text-align: right;width: 10px;font-size:14px;line-height: 20px;">-</td>
+              {% else %}
+                <td style="text-align: right;width: 10px;font-size:14px;line-height: 20px;"><span style="font-weight: 600;">{{referee.thanksgiving}}%</span></td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+          {% endif %}
+          {% endfor %}
+        </table>
+        <div style="text-align: center;margin:15px;">
+          <input id="npage" type="hidden" value="{{referralList.num_pages}}">
+          <span id="pageSpan" style="font-size: small;">Page 1 of {{referralList.num_pages}}</span>
+        </div>
+        <div class="d-flex align-items-center justify-content-center">
+          <nav aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item first" id="first_referralTableBtn">
+                <button class="page-link" style="background-color:#F8F4EE; border:none;color:black;" onclick="first('referralTable')"><i class="bx bx-chevrons-left"></i></button>
+              </li>
+              <li class="page-item prev" id="prev_referralTableBtn">
+                <button class="page-link" style="background-color:#F8F4EE; border:none;color:black;"  onclick="prev('referralTable')">Prev</button>
+              </li>
+              <div id="divReferralTable" style="display:inline-flex">
+              {% for page in referralList.page_range %}
+                <li class="page-item {% if page == 1 %}active{% endif %}" id="{{page}}_referralTableBtn" >
+                  <button class="page-link" onclick="pageMember('{{page}}')">{{page}}</button>
+                </li>
+              {% endfor %}
+              </div>
+              <li class="page-item next" id="next_referralTableBtn">
+                <button class="page-link" style="background-color:#F8F4EE; border:none;color:black;"  onclick="next('referralTable', '{{referralList.num_pages}}')">Next</button>
+              </li>
+              <li class="page-item last" id="last_referralTableBtn">
+                <button class="page-link" style="background-color:#F8F4EE; border:none;color:black;"  onclick="last('referralTable', '{{referralList.num_pages}}')"><i class="bx bx-chevrons-right"></i></button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <div id="payments_table" style="display:none">
+        <div class="input-group input-group-dynamic mb-4" style="align-items: center;height:auto; display: block;">
+          <p style="width:45%;margin-right: 10px;float: left;height: 100%;">Total Referral gifts you have received over the year. You can <a type="button" href="javascript:void(0)" onclick="showOverlay('Year')">view & print the annual statements here.</a></p>
+          <div style="float:right;display:block;height:100%;">
+            <div style="display:flex;align-items: center; width:100%;margin-bottom: 20px;">
+              {% for payment in paymentList %}
+                {% if payment.year == currentYear %}
+                  <p style="font-size: medium;color:black;width:20%;">RM<p id="total_amount_p" style="font-size: 48px;color:black;margin-left:10px;margin-right:25px;">{{payment.totalAmount | floatformat:2}}</p></p>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <div class="row" style="position:relative;height:20px;width:100%;">
+              <button id="year_btn" class="btn btn-outline-primary mx-3 dropbtn dropbtn" style="width:150px;border-radius: 99px;box-shadow: none;text-transform: none;position:absolute;right:0%;bottom: 20%;padding:5px" onclick="showDropdown()">In year: {{currentYear}} <i class="fa fa-angle-down"></i>
+              </button>
+              <div class="dropdownStatement">
+                <input id="showYear" type="hidden" value="{{currentYear}}">
+                <div id="dropdown" class="dropdown-content" style="align-items: center;">
+                  {% for payment in paymentList %}
+                  {% if payment.year == currentYear %}
+                    <a style="margin:auto;" id="{{payment.year}}_option" value="{{payment.year}}" onclick="populatePaymentTable('{{years}}','{{payment.year}}','{{payment.totalAmount}}')">{{payment.year}}<span style="float:right;"><i class="fa-solid fa-check"></i></span></a>
+                  {% else %}
+                    <a id="{{payment.year}}_option" value="{{payment.year}}" onclick="populatePaymentTable('{{years}}','{{payment.year}}','{{payment.totalAmount}}')">{{payment.year}}</a>
+                  {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+        {% for payment in paymentList %}
+        <table class="table" id="{{payment.year}}_table" style="display: none;">
+          <thead>
+            <th class="text-uppercase text-muted letter-spacing-2" style="text-align: left;width: 20%;">Month</th>
+            <th class="text-uppercase text-muted letter-spacing-2" style="text-align: left;width: 40%;">Reference No.</th>
+            <th class="text-uppercase text-muted letter-spacing-2" style="text-align: right;width: 30%">Amount</th>
+            <th style="width:10%"></th>
+          </thead>
+          <tbody>
+            {% for detail in payment.paymentPerYear %}
+            <tr style="height:48px;">
+              <td style="text-align: left;font-size:14px;width: 10px;"><span style="font-weight: 400;">{{detail.month}}</span></td>
+              <td style="text-align: left;font-size:14px;width: 15px;"><span style="font-weight: 400;">{{detail.referenceNo | default_if_none:"-"}}</span></td>
+              {% if detail.amount is None %}
+                <td style="text-align: right;font-size:14px;width: 10px"><span style="font-weight: 600;">-</span></td>
+                <td style="text-align:center"><a type="button" id="{{payment.year}}_{{detail.month}}_btn"><i class="bx bx-chevron-right"></i></a></td>
+              {% else %}
+              <td style="text-align: right;font-size:14px;width: 10px"><span style="font-weight: 600;">RM{{detail.amount | floatformat:2}}</span></td>
+              <td style="text-align:center"><a type="button" id="{{payment.year}}_{{detail.month}}_btn" onclick="showOverlay('{{payment.year}}_{{detail.month}}')"><i class="bx bx-chevron-right"></i></a></td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>      
+        </table>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="share_referral_area">
+      <div class="card mb-3" style="background: #F5F0E8;width:400px;">
+        <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;
+        align-items: center;padding:16px;gap:20px;border-top-left-radius: 15px;border-top-right-radius: 15px;">
+          <h6>Share your link</h6>
+          <p>You can refer DearTime to your staff and customers by sharing your referral code directly, sharing your referral link via chat apps or social medias, or embedding the referral link into you business web/app for maximum impact.</p>
+        </div>
+        <div class="card-body pt-4" style="border: 1px solid #E7E0D6;background-color: #F8F4EE;
+        align-items: center;padding:16px;">
+            <h6 style="text-transform: uppercase;">Referral code</h3>
+            <div style="align-items: center;border: 1px solid #E7E0D6;height:60px;border-radius: 15px;padding:10px;">
+              <b id="referralCode" style="font-size: 20px;">{{referralCode}}</b>
+              <a class="btn btn-primary" style="border-radius: 10px;box-shadow: none;background-color:#E7E0D6;color:#57534E;text-transform: none;position:absolute;right:25px;" onclick="copyItem('code')">Copy</a>
+            </div>
+        </div>
+        <div class="card-body pt-4" style="border: 1px solid #E7E0D6;background-color: #F8F4EE;
+        align-items: center;padding:16px;">
+            <h6 style="text-transform: uppercase;">Referral Link</h3>
+            <div style="align-items: center;border: 1px solid #E7E0D6;height:auto;border-radius: 15px;padding:10px;">
+              <p id="referralLink" style="max-width:300px;display:inline-block; width: 75%;">{{referralLink}}
+              </p>
+              <a class="btn btn-primary" style="border-radius: 10px;box-shadow: none;background-color:#E7E0D6;color:#57534E;text-transform: none;position:absolute;right:25px;width:20%" onclick="copyItem('link')">Copy</a>
+            </div>
+        </div>
+        <div class="card-body pt-4" style="border: 1px solid #E7E0D6;background-color: #F8F4EE;
+        align-items: center;border-bottom-left-radius: 15px;border-bottom-right-radius: 15px;height:auto;">
+          <p style="font-size: 15px;width:55%;display:inline-block;">Share the referral link with your staff and customers</p>
+          <a class="btn" href="mailto:?subject=Introducing DearTime - Malaysia's 1st Fully Digital Life Insurer&body=Have you heard of DearTime? Join me by signing up through my link below and be my Referee.%0D%0A 
+          {{host_address}}%0D%0A" style="border-radius: 10px;box-shadow: none;color:white;text-transform: none;position:absolute;right:25px;background-color: #836E49;width:40%;">Email Referral Link</a>
+        </div>
+      </div>
+
+      <div class="card mb-3" style="background: #F5F0E8;width:400px;">
+        <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;
+        align-items: center;padding:16px;gap:20px;border-top-left-radius: 15px;border-top-right-radius: 15px;">
+          <h6>QR Code</h6>
+          <p>Print the QR code for your Referees to scan in-person.</p>
+        </div>
+        <div class="card-body pt-4" style="border: 1px solid #E7E0D6;background-color: #F8F4EE;
+        align-items: center;padding:16px;">
+            <div id="qrCodeArea" class="input-group input-group-dynamic mb-4">
+              <img id="qrCode" class="noprint" src="{{host_address}}/media/{{company.company_name}}/{{company.company_name}}.png" style="width:100px;height:100px;display:block;margin-left:auto;margin-right:auto;"/>
+              <!-- <img id="qrCode" class="noprint" src="{{host_address}}/static/referral/referralQR/{{company.company_name}}.png" style="width:100px;height:100px;display:block;margin-left:auto;margin-right:auto;"/> -->
+            </div>
+        </div>
+        <div class="card-body pt-4" style="border: 1px solid #E7E0D6;background-color: #F8F4EE;
+        align-items: center;padding:16px;border-bottom-left-radius: 15px;border-bottom-right-radius: 15px;margin:0;height:80px">
+            <div class="input-group input-group-dynamic mb-4" style="align-items: center;">
+              <p>Preview and print</p>
+              <a class="btn" style="background-color: #836E49 ;border-radius: 15px;box-shadow: none;color:white;text-transform: none;position:absolute;right:10px;" onclick="PrintImage('{{host_address}}/media/{{company.company_name}}/{{company.company_name}}.png');">Print</a>
+              <!-- <a class="btn" style="background-color: #836E49 ;border-radius: 15px;box-shadow: none;color:white;text-transform: none;position:absolute;right:10px;" onclick="PrintImage('{{host_address}}/static/referral/referralQR/{{company.company_name}}.png');">Print</a> -->
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="qrTemplate" style="display:none;width:100%;height:100%;position:relative;">
+    <img class="bgQR" src="{% static "portal/img/QR-code-A5-v2.png" %}">
+    <img class='imageQR' src="{{host_address}}/media/{{company.company_name}}/{{company.company_name}}.png">
+</div>
+<div class="overlayPayment" id="overlayPayment">
+</div>
+<div class="overlayPaymentRight" id="overlayPaymentRight">
+  {% for payment in paymentList %}
+    {% for detail in payment.paymentPerYear %}
+    <!-- monthly statement -->
+      <div class="container" id="{{payment.year}}_{{detail.month}}_overlay" style="display:none;height:100%;width:100%;overflow:auto;">
+        <div class="row m-3" style="position:relative;">
+          <div class="d-flex justify-content-between" id="overlay_header" style="padding:0px;">
+            <h4 class="text-large" style="color: black; padding:10px;">Statement {{detail.month}}, {{payment.year}}</h4>
+            <button class="buttonClose" id="{{payment.year}}_{{detail.month}}_closeBtn" aria-label="Close" onclick="return CloseOverlay()"></button>
+            <!-- <div id="pageNum" class="pageNum"></div> -->
+          </div>
+        </div>
+        <p></p>
+        <div id="content_div" class="container" style="position:relative;">
+          <div>
+            <img src="{% static "portal/img/logo.png" %}" alt="dt logo" style="width:150px;">
+          </div>
+          <p>&nbsp;</p>
+          <div>
+            <p>Dear {{company.company_name}},</p>
+            <p>We are pleased to inform you that the following amount has been credited to your account.</p>
+          </div>
+          <hr style="border: solid 0.2px;"> 
+          <div style="padding-top: 16px;">
+            <p style="font-size: 14px; color:#A8A29E;margin:0px;">Reference Number</p>
+            <p style="color:black">{{detail.referenceNo}}</p>
+          </div>
+          <div style="display:flex;">
+            <div>
+              <p style="font-size: 14px; color:#A8A29E;margin:0px;">Account Number</p>
+              <p id="account_number" style="color:black">{{accountNo}}</p>
+            </div>
+            <a class="btn btn-primary" id="{{payment.year}}_{{detail.month}}_copyBtn" style="border-radius: 10px;box-shadow: none;background-color:white;color:#000000;text-transform: none;position:absolute;right:25px;" onclick="copyItem('accountNo')">Copy</a>
+          </div>
+          <div>
+            <p style="font-size: 14px; color:#A8A29E;margin:0px;">Transaction Date</p>
+            <p style="color:black">{{detail.transactionDate | date:'d/m/Y'}}</p>
+          </div>
+          <div>
+            <p style="font-size: 16px; color:#A8A29E;margin:0px;">Total Amount</p>
+            <div style="display:flex;align-items: center;">
+              <p style="color:black;font-size: 16px; font-weight: 600;">RM </p>
+              <p style="color:black;font-size: 28px; font-weight: 700;margin-left: 5px;">{{detail.amount | floatformat:2}}</p>
+            </div>
+          </div>
+          <div style="border-top: 3px solid #000000;padding-top:20px;">
+            <p style="font-size: 14px; color:#A8A29E;margin:0px;">Gratitude From:</p>
+            <table class="table" style="width:100%;">
+              <tbody>
+              {% for information in detail.paymentListPerMonth %}
+              <tr class="{{ forloop.counter }}_table-row">
+                <td style="text-align: left;font-size:14px;width: 80%;">{{information.to_referee}}</td>
+                <td style="text-align: right;font-size:14px;width: 20%;">RM{{information.individualAmount | floatformat:2}</td>
+              </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div style="text-align: center;">
+            <a class="btn btn-outline-primary" id="{{payment.year}}_{{detail.month}}_printBtn" style="border-radius: 25px;text-transform: none;" onclick="printStatement('{{payment.year}}_{{detail.month}}','Monthly Statement')" type="button">Print Statement</a>
+            {% comment %} <a class="btn btn-outline-primary" id="{{payment.year}}_{{detail.month}}_shareBtn" style="border-radius: 25px;text-transform: none;" onclick="shareStatement('{{payment.year}}_{{detail.month}}','Monthly Statement')" type="button">Share Statement</a> {% endcomment %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+    <!-- annual statement  -->
+    <div class="container" id="{{payment.year}}_overlay" style="display:none;height:100%;width:100%;overflow:auto;">
+      <div class="row m-3" style="position:relative;">
+        <div class="d-flex justify-content-between"  id="overlay_header" style="padding:0px;">
+          <h4 class="text-large" style="color: black; padding:10px;">Statement Year {{payment.year}}</h4>
+          <button class="buttonClose" id="{{payment.year}}_closeBtn" aria-label="Close" onclick="return CloseOverlay()"></button>
+        </div>
+      </div>
+      <p></p>
+      <div id="content_div" class="container" style="position:relative;">
+        <div>
+          <img src="{% static "portal/img/logo.png" %}" style="width:150px;">
+        </div>
+        <p>&nbsp;</p>
+        <div>
+          <p>Dear {{company.company_name}},</p>
+          <p>This is the annual statement for year {{payment.year}}.</p>
+        </div>
+        <hr style="border: solid 0.2px;"> 
+        <div>
+          <p style="font-size: 16px; color:#A8A29E;margin:0px;">Total Amount</p>
+          <div style="display:flex;align-items: center;">
+            <p style="color:black;font-size: 16px; font-weight: 600;">RM </p>
+            {% if payment.totalAmount is None %}
+              <p style="color:black;font-size: 28px; font-weight: 700;margin-left: 5px;">0.00</p>
+            {% else %}
+              <p style="color:black;font-size: 28px; font-weight: 700;margin-left: 5px;">{{payment.totalAmount | floatformat:2}}</p>
+            {% endif %}
+          </div>
+        </div>
+        <div style="border-top: 3px solid #000000;padding-top:20px;">
+          <table class="table" style="width:100%">
+            <tbody>
+            {% for detail in payment.paymentPerYear %}
+            <tr>
+              <td style="text-align: left;font-size:14px;width: 80%;">{{detail.month}}</td>
+              {% if detail.amount is None %}
+                <td style="text-align: right;font-size:14px;width: 20%;">-</td>
+              {% else %}
+                <td style="text-align: right;font-size:14px;width: 20%;">RM{{detail.amount | floatformat:2}}</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div style="text-align: center;">
+          <a class="btn btn-outline-primary" style="border-radius: 25px;text-transform: none;width:140px" id="{{payment.year}}_printBtn" onclick="printStatement('{{payment.year}}','Annual Statement')" type="button">Print Statement</a>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    var openOverlay = ''
+    function showOverlay(module){
+      if(module=='Year')
+      {
+        module = document.getElementById('showYear').value;
+      }
+      overlayLeft = document.getElementById('overlayPayment').style.display = 'block';
+      overlayRight = document.getElementById('overlayPaymentRight').style.display = 'block';
+      overlayContent = document.getElementById(module+'_overlay');
+      overlayContent.style.display = 'block';
+      openOverlay = module;
+    }
+
+    function CloseOverlay(){
+      overlayLeft = document.getElementById('overlayPayment');
+      overlayRight = document.getElementById('overlayPaymentRight');
+      overlayLeft.style.display = 'none';
+      overlayRight.style.display = 'none';
+      if (openOverlay!=''){
+        document.getElementById(openOverlay+'_overlay').style.display='none';
+      }
+    }
+
+    //populate payment table
+    tableNum = document.getElementById('showYear').value;
+    document.getElementById(tableNum+'_table').style.display = '';
+
+    function displayRefereesPayments(table){
+      if(table=='referees'){
+        document.getElementById('referees_table').style.display='block';
+        document.getElementById('payments_table').style.display='none';
+        document.getElementById('refereesButton').style.background='#836E49';
+        document.getElementById('refereesButton').style.color='#FFF';
+        document.getElementById('paymentButton').style.background='#E7E0D6';
+        document.getElementById('paymentButton').style.color='#836E49';
+      }else{
+        document.getElementById('referees_table').style.display='none';
+        document.getElementById('payments_table').style.display='block';
+        document.getElementById('refereesButton').style.background='#E7E0D6';
+        document.getElementById('refereesButton').style.color='#836E49';
+        document.getElementById('paymentButton').style.background='#836E49';
+        document.getElementById('paymentButton').style.color='#FFF';
+      }
+    }
+
+    const unsecuredCopyToClipboard = (text) => { const textArea = document.createElement("textarea"); textArea.value=text; document.body.appendChild(textArea); textArea.focus();textArea.select(); try{document.execCommand('copy')}catch(err){console.error('Unable to copy to clipboard',err)}document.body.removeChild(textArea)};
+    function copyItem(item){
+      if(item == 'code'){
+        var copyText = document.getElementById('referralCode').innerText;
+        // navigator.clipboard.writeText(copyText)
+        unsecuredCopyToClipboard(copyText);
+        toastr.success('Share it with your friends!','Copied');
+      }else if(item == 'link'){
+        var copyText = document.getElementById('referralLink').innerText;
+        // navigator.clipboard.writeText(copyText)
+        unsecuredCopyToClipboard(copyText);
+        toastr.success('Share it with your friends!','Copied');
+      }else{
+        var copyText = document.getElementById('account_number').innerText;
+        navigator.clipboard.writeText(copyText)
+        toastr.success('Copied');
+      }
+    }
+
+    function PrintImage(source){
+      var qrTemplate = document.getElementById('qrTemplate');
+      var originalTemplate = document.body.innerHTML;
+      document.body.innerHTML = qrTemplate.innerHTML;
+      window.print();
+      window.close();
+      document.body.innerHTML = originalTemplate;
+      document.getElementById('qrTemplate').style.display = 'none';
+    }
+
+    function pageMember(p) {
+      var button = document.getElementById(p+"_referralTableBtn");
+      var div = document.getElementById('divReferralTable');
+
+      for (let i = 0; i < div.children.length; i++) {
+        div.children[i].classList.remove("active");
+        document.getElementById((i+1)+'_referralTable').hidden = true;
+      }
+      var span = document.getElementById('pageSpan');
+      var num_pages = document.getElementById('npage');
+      span.innerText = 'Page '+p+' of '+num_pages.value;
+      button.classList.add("active");
+      document.getElementById(p+"_referralTable").hidden = false;
+    }
+    
+    function first(t) {
+      table = document.getElementById('1_'+t);
+      button = document.getElementById('1_'+t+'Btn');
+      div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+      for (let i = 0; i < div.children.length; i++) {
+        div.children[i].classList.remove('active');
+        document.getElementById((i+1)+'_'+t).hidden = true;
+      }
+      button.classList.add('active');
+      table.hidden = false;
+    }
+
+    function last(t, num_pages) {
+      table = document.getElementById(num_pages+'_'+t);
+      button = document.getElementById(num_pages+'_'+t+'Btn');
+      div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+      for (let i = 0; i < div.children.length; i++) {
+        div.children[i].classList.remove('active');
+        document.getElementById((i+1)+'_'+t).hidden = true;
+      }
+      button.classList.add('active');
+      table.hidden = false;
+    }
+
+    function prev(t) {
+      div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+      for (let i = 0; i < div.children.length; i++) {
+        if (div.children[i].classList.contains('active') && i+1!=1) {
+          div.children[i].classList.remove('active');
+          div.children[i-1].classList.add('active');
+          document.getElementById((i+1)+'_'+t).hidden = true;
+          document.getElementById(i+'_'+t).hidden = false;
+          break
+        }
+      }
+    }
+
+    function next(t, num_pages) {
+      div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+      for (let i = 0; i < div.children.length; i++) {
+        if (div.children[i].classList.contains('active') && i+1!=num_pages) {
+          div.children[i].classList.remove('active');
+          div.children[i+1].classList.add('active');
+          document.getElementById((i+1)+'_'+t).hidden = true;
+          document.getElementById((i+2)+'_'+t).hidden = false;
+          break
+        }
+      }
+    }
+
+    function showDropdown(){
+      document.getElementById('dropdown').classList.toggle('show');
+    }
+
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+
+    let lastTableSelected = document.getElementById('showYear').value;
+    function populatePaymentTable(years,year,totalAmount){
+      var selectedTable = document.getElementById(year+'_table');
+      if(lastTableSelected){
+        document.getElementById(lastTableSelected+"_table").style.display = "none";
+      }
+      lastTableSelected = year;
+      if(lastTableSelected!=""){
+        selectedTable.style.display="";
+        document.getElementById('year_btn').innerHTML = "In year: "+year+" <i class='fa fa-angle-down'></i>";
+        document.getElementById('showYear').value = year;
+
+        // change tick in select year option
+        years = JSON.parse(years)
+        for(i=0;i<years.length;i++){
+          document.getElementById(years[i]+'_option').innerHTML = years[i]
+        }
+        document.getElementById(year+'_option').innerHTML = year + " <span style='float:right;''><i class='fa-solid fa-check'></i></span>";
+        
+        //populate total amount
+        totalAmount = parseFloat(totalAmount).toFixed(2);
+        document.getElementById('total_amount_p').innerText = totalAmount
+      }
+    }
+
+    function printStatement(overlay,title){
+      window.PagedConfig = { auto: false };
+      document.getElementById(overlay+'_printBtn').style.display = 'none'
+      // document.getElementById(overlay+'_shareBtn').style.display = 'none'
+      document.getElementById(overlay+'_closeBtn').style.display = 'none'
+      if(title=='Monthly Statement'){
+        document.getElementById(overlay+'_copyBtn').style.display = 'none'
+      }
+      // document.getElementById('pageNum').style.display = 'block'
+
+      //hard code leave spaces in second page
+      var i=24;
+      $('table tr').each(function() {
+          if($(this).hasClass('6_table-row')) 
+          {
+            this.style.borderBottom = '190px solid transparent';
+          }
+          if($(this).hasClass(i+'_table-row')) 
+          {
+            this.style.borderBottom = '190px solid transparent';
+            i=i+18;
+          }
+      })
+
+      var printContent  = document.getElementById(overlay+'_overlay').innerHTML;
+      var originalContent = document.body.innerHTML;
+      document.body.innerHTML = printContent;
+      window.print();
+      document.body.innerHTML = originalContent;
+
+      document.getElementById(overlay+'_printBtn').style.display = ''
+      // document.getElementById(overlay+'_shareBtn').style.display = ''
+      document.getElementById(overlay+'_closeBtn').style.display = ''
+      if(title=='Monthly Statement'){
+        document.getElementById(overlay+'_copyBtn').style.display = ''
+      }
+      // document.getElementById('pageNum').style.display = 'none'
+      var i=24;
+      $('table tr').each(function() {
+          if($(this).hasClass('6_table-row')) 
+          {
+            this.style.borderBottom = null;
+          }
+          if($(this).hasClass(i+'_table-row')) 
+          {
+            this.style.borderBottom = null;
+            i=i+18;
+          }
+      })
+      return true;
+    }
+</script>
+{% endblock %}

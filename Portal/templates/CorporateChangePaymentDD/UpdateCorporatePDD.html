@@ -1,0 +1,735 @@
+{% extends "../AdminBase.html" %}
+{% block title %}
+<title>DearTime |  Change Corporate Payment Due Date</title>
+{% endblock %}
+{% block css %}
+<style>
+    .blankStateButton {
+      width: 250px;
+      height: 60px;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+      color: #9B8A6C;
+    }
+  
+    .pClassCustomLabel{
+      font-size: 12px;
+    }
+  
+    .pClassCustomDescription{
+      font-size: 14px;
+      color:black;
+    }
+  
+    .table td{
+      padding-left: 0px;
+    }
+    .table th{
+      padding-left: 0px;
+    }
+    .dropdownReject {
+      position: relative;
+      display: inline-block;
+    }
+    .dropdown-contentReject {
+      display: none;
+      position: absolute;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1000;
+      margin: 0;
+      text-align: left;
+      background-clip: padding-box;
+    }
+    .dropdown-contentReject a {
+      --bs-dropdown-min-width: 11rem;
+      --bs-dropdown-padding-x: 0;
+      --bs-dropdown-padding-y: 0.5rem;
+      --bs-dropdown-spacer: 1.625rem;
+      --bs-dropdown-font-size: 0.875rem;
+      --bs-dropdown-color: #7b809a;
+      --bs-dropdown-bg: #fff;
+      --bs-dropdown-border-color: transparent;
+      --bs-dropdown-border-radius: 0.375rem;
+      --bs-dropdown-border-width: 0;
+      --bs-dropdown-inner-border-radius: 0.375rem;
+      --bs-dropdown-divider-bg: transparent;
+      --bs-dropdown-divider-margin-y: 0.5rem;
+      --bs-dropdown-box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --bs-dropdown-link-color: #7b809a;
+      --bs-dropdown-link-hover-color: #344767;
+      --bs-dropdown-link-hover-bg: #f0f2f5;
+      --bs-dropdown-link-active-color: #7b809a;
+      --bs-dropdown-link-active-bg: transparent;
+      --bs-dropdown-link-disabled-color: #6c757d;
+      --bs-dropdown-header-color: #6c757d;
+      --bs-dropdown-header-padding-x: 1rem;
+      --bs-dropdown-header-padding-y: 0.5rem;
+      position: absolute;
+      z-index: 1000;
+      min-width: var(--bs-dropdown-min-width);
+      padding: var(--bs-dropdown-padding-y) var(--bs-dropdown-padding-x);
+      margin: 0;
+      font-size: var(--bs-dropdown-font-size);
+      color: var(--bs-dropdown-color);
+      text-align: left;
+      list-style: none;
+      background-color: var(--bs-dropdown-bg);
+      background-clip: padding-box;
+      border: var(--bs-dropdown-border-width) solid var(--bs-dropdown-border-color);
+      border-radius: var(--bs-dropdown-border-radius);
+  
+      color: black;
+      padding: 12px 16px;
+      display: block;
+    }
+    .dropdown:hover .dropdown-contentReject {display: block;}
+  
+    .modalLabel {
+      font-style: italic;
+      margin:0;
+    }
+    
+    .custom-dropdown {
+      border: thin solid grey;
+      border-radius: 5px;
+      width: 115px;
+      padding: 1px 1px 1px 5px;
+      margin: 0px;
+      text-transform: none;
+      color: #9B8A6C;
+      background: transparent;
+      height: 25px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+</style> 
+  {% endblock %}
+  {% block page_title %}
+  <div class="navbar-brand"><h5 class="fw-bold">{{ company.company_name }}</h5></div>
+  {% endblock %}
+  {% if messages %}
+  {% for message in messages %}
+      <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+  {% endfor %}
+{% endif %}
+{% block content %}
+{% if messages %}
+  <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+{% endif %}
+
+
+<div class="container-xxl flex-grow-1" style="height:100%;overflow:hidden">
+  <div class="content-wrapper mt-3">
+    <div class="container mb-4" style="margin: 0px; max-width: 1920px;">
+      <div class="row">
+        <div class="col-6">
+          <h4>Company Current Date Ammendment</h4>
+        </div>
+        <div class="col-3" style="width:80%">
+          <form method ="POST" action="{{host_address}}/company-modify-PDD">
+            {% csrf_token %}
+            <div class="col-6">
+              <div class="nav-item d-flex align-items-center">
+                <i class="bx bx-search fs-4 lh-0 me-3"></i>
+                <div style="border: thin solid lightgrey; border-radius: 5px; width: 270px; margin-right: 5px;">
+                  <input
+                    id="searchCompany"
+                    name="searchCompany"
+                    type="text"
+                    class="form-control border-0 shadow-none"
+                    placeholder="Search Corporate by Corporate Name..."
+                    value="{% if filterCompany %}{{filterCompany}}{% endif %}"
+                    {% comment %} style="width: 100%; box-sizing: border-box; padding: 5px;" {% endcomment %}
+                  >
+                </div>
+                <div class="nav-item d-flex align-items-center">
+                  <button type="submit" class="btn btn-outline-primary me-1" style="margin: 0px; text-transform: none; color: #9B8A6C;">
+                    Filter
+                  </button> 
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-8" style="text-align:right;width:20%;">
+          <div class="row">
+            <div class="col">
+              <a role="button" class="btn btn-outline-primary" style="text-align: center;" href="{{host_address}}/company-approval">Back</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-nowrap">
+      <table class="table">
+        <thead>
+          <tr>
+            {% comment %} <th style="width:2%; text-align:left">
+              <div class="form-check">
+                <input class="form-check-input" style="border: thin solid #000" type="checkbox" id="selectAllCheckbox" onclick="selectAll();">
+              </div>
+            </th>  {% endcomment %}
+            <th rowspan="2" style="text-align: center;width:5%;">#</th>
+            <th class="text-uppercase" rowspan="2" style="text-align: center;width:20%;">Company</th>
+            <th class="text-uppercase text-muted" style="text-align: center; width:10%;" rowspan="2">Current Date</th>
+            <th class="text-uppercase text-muted" rowspan="2" style="text-align: center;width:5%;" hidden>Actions</th>
+            <th class="text-uppercase text-muted" rowspan="2" style="text-align: center;width:5%;">Actions</th>
+            <th class="text-uppercase text-muted" rowspan="2" style="text-align: center;width:5%;">Reset Date</th>
+          </tr>
+        </thead>
+        {% for page in company_lists %}
+        {% if not page.has_previous %}
+        <tbody id="1_companyTable">
+          {% for cmp in page %}
+          {% if cmp.rejected == False %}
+          <tr>
+            <td style="font-size: 15px; text-align: center;">{{ forloop.counter }}.</td>
+            <td style="text-align:left">
+              <div class="dropdown">
+                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px; text-align: center;">
+                  {{ cmp.company_name }}
+                </button>
+                <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                  <div class="px-3 py-2 text-muted">
+                    {% if cmp.submitted %}
+                      <p class="mb-0">Company Registration Number</p>
+                      <p class="mb-0" style="font-weight: bold;">{{ cmp.registration_no }}</p>
+                      <p class="mb-0">Company Email</p>
+                      <p class="mb-0" style="font-weight: bold;">{{ cmp.email_address }}</p>
+                      <p class="mb-0">Company Telephone Number</p>
+                      <p class="mb-0" style="font-weight: bold;">{{ cmp.contact1 }}</p>
+                      <p class="mb-0">Company Address</p>
+                      <p class="mb-0" style="font-weight: bold;">
+                        {{ cmp.address_line1 }}<br>
+                        {% if cmp.address_line2 %}
+                          {{ cmp.address_line2 }}<br>
+                        {% else %}
+                        {% endif %}
+                        {% if cmp.address_line3 %}
+                          {{ cmp.address_line3 }}<br>
+                        {% else %}
+                        {% endif %}
+                        {{ cmp.city }}<br>
+                        {{ cmp.state }}<br>
+                        {{ cmp.postcode }}
+                      </p>
+                    {% else %}
+                      <p class="mb-0">Company Registration Number</p>
+                      <p class="mb-0" style="font-weight: bold;">{{ cmp.registration_no }}</p>
+                      <p class="mb-0">Company Email</p>
+                      <p class="mb-0" style="font-weight: bold;">{{ cmp.email_address }}</p>
+                      <p class="mb-0">Company Telephone Number</p>
+                      <p class="mb-0" style="font-weight: bold;">{{ cmp.contact1|default_if_none:"-" }}</p>
+                      <p class="mb-0">Company Address</p>
+                      <p class="mb-0" style="font-weight: bold;">-</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </td>
+            {% if cmp.submitted %}
+              <td style="font-size: 15px; text-align: center;">{{ cmp.current_date|slice:"8:"|default_if_none:"-" }}-{{ cmp.current_date|slice:"5:7"|default_if_none:"-" }}-{{ cmp.current_date|slice:":4"|default_if_none:"-" }}</td>
+            {% else %}
+              <td style="font-size: 15px; text-align: center;">-</td>
+            {% endif %}
+            <td style="text-align:center" hidden>
+              <div class="ms-auto d-flex justify-content-center" style="text-align: center;">
+                <div class="row">
+                  <div class="col-4">
+                    <a class="btn btn-link text-info text-gradient px-3 mb-0" href="#" style="font-size: 20px !important;" data-toggle="modal" data-target="#companyPaymentModal" data-placement="top" title="Change PDD" onclick="populatePaymentDueDate('{{ cmp.payment_due_date }}', '{{ cmp.deartime_payerid }}', '{{ cmp.user }}')">
+                      <i class="fa-regular fa-calendar"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td style="text-align:center">
+              <div class="ms-auto d-flex justify-content-center" style="text-align: center;">
+                <div class="row">
+                  <div class="col-4">
+                    <a class="btn btn-link text-info text-gradient px-3 mb-0" href="#" style="font-size: 20px !important;" data-toggle="modal" data-target="#companyCurrentModal" data-placement="top" title="Change CD" onclick="populateCurrentDate('{{ cmp.current_date }}','{{ cmp.company_id }}')">
+                      <i class="fa-solid fa-calendar"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td style="text-align:center">
+              <div class="ms-auto d-flex justify-content-center" style="text-align: center;">
+                <div class="row">
+                  <div class="col-4">
+                    <a class="btn btn-link text-info text-gradient px-3 mb-0" href="#" style="font-size: 20px !important;" data-toggle="modal" data-target="#companyResetModal" data-placement="top" title="Reset CD" onclick="resetCurrentDate('{{ cmp.company_id }}')">
+                      <i class="fa-solid fa-refresh"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+        </tbody>
+        {% else %}
+        <tbody id="{{ page.number }}_companyTable" hidden>
+          {% for cmp in page %}
+            {% if not cmp.rejected %}
+            <tr>
+              <td style="font-size: 15px;">{{ forloop.counter }}.</td>
+              <td style="text-align:left">
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px; text-align: center;">
+                    {{ cmp.company_name }}
+                  </button>
+                    <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                      <div class="px-3 py-2 text-muted">
+                      {% if cmp.submitted %}
+                        <p class="mb-0">Company Registration Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.registration_no }}</p>
+                        <p class="mb-0">Company Email</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.email_address }}</p>
+                        <p class="mb-0">Company Telephone Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.contact1|default_if_none:"-"}}</p>
+                        <p class="mb-0">Company Address</p>
+                        <p class="mb-0" style="font-weight: bold;">
+                          {{ cmp.address_line1 }}<br>
+                          {% if cmp.address_line2 %}
+                            {{ cmp.address_line2 }}<br>
+                          {% else %}
+                          {% endif %}
+                          {% if cmp.address_line3 %}
+                            {{ cmp.address_line3 }}<br>
+                          {% else %}
+                          {% endif %}
+                          {{ cmp.city }}<br>
+                          {{ cmp.state }}<br>
+                          {{ cmp.postcode }}
+                        </p>
+
+                      {% else %}
+                        <p class="mb-0">Company Registration Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.registration_no }}</p>
+                        <p class="mb-0">Company Email</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.email_address }}</p>
+                        <p class="mb-0">Company Telephone Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.contact1|default_if_none:"-"}}</p>
+                        <p class="mb-0">Company Address</p>
+                        <p class="mb-0" style="font-weight: bold;">-</p>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              {% if cmp.submitted %}
+                <td style="font-size: 15px; text-align: center;">{{ cmp.current_date|slice:"8:"|default_if_none:"-" }}-{{ cmp.current_date|slice:"5:7"|default_if_none:"-" }}-{{ cmp.current_date|slice:":4"|default_if_none:"-" }}</td>
+              {% else %}
+                <td style="font-size: 15px; text-align: center;">-</td>
+              {% endif %}
+              <td style="text-align:center" hidden>
+                <div class="ms-auto d-flex justify-content-center" style="text-align: center;">
+                  <div class="row">
+                    <div class="col-4">
+                      <a class="btn btn-link text-info text-gradient px-3 mb-0" href="#" style="font-size: 20px !important;" data-toggle="modal" data-target="#companyPaymentModal" data-placement="top" title="Change PDD" onclick="populatePaymentDueDate('{{ cmp.payment_due_date }}', '{{ cmp.deartime_payerid }}', '{{ cmp.user }}')">
+                        <i class="fa-regular fa-calendar"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="text-align:center">
+                <div class="ms-auto d-flex justify-content-center" style="text-align: center;">
+                  <div class="row">
+                    <div class="col-4">
+                      <a class="btn btn-link text-info text-gradient px-3 mb-0" href="#" style="font-size: 20px !important;" data-toggle="modal" data-target="#companyCurrentModal" data-placement="top" title="Change CD" onclick="populateCurrentDate('{{cmp.current_date}}','{{ cmp.company_id }}')">
+                        <i class="fa-solid fa-calendar"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="text-align:center">
+                <div class="ms-auto d-flex justify-content-center" style="text-align: center;">
+                  <div class="row">
+                    <div class="col-4">
+                      <a class="btn btn-link text-info text-gradient px-3 mb-0" href="#" style="font-size: 20px !important;" data-toggle="modal" data-target="#companyResetModal" data-placement="top" title="Change CD" onclick="resetCurrentDate('{{ cmp.company_id }}')">
+                        <i class="fa-solid fa-refresh"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+        {% endif %}
+        {% endfor %}
+      </table>
+      <div class="d-flex align-items-center justify-content-center">
+        <nav aria-label="Page navigation">
+          <ul class="pagination">
+            <li class="page-item first" id="first_companyTableBtn">
+              <button class="page-link" onclick="first('companyTable')"><i class="bx bx-chevrons-left"></i></button>
+            </li>
+            <li class="page-item prev" id="prev_companyTableBtn">
+              <button class="page-link" onclick="prev('companyTable')"><i class="bx bx-chevron-left"></i></button>
+            </li>
+            <div id="divCompanyTable" style="display:inline-flex">
+            {% for page in company_lists.page_range %}
+              <li class="page-item {% if page == 1 %}active{% endif %}" id="{{page}}_companyTableBtn">
+                <button class="page-link" onclick="pageCompany('{{page}}')">{{page}}</button>
+              </li>
+            {% endfor %}
+            </div>
+            <li class="page-item next" id="next_companyTableBtn">
+              <button class="page-link" onclick="next('companyTable', '{{company_lists.num_pages}}')"><i class="bx bx-chevron-right"></i></button>
+            </li>
+            <li class="page-item last" id="last_companyTableBtn">
+              <button class="page-link" onclick="last('companyTable', '{{company_lists.num_pages}}')"><i class="bx bx-chevrons-right"></i></button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Company Due Date Ammendment -->
+<div class="modal fade" id="companyPaymentModal" tabindex="-1" role="dialog" aria-labelledby="companyPaymentModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="companyPaymentModal">Company Due Date Ammendment</h5>
+          </div>
+          <form method = "POST" action = "{{host_address}}/ammend-PDD">
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="dayDropdown" >Current Payment Due Date:</label>
+                    <select id="dayDropdown" class="form-control" style="display: inline-block; width: auto;">
+                      <!-- Populate with day options dynamically using JavaScript -->
+                    </select>
+                    <select id="monthDropdown" class="form-control" style="display: inline-block; width: auto;">
+                      <!-- Populate with month options dynamically using JavaScript -->
+                    </select>
+                </div>
+                <input type="hidden" id="deartimePayerID" name="deartimePayerID">
+                <input type="hidden" id="deartimeUserID" name="deartimeUserID">
+                <input type="hidden" id="ammendDayPDD" name="ammendDayPDD">
+                <input type="hidden" id="ammendMonthPDD" name="ammendMonthPDD">
+                <input type="hidden" id="hiddenDay">
+                <input type="hidden" id="hiddenMonth">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" id="confirmButton" class="btn btn-primary" onclick="submitForm()">Confirm</button>
+            </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<!-- Modal for Current Date Ammendment -->
+<div class="modal fade" id="companyCurrentModal" tabindex="-1" role="dialog" aria-labelledby="companyCurrentModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="companyCurrentModal">Company Current Date Ammendment</h5>
+          </div>
+          <form method = "POST" action = "{{host_address}}/ammend-CD">
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="currentDate">Current Date:</label>
+                    <!-- <select id="cdayDropdown" class="form-control" style="display: inline-block; width: auto;">
+                    </select>
+                    <select id="cmonthDropdown" class="form-control" style="display: inline-block; width: auto;">
+                    </select> -->
+                    <input type="date" name="currentDate" id="currentDate">
+                </div>
+                <input type="hidden" id="corporate_id" name="corporate_id">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" id="confirmButton" name="action" value="save" class="btn btn-primary">Confirm</button>
+            </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<!-- Modal for Current Date Reset -->
+<div class="modal fade" id="companyResetModal" tabindex="-1" role="dialog" aria-labelledby="companyResetModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="companyResetModal">Company Current Date Reset</h5>
+          </div>
+          <form method = "POST" action = "{{host_address}}/reset-CD">
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="form-group">
+                    <h6>Are you certain that you wish to revert your current date to its original state?</h6>
+                </div>
+                <input type="hidden" id="corporate-id" name="corporate-id">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" id="confirmButton" name="action" value="save" class="btn btn-primary">Confirm</button>
+            </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block javascript%}
+<script>
+let selectedUserIds = [];
+
+function selectAll() {
+  const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+  for (let i = 0; i < checkboxes.length; i++) {
+    const checkbox = checkboxes[i];
+    if (checkbox.id !== 'selectAllCheckbox') {
+      checkbox.checked = selectAllCheckbox.checked;
+      const userId = checkbox.id.replace('ClearSelectedUser', '');
+      if (selectAllCheckbox.checked) {
+        selectedUserIds.push(userId);
+      } else {
+        const index = selectedUserIds.indexOf(userId);
+        if (index !== -1) {
+          selectedUserIds.splice(index, 1);
+        }
+      }
+    }
+  }
+  updateMemberIdField();
+}
+
+function pageCompany(p) {
+  var button = document.getElementById(p+"_companyTableBtn");
+  var div = document.getElementById('divCompanyTable');
+
+  for (let i = 0; i < div.children.length; i++) {
+    div.children[i].classList.remove("active");
+    document.getElementById((i+1)+'_companyTable').hidden = true;
+  }
+  button.classList.add("active");
+  document.getElementById(p+"_companyTable").hidden = false;
+}
+
+function first(t) {
+  table = document.getElementById('1_'+t);
+  button = document.getElementById('1_'+t+'Btn');
+  div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+  for (let i = 0; i < div.children.length; i++) {
+    div.children[i].classList.remove('active');
+    document.getElementById((i+1)+'_'+t).hidden = true;
+  }
+  button.classList.add('active');
+  table.hidden = false;
+}
+
+function last(t, num_pages) {
+  table = document.getElementById(num_pages+'_'+t);
+  button = document.getElementById(num_pages+'_'+t+'Btn');
+  div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+  for (let i = 0; i < div.children.length; i++) {
+    div.children[i].classList.remove('active');
+    document.getElementById((i+1)+'_'+t).hidden = true;
+  }
+  button.classList.add('active');
+  table.hidden = false;
+}
+
+function prev(t) {
+  div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+  for (let i = 0; i < div.children.length; i++) {
+    if (div.children[i].classList.contains('active') && i+1!=1) {
+      div.children[i].classList.remove('active');
+      div.children[i-1].classList.add('active');
+      document.getElementById((i+1)+'_'+t).hidden = true;
+      document.getElementById(i+'_'+t).hidden = false;
+      break
+    }
+  }
+}
+
+function next(t, num_pages) {
+  div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+  for (let i = 0; i < div.children.length; i++) {
+    if (div.children[i].classList.contains('active') && i+1!=num_pages) {
+      div.children[i].classList.remove('active');
+      div.children[i+1].classList.add('active');
+      document.getElementById((i+1)+'_'+t).hidden = true;
+      document.getElementById((i+2)+'_'+t).hidden = false;
+      break
+    }
+  }
+}
+
+// function populatePaymentDueDate(paymentDueDate, deartimePayerID, deartimeUserID) {
+//   // Extract day and month from the paymentDueDate (in the format YYYY-MM-DD)
+//   const dateParts = paymentDueDate.split('-');
+//   const day = String(dateParts[2]).padStart(2, '0');
+//   const month = String(dateParts[1]).padStart(2, '0');
+
+//   document.getElementById('deartimePayerID').value = deartimePayerID;
+//   document.getElementById('deartimeUserID').value = deartimeUserID;
+
+//   // Populate the day dropdown
+//   const dayDropdown = document.getElementById('dayDropdown');
+//   for (let i = 1; i <= 31; i++) {
+//       const option = document.createElement('option');
+//       option.value = String(i).padStart(2, '0');
+//       option.textContent = String(i).padStart(2, '0');
+//       dayDropdown.appendChild(option);
+//   }
+//   dayDropdown.value = day; // Set the selected day
+
+//   // Populate the month dropdown
+//   const monthDropdown = document.getElementById('monthDropdown');
+//   const months = [
+//       'January', 'February', 'March', 'April', 'May', 'June',
+//       'July', 'August', 'September', 'October', 'November', 'December'
+//   ];
+//   for (let i = 1; i <= 12; i++) {
+//       const option = document.createElement('option');
+//       const monthValue = String(i).padStart(2, '0');
+//       option.value = monthValue;
+//       option.textContent = months[i - 1];
+//       monthDropdown.appendChild(option);
+//   }
+//   monthDropdown.value = month; // Set the selected month
+
+//   // Show the modal
+//   const modal = new bootstrap.Modal(document.getElementById('companyPaymentModal'));
+//   modal.show();
+// }
+
+function populateCurrentDate(current_date, deartimeUserID) {
+  // Extract day and month from the current_date (in the format YYYY-MM-DD)
+  const dateParts = current_date.split('-');
+  const day = String(dateParts[2]).padStart(2, '0');
+  const month = String(dateParts[1]).padStart(2, '0');
+
+  document.getElementById('corporate_id').value = deartimeUserID;
+
+  var currentDate = document.getElementById("currentDate");
+
+  if(current_date != ''){
+    currentDate.value = current_date
+  }
+
+
+  // // Populate the day dropdown
+  // const cdayDropdown = document.getElementById('cdayDropdown');
+  // for (let i = 1; i <= 31; i++) {
+  //     const option = document.createElement('option');
+  //     option.value = String(i).padStart(2, '0');
+  //     option.textContent = String(i).padStart(2, '0');
+  //     cdayDropdown.appendChild(option);
+  // }
+  // cdayDropdown.value = day; // Set the selected day
+
+  // // Populate the month dropdown
+  // const cmonthDropdown = document.getElementById('cmonthDropdown');
+  // const months = [
+  //     'January', 'February', 'March', 'April', 'May', 'June',
+  //     'July', 'August', 'September', 'October', 'November', 'December'
+  // ];
+  // for (let i = 1; i <= 12; i++) {
+  //     const option = document.createElement('option');
+  //     const monthValue = String(i).padStart(2, '0');
+  //     option.value = monthValue;
+  //     option.textContent = months[i - 1];
+  //     cmonthDropdown.appendChild(option);
+  // }
+  // cmonthDropdown.value = month; // Set the selected month
+
+
+
+  // Show the modal
+  const modal = new bootstrap.Modal(document.getElementById('companyCurrentModal'));
+  modal.show();
+}
+function resetCurrentDate(deartimeUserID) {
+
+  document.getElementById('corporate-id').value = deartimeUserID;
+  
+  const modal = new bootstrap.Modal(document.getElementById('companyResetModal'));
+  modal.show();
+}
+// function submitCdForm() {
+//     // Access form elements and retrieve their values
+//     const dayValue = document.getElementById('cdayDropdown').value;
+//     const monthValue = document.getElementById('cmonthDropdown').value;
+//     const corporateId = document.getElementById('corporate_id').value;
+
+//     // Submit the form
+//     document.querySelector('form').submit();
+// }
+
+function submitForm() {
+  const ammendDayPDD = document.getElementById('dayDropdown').value;
+  const ammendMonthPDD = document.getElementById('monthDropdown').value;
+
+  // Set the values of the hidden fields
+  document.getElementById('ammendDayPDD').value = ammendDayPDD;
+  document.getElementById('ammendMonthPDD').value = ammendMonthPDD;
+  
+  // Submit the form
+  document.querySelector('form').submit();
+}
+
+
+function updateMemberIdField() {
+  const memberIdField = document.getElementById('memberIdField');
+  memberIdField.value = selectedUserIds.join(',');
+}
+
+function SubmitUserIdForm(){
+  document.getElementById('users_tb_cleared').submit();
+}
+
+function displayModal(event){
+  event.preventDefault();
+  $('#ClearMemberConfirmationModal').modal('show');
+  document.getElementById('memberIdField').value = selectedUserIds.join(',');
+  return false;
+}
+
+function clearUsers(memberID){
+  var checkbox = document.getElementById(`ClearSelectedUser${memberID}`);
+  var memberIdField = document.getElementById('memberIdField');
+  if (checkbox){
+    if(checkbox.checked){
+      // Add the selected user ID to the list
+      if (!selectedUserIds.includes(memberID)) {
+        selectedUserIds.push(memberID);
+      }
+    } else {
+      // Remove the user ID from the list if unchecked
+      const index = selectedUserIds.indexOf(memberID);
+      if (index !== -1) {
+        selectedUserIds.splice(index, 1);
+      }
+
+      memberIdField.value = selectedUserIds.join(',');
+    }
+  }
+}
+
+</script>
+{% endblock %}
+
+

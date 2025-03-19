@@ -1,0 +1,22 @@
+{% extends '../EmailTemplateBase.html' %}
+{% load static %}
+{% block content %}
+<p>Hi {{ payor }},</p>
+
+{% if isReminder %}
+<p> Reminder. </p>
+{% endif %}
+
+{% if afterPDD %}
+<p> Coverage(s) for all your members was due on {{ premiumDD }}. </p>
+{% else %}
+<p> Coverage(s) for all your members will be due on {{ premiumDD }}. </p>
+{% endif %}
+
+<p> You may proceed to select members to be renewed and generate the invoice before you make a premium payment.</p>
+
+<p> Please be informed that you must make a premium payment within the {{ invoiceDate }} days from the invoice generated date else the invoice will be voided.</p>
+
+<p>Thank you.</p>
+    
+{% endblock %}

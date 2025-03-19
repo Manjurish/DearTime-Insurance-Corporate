@@ -1,0 +1,455 @@
+{% load static %}
+<!DOCTYPE html>
+
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-template="vertical-menu-template-free"
+>
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+        />
+        {% block title %} {% endblock %}
+        <meta name="description" content="" />
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/x-icon" href="{% static "portal/img/favicon.png" %}" />
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Icons. Uncomment required icon fonts -->
+        <link rel="stylesheet" href="{% static "fontawesome-free-6.2.1-web/css/all.css" %}" />
+        <link rel="stylesheet" href="{% static "fontawesome-free-6.2.1-web/css/fontawesome.css" %}" />
+        <link rel="stylesheet" href="{% static "fontawesome-free-6.2.1-web/css/regular.css" %}" />
+        <link rel="stylesheet" href="{% static "portal/fonts/boxicons.css" %}" />
+
+        <!-- Core CSS -->
+        <link rel="stylesheet" href="{% static "external/css/dropzone.css" %}" class="template-customizer-core-css" />
+        <link rel="stylesheet" href="{% static "portal/css/core.css" %}" class="template-customizer-core-css" />
+        <link rel="stylesheet" href="{% static "portal/css/theme-default.css" %}" class="template-customizer-theme-css" />
+        <link rel="stylesheet" href="{% static "material/css/material-kit.css" %}" class="template-customizer-core-css" />
+        <!-- <link rel="stylesheet" href="../assets/css/demo.css" /> -->
+
+        <!-- Vendors CSS -->
+        <link rel="stylesheet" href="{% static "portal/libs/perfect-scrollbar.css" %}" />
+
+        <link rel="stylesheet" href="{% static "portal/css/toastr.css" %}">
+
+        <!-- Page CSS -->
+        <script src="https://kit.fontawesome.com/c3c32dbdee.js" crossorigin="anonymous"></script>
+        <!-- Helpers -->
+        <script src="{% static "fontawesome-free-6.2.1-web/js/all.js" %}"></script>
+        <script src="{% static "fontawesome-free-6.2.1-web/js/fontawesome.js" %}"></script>
+        <script src="{% static "fontawesome-free-6.2.1-web/js/regular.js" %}"></script>
+        <script src="{% static "portal/js/helpers.js" %}"></script>
+
+        <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+        <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+        <script src="{% static "portal/js/config.js" %}"></script>
+        <script src="{% static "material/js/material-kit.js" %}"></script>
+        <script src="{% static "external/js/jquery-3.6.4.min.js" %}"></script>
+        <script src="{% static "external/js/dropzone.js" %}"></script>
+        <script src="{% static "portal/js/toastr.js" %}"></script>
+        <script src="{% static "material/js/bodymovin/5.7.4/lottie.min.js" %}"></script>
+        <style>
+            .break {
+                flex-basis: 100%;
+                height: 0;
+            }
+            .overlay {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                background-color: #000000;
+                overflow: hidden;
+                width: 65%;
+                height: 100%;
+                opacity: 0.3;
+                transition: .5s linear;
+                display: none;
+                z-index: 4;
+            }
+
+            .overlayRight {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                background-color: #fff;
+                overflow: hidden;
+                width: 35%;
+                height: 100%;
+                opacity: 1;
+                transition: .5s linear;
+                display: none;
+                z-index: 4;
+            }
+
+            .pclassCustom{
+                color: #78716C;
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 20px;
+            }
+
+            .dropzone {
+                background: #F8F4EE;
+                border-radius: 15px;
+                border: 1.5px dashed #A8A29E;
+                border-image: none;
+                max-width: 100%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .bottomButton{
+                position: static; 
+                bottom: 0;
+                width: 100%; 
+                background: #E7E0D6;
+                width: 100%;
+                height: 75px;
+            }
+
+            .collapseDiv{
+                width: 100%;
+                outline: none;
+                background: #F5F5F4;
+                border-radius: 8px;
+                height: 48px;
+            }
+
+            .collapseDiv:hover,.collapseDiv:active,.collapseDiv:focus{
+                width: 100%;
+                outline: none;
+                background: #F5F5F4;
+                border-radius: 8px;
+                height: 48px;
+            }
+
+            .dropdown .dropdown-toggle.collapsed:after {
+                transform: rotate(180deg);
+                float:right;
+            }
+
+            .dropdown .dropdown-toggle:after
+            {
+                content: "\f106";
+                font: normal normal normal 14px/1 FontAwesome;
+                border: none;
+                vertical-align: middle;
+                font-weight: 600;
+                float:right;
+            }
+
+            .containerCustom {
+                border : 1px solid #CBC2B2;
+                border-radius: 15px;
+                background: #F8F4EE;
+                color: #000;
+            }
+
+            .form-range{
+                background: #DBEAFE;
+                border-radius: 15px;
+                width: 350px;
+                height: 52px;
+                padding: 10px 16px;
+                color: #BFDBFE;
+            }
+
+            .buttonClose{
+                border-radius: 50%;
+                padding: 0.5em;
+                width: 30px;
+                height: 30px;
+                border: 1.5px solid #000000;
+                color: #000000;
+                position: relative;
+            }
+
+            .buttonClose::before {
+                content: " ";
+                position: absolute;
+                display: block;
+                background-color: #000000;
+                width: 2px;
+                left: 12px;
+                top: 5px;
+                bottom: 5px;
+                transform: rotate(45deg);
+            }
+
+            .buttonClose::after {
+                content: " ";
+                position: absolute;
+                display: block;
+                background-color: #000000;
+                height: 2px;
+                top:12px;
+                left: 5px;
+                right: 5px;
+                transform: rotate(45deg);
+            }
+
+            .buttonCloseSecondary{
+                border-radius: 50%;
+                padding: 0.5em;
+                width: 30px;
+                height: 30px;
+                border: 1.5px solid #2563EB;
+                color: #000000;
+                position: relative;
+            }
+
+            .buttonCloseSecondary::before {
+                content: " ";
+                position: absolute;
+                display: block;
+                background-color: #2563EB;
+                width: 2px;
+                left: 12px;
+                top: 5px;
+                bottom: 5px;
+                transform: rotate(45deg);
+            }
+
+            .buttonCloseSecondary::after {
+                content: " ";
+                position: absolute;
+                display: block;
+                background-color: #2563EB;
+                height: 2px;
+                top:12px;
+                left: 5px;
+                right: 5px;
+                transform: rotate(45deg);
+            }
+        
+            .tableCustom {
+                --bs-table-bg: transparent;
+                --bs-table-accent-bg: transparent;
+                --bs-table-striped-color: #697a8d;
+                --bs-table-striped-bg: #f9fafb;
+                --bs-table-active-color: #697a8d;
+                --bs-table-active-bg: rgba(67, 89, 113, 0.1);
+                --bs-table-hover-color: #697a8d;
+                --bs-table-hover-bg: rgba(67, 89, 113, 0.06);
+                width: 100%;
+                margin-bottom: 1rem;
+                color: #697a8d;
+                vertical-align: middle;
+                border : 2px solid #2563EB;
+                border-radius: 15px;
+                background: #EFF6FF;
+            }
+
+            .tableCustom > :not(caption) > * > * {
+                padding: 0.625rem 1.25rem;
+                background-color: var(--bs-table-bg);
+                border-bottom-width: 1px;
+                box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+            }
+
+            .tableCustom > tbody {
+                vertical-align: inherit;
+            }
+
+            .tableCustom > thead {
+                vertical-align: bottom;
+            }
+
+            .tableCustom > :not(:first-child) {
+                border-top: 2px solid #d9dee3;
+            }
+
+            .tableCustom tr:last-child > td {
+                border-bottom-width: 0px;
+            }
+        
+            .tableCustom:not(.table-dark) th{
+                color: #60A5FA;
+            }
+            .dropzone .dz-preview .dz-error-message {
+                top: 150px!important;
+            }
+        </style>
+        {% block css %} {% endblock %}
+    </head>
+
+    <body>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-content-navbar" style="background: #F8F4EE;">
+            <div class="layout-container">
+                <div class="content-wrapper">
+                    
+                    {% if messages %}
+                        {% for message in messages %}
+                            <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+                        {% endfor %}
+                    {% endif %}
+                    {% block content %} {% endblock %}
+                    <!-- Footer -->
+                    <footer class="content-footer footer">
+                        <div class="container-xxl d-flex flex-wrap py-2 flex-md-row flex-column">
+                            {% block footerContent %} {% endblock %}
+                            <div class="mb-2 mb-md-0">
+                                <img src="{% static "portal/img/favicon-removebg-preview.png" %}" width="40px" height="40px">
+                            </div>
+                        </div>
+                    </footer>
+                    <!-- / Footer -->
+                    <div class="content-backdrop fade"></div>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            function CloseOverlay(){
+                var overlayLeft = document.getElementById("baseOverlayLeft");
+                var overlayRight = document.getElementById("baseOverlayRight");
+                var overlayAddMember = document.getElementById("addMemberOverlay");
+                var overlayImportMember = document.getElementById("importMemberOverlay");
+                overlayLeft.style.display = "none";
+                overlayRight.style.display = "none";
+                overlayImportMember.style.display = "none";
+                overlayAddMember.style.display = "none";
+            }
+        
+            function updateRangeValue(rangeId, inputValue){
+                const inputSlider = document.getElementById(rangeId);
+                const inputBox = document.getElementById(inputValue);
+                inputBox.value = parseInt(inputSlider.value);
+            }
+
+            function updateSliderValue(rangeId, inputValue){
+                const inputSlider = document.getElementById(rangeId);
+                const inputBox = document.getElementById(inputValue);
+                inputSlider.value = parseInt(inputBox.value);
+            }
+
+            function MemberAction(actionType){
+                var overlayLeft = document.getElementById("baseOverlayLeft");
+                var overlayRight = document.getElementById("baseOverlayRight");
+                var overlayAddMember = document.getElementById("addMemberOverlay");
+                var overlayImportMember = document.getElementById("importMemberOverlay");
+                var overlayEditMember = document.getElementById("editMemberOverlay");
+                if (actionType == "ImportMember"){
+                    overlayLeft.style.display = "block";
+                    overlayRight.style.display = "block";
+                    overlayImportMember.style.display = "block";
+                    overlayAddMember.style.display = "none";
+                    overlayEditMember.style.display = "none";
+                }
+                else if(actionType == "AddMember"){
+                    overlayLeft.style.display = "block";
+                    overlayRight.style.display = "block";
+                    overlayImportMember.style.display = "none";
+                    overlayAddMember.style.display = "block";
+                    overlayEditMember.style.display = "none";
+                }
+                else if(actionType == "EditMember"){
+                    overlayLeft.style.display = "block";
+                    overlayRight.style.display = "block";
+                    overlayImportMember.style.display = "none";
+                    overlayAddMember.style.display = "none";
+                    overlayEditMember.style.display = "block";
+                }
+            }
+
+            function ProductType(){
+                var productType = document.getElementById("product_name");
+                var death = document.getElementById("deathCoverage");
+                var disability = document.getElementById("disabilityCoverage");
+                var criticalIllness = document.getElementById("criticalIllnessCoverage");
+                var accident = document.getElementById("accidentCoverage");
+                var medical = document.getElementById("medicalCoverage");
+
+                if (productType.value == "death"){
+                    death.style.display = "block";
+                    disability.style.display = "none";
+                    criticalIllness.style.display = "none";
+                    accident.style.display = "none";
+                    medical.style.display = "none";
+                }
+                else if(productType.value == "disability"){
+                    death.style.display = "none";
+                    disability.style.display = "block";
+                    criticalIllness.style.display = "none";
+                    accident.style.display = "none";
+                    medical.style.display = "none";
+                }
+                else if(productType.value == "illness"){
+                    death.style.display = "none";
+                    disability.style.display = "none";
+                    criticalIllness.style.display = "block";
+                    accident.style.display = "none";
+                    medical.style.display = "none";
+                }
+                else if(productType.value == "accident"){
+                    death.style.display = "none";
+                    disability.style.display = "none";
+                    criticalIllness.style.display = "none";
+                    accident.style.display = "block";
+                    medical.style.display = "none";
+                }
+                else if(productType.value == "medical"){
+                    death.style.display = "none";
+                    disability.style.display = "none";
+                    criticalIllness.style.display = "none";
+                    accident.style.display = "none";
+                    medical.style.display = "block";
+                }
+                else {
+                    death.style.display = "none";
+                    disability.style.display = "none";
+                    criticalIllness.style.display = "none";
+                    accident.style.display = "none";
+                    medical.style.display = "none";
+                }
+            }
+        </script>
+        <!-- Core JS -->
+        <!-- build:js assets/vendor/js/core.js -->
+        <script src="{% static "portal/js/jquery.js" %}"></script>
+        <script src="{% static "portal/js/popper.js" %}"></script>
+        <script src="{% static "portal/js/bootstrap.js" %}"></script>
+        <script src="{% static "portal/js/perfect-scrollbar.js" %}"></script>
+
+        <script src="{% static "portal/js/menu.js" %}"></script>
+        <!-- endbuild -->
+
+        <!-- Main JS -->
+        <script src="{% static "portal/js/main.js" %}"></script>
+
+        <!-- Page JS -->
+        <script src="{% static "portal/js/dashboards-analytics.js" %}"></script>
+
+        <!-- Place this tag in your head or just before your close body tag. -->
+        <script async defer src="https://buttons.github.io/buttons.js"></script>
+        {% block javascript %}
+        {% endblock %}
+    </body>
+</html>

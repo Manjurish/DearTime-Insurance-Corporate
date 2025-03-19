@@ -1,0 +1,182 @@
+{% extends '../EmailLink/EmailLinkExpiredBase.html' %}
+{% load static %}
+{% block title %}
+<title>Member Invitation Accepted</title>
+{% endblock %}
+{% block css%}
+<style>
+  html {
+    box-sizing: border-box;
+  }
+
+  header,
+  section {
+    display: block;
+  }
+
+  header {
+    background: #F8F4EE;
+    border-radius: 15px 15px 0 0;
+    margin: 0 5px 0 0;
+
+  }
+
+  body {
+    background: #F0F8FF none repeat scroll 0 0;
+    color: #222;
+    font-size: 100%;
+    line-height: 24px;
+    margin: 0;
+    padding: 0;
+    font-family: "Raleway", sans-serif;
+    justify-content: center;
+    display: flex;
+  }
+
+  a {
+    font-family: "Raleway", sans-serif;
+    text-decoration: none;
+    outline: none;
+    text-align: center;
+  }
+
+  a:hover,
+  a:focus {
+    color: #373e18;
+  }
+
+  section {
+    float: left;
+    width: 100%;
+    padding-bottom: 3em;
+  }
+
+
+  body,
+  div,
+  h1,
+  p {
+    padding: 0;
+    margin: 0;
+    outline: none;
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 16px;
+    color: #666;
+  }
+
+  .main-block {
+    max-width: 450px;
+    min-height: 450px;
+    margin: auto;
+    margin-left: 10%;
+    margin-right: 10%;
+    border-radius: 20px;
+    border: solid 1px #ccc;
+    box-shadow: 10px 10px 50px 5px grey;
+    background: #fff;
+  }
+
+  svg {
+    width: 30%;
+    margin: 0 5% 3vh;
+  }
+
+  .message {
+    margin: auto;
+    padding: 0 2em;
+  }
+
+  .message h1 {
+    color: black;
+    font-size: 35px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    line-height: 1.1em;
+    font-weight: bold;
+  }
+
+  .message p {
+    color: #262C34;
+    font-size: 1.3em;
+    font-weight: lighter;
+    line-height: 1.1em;
+  }
+
+  a.button {
+    width: 100%;
+    padding: 10px 0;
+    margin: auto;
+    border-radius: 8px;
+    border: none;
+    background: #1c87c9;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+  }
+
+  a.button:hover {
+    background: #26a9e0;
+  }
+
+  .fa-regular  {
+    display: inline-block;
+    fill: currentColor;
+    width: 1em;
+    height: 1em;
+    text-align: center;
+    padding: 25px 0
+  }
+
+  .fa-face-frown {
+    color: #FFF;
+    font-size: 100px;
+  }
+
+  .ScriptHeader {
+    text-align: center;
+    width: 100%;
+    margin: auto;
+  }
+
+  #upper-side {
+    padding: 2em;
+    display: block;
+    color: #fff;
+    text-align: center;
+  }
+
+  #lower-side {
+    padding: 2em 2em 0 2em;
+    display: block;
+
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="main-block">
+  <header class="ScriptHeader">
+    <i class="fa-regular fa-circle-check" style="font-size: 80px; color: green;"></i>
+  </header>
+  <section>
+    <div class="message">
+      <div id="upper-side">
+        <h1>Thank you for accepting the invitation!</h1>
+        <br>
+        <p>You will be inform to perform medical survey via email.</p>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
+{% block javascript %}
+<script>
+  function loading() {
+    document.getElementById("reset").disabled = true;
+    document.getElementById("reset").style.cursor = 'progress';
+    document.getElementById("reset").innerHTML = '<i class="fa fa-spinner fa-spin"></i> Reset Password'
+  }
+</script>
+{% endblock %}

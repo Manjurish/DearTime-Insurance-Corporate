@@ -1,0 +1,11 @@
+{% extends '../EmailTemplateBase.html' %}
+{% load static %}
+{% block content %}
+<p>Hi {{companyName}}</p>
+
+
+<p>You have successfully changed the Payment Due Date to {{pdd}}.</p>
+
+
+<p>Thank you.</p>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends '../EmailTemplateBase.html' %}
+{% load static %}
+{% block content %}
+<p>Hi {{ payor }},</p>
+
+<p> We have not received the insurance premium for {{memberCount}} members who have accepted your kind action in buying DearTime's insurance for them. Please make the payment no later than {{ due_date }} to activate the coverage. </p>
+
+<a href="{{ invitationUrl }}">Pay Now</a>
+    
+{% endblock %}

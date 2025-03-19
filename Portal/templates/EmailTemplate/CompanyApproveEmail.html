@@ -1,0 +1,10 @@
+{% extends '../EmailTemplateBase.html' %}
+{% load static %}
+{% block content %}
+<p>Hi {{ corporatePayor }},</p>
+
+<p>We are pleased to inform you that your document has been successfully verified. You can now buy coverage for other people.</p>
+
+<a href="{{ loginUrl }}">Purchase Now</a>
+    
+{% endblock %}

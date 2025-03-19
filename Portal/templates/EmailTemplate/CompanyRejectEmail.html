@@ -1,0 +1,11 @@
+{% extends '../EmailTemplateBase.html' %}
+{% load static %}
+{% block content %}
+<p>Hi {{ corporatePayor }},</p>
+
+<p>We regret to inform you that the documents sent cannot be verified due to the following:-</p>
+
+<p>{{rejectReason}}</p>
+
+<p>Please contact DearTime administrators for more information.</p>
+{% endblock %}

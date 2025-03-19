@@ -1,0 +1,8 @@
+{% extends "Error/Base.html" %}
+{% block title %}
+    <title>DearTime | Internal Server Error</title>
+{% endblock %}
+{% block content %}
+    <h1 class="heading">500</h1>
+    <p class="subheading">Something went wrong. Please contact the administrator. Click <a href="{{host_address}}">here</a> to go back.</p>
+{% endblock %}

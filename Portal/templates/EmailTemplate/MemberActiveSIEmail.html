@@ -1,0 +1,8 @@
+{% extends '../EmailTemplateBase.html' %}
+{% load static %}
+{% block content %}
+<p>Hi {{ payor }},</p>
+
+<p>{{ owner }} is currently insured with DearTime. You may offer to pay for {% if gender.upper == "MALE" or gender.upper == "M" %} him {% else %} her {% endif %} again from {{next_renewal_date}} when {% if gender.upper == "MALE" or gender.upper == "M" %} his {% else %} her {% endif %} current coverage falls due.</p>
+    
+{% endblock %}

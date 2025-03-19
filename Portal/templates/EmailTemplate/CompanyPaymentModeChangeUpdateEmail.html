@@ -1,0 +1,21 @@
+{% extends '../EmailTemplateBase.html' %}
+{% load static %}
+{% block content %}
+<p>Hi {{companyName}}</p>
+
+{% if paymentMode == 'Monthly' %}
+    <p>You have successfully changed to {{paymentMode}} payment mode. It will take effect on your next premium due date {{ nextPaymentDD }}.</p>
+{% endif %}
+
+{% if paymentMode == 'Yearly' %}
+    <p>You have successfully changed to Yearly mode. Your next premium due date is on  {{ nextPaymentDD }}.</p>
+{% endif %}
+
+<!-- {% if paymentMode == 'Yearly' %}
+    <p>The invoice for the new payment mode is attached. Please make your payment using our corporate portal <a href="https://insurance.deartime.com/corporate" target="_blank" >website</a>.</p>
+{% endif %} -->
+
+<!-- <p>If you have any additional questions or need assistance, kindly call us at 03-8605 3511 or send an email to help@deartime.com.</p> -->
+
+<p>Thank you.</p>
+{% endblock %}

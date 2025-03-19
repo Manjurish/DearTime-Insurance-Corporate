@@ -1,0 +1,1454 @@
+{% load static %}
+
+<head>
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="{% static "portal/img/favicon.png" %}" />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+  rel="stylesheet"
+/>
+
+<!-- Icons. Uncomment required icon fonts -->
+<link rel="stylesheet" href="{% static "fontawesome-free-6.2.1-web/css/all.css" %}" />
+<link rel="stylesheet" href="{% static "fontawesome-free-6.2.1-web/css/fontawesome.css" %}" />
+<link rel="stylesheet" href="{% static "fontawesome-free-6.2.1-web/css/regular.css" %}" />
+<link rel="stylesheet" href="{% static "portal/fonts/boxicons.css" %}" />
+
+<!-- Core CSS -->
+<link rel="stylesheet" href="{% static "external/css/dropzone.css" %}" class="template-customizer-core-css" />
+<link rel="stylesheet" href="{% static "portal/css/core.css" %}" class="template-customizer-core-css" />
+<link rel="stylesheet" href="{% static "portal/css/theme-default.css" %}" class="template-customizer-theme-css" />
+<link rel="stylesheet" href="{% static "material/css/material-kit.css" %}" class="template-customizer-core-css" />
+<!-- <link rel="stylesheet" href="../assets/css/demo.css" /> -->
+
+<!-- Vendors CSS -->
+<link rel="stylesheet" href="{% static "portal/libs/perfect-scrollbar.css" %}" />
+
+<link rel="stylesheet" href="{% static "portal/css/toastr.css" %}">
+
+<!-- Page CSS -->
+<script src="https://kit.fontawesome.com/c3c32dbdee.js" crossorigin="anonymous"></script>
+<!-- Helpers -->
+<script src="{% static "fontawesome-free-6.2.1-web/js/all.js" %}"></script>
+<script src="{% static "fontawesome-free-6.2.1-web/js/fontawesome.js" %}"></script>
+<script src="{% static "fontawesome-free-6.2.1-web/js/regular.js" %}"></script>
+<script src="{% static "portal/js/helpers.js" %}"></script>
+
+<!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+<!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+<script src="{% static "portal/js/config.js" %}"></script>
+<script src="{% static "material/js/material-kit.js" %}"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="{% static "external/js/dropzone.js" %}"></script>
+<script src="{% static "portal/js/toastr.js" %}"></script>
+
+<style>
+    .break {
+            flex-basis: 100%;
+            height: 0;
+    }
+    .pclassCustom{
+          color: #78716C;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 20px;
+    }
+    .bottomButton{
+            position: absolute; 
+            bottom: 0;
+            width: 100%; 
+            background: #E7E0D6;
+            width: 100%;
+            height: 75px;
+    }
+    .containerCustom {
+          border : 1px solid #CBC2B2;
+          border-radius: 15px;
+          background: #F8F4EE;
+          color: #000;
+      }
+      .form-range{
+          background: #DBEAFE;
+          border-radius: 15px;
+          width: 350px;
+          height: 52px;
+          padding: 10px 16px;
+          color: #BFDBFE;
+      }
+      .buttonClose{
+        border-radius: 50%;
+        padding: 0.5em;
+        width: 30px;
+        height: 30px;
+        border: 1.5px solid #000000;
+        color: #000000;
+        position: relative;
+      }
+      .buttonClose::before {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #000000;
+        width: 2px;
+        left: 12px;
+        top: 5px;
+        bottom: 5px;
+        transform: rotate(45deg);
+    }
+    .buttonClose::after {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #000000;
+        height: 2px;
+        top:12px;
+        left: 5px;
+        right: 5px;
+        transform: rotate(45deg);
+    }
+    .buttonCloseSecondary{
+        border-radius: 50%;
+        padding: 0.5em;
+        width: 30px;
+        height: 30px;
+        border: 1.5px solid #2563EB;
+        color: #000000;
+        position: relative;
+    }
+    .buttonCloseSecondary::before {
+      content: " ";
+      position: absolute;
+      display: block;
+      background-color: #2563EB;
+      width: 2px;
+      left: 12px;
+      top: 5px;
+      bottom: 5px;
+      transform: rotate(45deg);
+    }
+    .buttonCloseSecondary::after {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #2563EB;
+        height: 2px;
+        top:12px;
+        left: 5px;
+        right: 5px;
+        transform: rotate(45deg);
+    }
+    .dropdown .dropdown-toggle.collapsed:after {
+        transform: rotate(180deg);
+        float:right;
+    }
+    .dropdown .dropdown-toggle:after
+    {
+        content: "\f106";
+        font: normal normal normal 14px/1 FontAwesome;
+        border: none;
+        vertical-align: middle;
+        font-weight: 600;
+        float:right;
+    }
+    .tableCustom {
+      --bs-table-bg: transparent;
+      --bs-table-accent-bg: transparent;
+      --bs-table-striped-color: #697a8d;
+      --bs-table-striped-bg: #f9fafb;
+      --bs-table-active-color: #697a8d;
+      --bs-table-active-bg: rgba(67, 89, 113, 0.1);
+      --bs-table-hover-color: #697a8d;
+      --bs-table-hover-bg: rgba(67, 89, 113, 0.06);
+      width: auto;
+      margin-bottom: 1rem;
+      color: #697a8d;
+      vertical-align: middle;
+      border : 2px solid #2563EB;
+      border-radius: 15px;
+      background: #EFF6FF;
+      border-collapse:unset; 
+    }
+    .tableCustom > :not(caption) > * > * {
+      padding: 0.625rem 1.25rem;
+      background-color: var(--bs-table-bg);
+      border-bottom-width: 1px;
+      box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+    }
+    .tableCustom > tbody {
+      vertical-align: inherit;
+    }
+    .tableCustom > thead {
+      vertical-align: bottom;
+    }
+    .tableCustom > :not(:first-child) {
+      border-top: 2px solid #d9dee3;
+    }
+    .tableCustom tr:last-child > td {
+      border-bottom-width: 0px;
+    }
+    .tableCustom:not(.table-dark) th{
+        color: #60A5FA;
+    }
+    .customCheckbox {
+        width: 1.23em;
+        height: 1.23em;
+        margin-top: 0.135em;
+        vertical-align: top;
+    }
+    .modal-body > div {
+      width: 100%;
+      position: relative;
+    }
+    .input-group:focus-within input[type=text] {
+      box-shadow: none;
+    }
+    div.modal-header {
+      margin-block: 16px;
+    }
+
+    #status {
+      margin-top: 3px;
+    }
+
+    select.form-select {
+      padding: 8px;
+      background-position-x: 98%;
+    }
+
+    table#summaryTable {
+      margin-block-start: 20px;
+      width: 100%;
+      top: 0;
+      border-radius: 8px;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    table#summaryTable th label {
+      margin: 0;
+      font-size: 0.8rem;
+    }
+
+    #summaryTable label {
+      font-size: 1rem
+    }
+
+    #summaryTable thead tr th {
+      text-transform: uppercase;
+    }
+
+    #summaryTable > :not(:first-child) {
+      border: 0;
+    }
+
+    #summaryTable tbody {
+      color: #333;
+    }
+
+    #collapsePackages table input, #collapsePackages table select {
+      width: 80%;
+      padding: 4px;
+      border-radius: 8px;
+      border: 1px solid #999;
+    }
+
+    #collapsePackages table select {
+      display: inline-block;
+      background-color: white;
+      background-position-x: 98%;
+      font-size: 16px;
+    }
+
+    #coverageSelection table {
+      border: 1px solid #e2e2e2;
+      border-collapse: separate;
+      border-spacing: 0;
+      padding: 24px 16px;
+      border-radius: 8px;
+      background-color: white;
+    }
+
+    #coverageSelection table thead th {
+      font-weight: 600;
+      position: relative;
+    }
+    #coverageSelection table thead th button {
+      position: absolute;
+      right: 0;
+      top: -50%;
+      padding: 8px;
+      display: inline-block;
+      margin: 0;
+      background: #e2e2e2;
+    }
+
+    #coverageSelection table tbody tr:first-child td {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 0;
+    }
+
+    #coverageSelection table tbody tr:first-child td input {
+      width: 100%;
+      padding: 8px;
+    }
+
+    div.bottomButton {
+      /* padding: 0 32px; */
+      right: 0;
+      display: flex;
+      position: relative;
+      gap: 20px;
+      margin-top: auto;
+    }
+
+    div.bottomButton button {
+      width: 100%;
+      left: 0;
+      box-shadow: none;
+      font-size: 16px;
+      height: auto;
+    }
+
+    div.bottomButton button:hover {
+      background-color: #836E49;
+      opacity: .8;
+      color: white;
+      transform: translateY(0);
+    }
+
+    .overlayRight .container form  {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    .overlay {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background-color: #000000;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        transition: .5s linear;
+        display: none;
+        z-index: 4;
+    }
+
+    .overlayRight {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        background-color: #fff;
+        overflow: hidden;
+        width: 60%;
+        max-width: 560px;
+        height: 100%;
+        opacity: 1;
+        transition: .5s linear;
+        display: none;
+        z-index: 4;
+    }
+    .faqOverlayLeft {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background-color: #000000;
+        overflow: hidden;
+        width: 70%;
+        height: 100%;
+        opacity: 0.3;
+        transition: .5s linear;
+        display: none;
+        z-index: 4;
+    }
+
+    .faqOverlayRight {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        overflow: hidden;
+        width: 30%;
+        height: auto;
+        opacity: 1;
+        transition: .5s linear;
+        display: none;
+        z-index: 4;
+        border-radius: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+    .info{
+      display: flex;
+      justify-content: space-between;
+    }
+    .astext {
+    background:none;
+    border:none;
+    margin:0;
+    padding:0;
+    cursor: pointer;
+    }
+    
+</style>
+</head>
+<body>
+  {% if messages %}
+    {% for message in messages %}
+        <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+    {% endfor %}
+  {% endif %}
+  <div class="layout-wrapper layout-content-navbar" style="overflow-x:hidden;background: #F8F4EE;">
+    <div class="layout-container">
+      <div class="content-wrapper">
+        <div class="container-xxl flex-shrink-1" style="padding: 0px;">
+          <nav class="navbar navbar-example navbar-expand-lg bg-light" style="padding: 0px;">
+            <div class="container-fluid">
+              <div class="navbar-brand">
+                <a href="{{ host_address }}/member-list">
+                  <h5 class="fw-bold text-uppercase">{{ company.company_name }}</h5>
+                </a> 
+              </div>
+              <ul class="navbar-nav flex-row align-items-center ms-auto">
+                <li>
+                  <a style="color:black; padding:10px;" href="{{ host_address }}/package-list/{{ companySalt }}">Packages</a>
+                </li>
+                <li style="align-items:left">
+                  <a style="color:black;padding:10px;" href="{{ host_address }}/invoice-list">Invoices</a>
+                </li>
+                <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                  <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                      <img src="{% static "portal/img/user-icon.png" %}" alt class="w-px-30 h-auto rounded-circle">
+                    </div>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <a class="dropdown-item" href="{{host_address}}/change-password">
+                        <i class="bx bx-lock-open-alt me-2"></i>
+                        <span class="align-middle">Change Password</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{{host_address}}/general">
+                        <i class="bx bx-cog me-2" aria-hidden="true"></i>
+                        <span class="align-middle">Settings</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{{host_address}}/logout">
+                        <i class="bx bx-power-off me-2"></i>
+                        <span class="align-middle">Log Out</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+        {% block content %}
+        <div class="container-xxl flex-grow-1">
+          <div class="content-wrapper mt-3">
+            <div class="container mb-4" style="margin: 0px; max-width: 1920px;">
+              <div class="row">
+                <div>
+                  <div class="text-wrap">
+                    <div class="row">
+                      <div class="col-3">
+                        <h3>Package List</h3>
+                      </div>
+                      <div class=" col-3 mt-2">
+                        <a class="btn btn-outline-primary mx-3" style="margin: 0px; text-transform: none;" href="{{host_address}}/member-list" class="text-muted">Back</a>
+                        <button class="btn btn-outline-primary mx-3" style="margin: 0px; text-transform: none;" onclick="DisplayOverlay('add')">Add Package</button>
+                      </div>
+                    </div>
+                    <br>
+                    <table class="table col-12" style="overflow-x:scroll">
+                      <thead>
+                        <tr>
+                          <th class="text-uppercase text-muted" rowspan="2" style="vertical-align : middle;text-align:center;">No.</th>
+                          <th class="text-uppercase text-muted" rowspan="2" style="vertical-align : middle;text-align:left;">Name</th>
+                          <th class="text-uppercase text-muted" rowspan="2" style="vertical-align : middle;text-align:left;">Description</th>
+                          <th class="text-uppercase text-muted" colspan="{{product_count}}" id="h-coverage" style="vertical-align : middle;text-align:center;">Coverage (RM)</th>
+                          <th class="text-uppercase text-muted" rowspan="2" style="vertical-align: middle;text-align:left;">Status</th>
+                          <th class="text-uppercase text-muted" rowspan="2" style="vertical-align : middle;text-align:center;">Action</th>
+                        </tr>
+                        <tr>
+                          {% for prd in productNameQS %}
+                            <th class="text-uppercase text-muted" style="vertical-align : middle;text-align:right;">{{prd.product_name}}
+                              <i class="bx bx-info-circle" style="cursor: pointer;" onclick="DisplayOverlay('{{prd.product_name}}')"></i>
+                            </th>
+                          {% endfor %}
+                        </tr>
+                      </thead>
+                      {% for page in packageListQS %}
+                      {% if not page.has_previous %}
+                      <tbody id="1_packageList">
+                        {% for pkg in page %}
+                          <tr>
+                              <td style="vertical-align : middle;text-align:center;">{{forloop.counter}}</td>
+                              <td style="vertical-align : middle;text-align:left;" id="{{pkg.id}}_name">{{pkg.package_name}}</td>
+                              <td style="vertical-align : middle;text-align:left;" id="{{pkg.id}}_description">{{pkg.description|default_if_none:""}}</td>
+                              {% for key, values in pkg.coverage.items %}
+                                  <td style="vertical-align : middle;text-align:right;" id="{{pkg.id}}_{{key}}">{{values}}</td>
+                              {% endfor %}
+                              <td style="vertical-align : middle;text-align:left;" id="{{pkg.id}}_status">{{pkg.is_active}}</td>
+                              <td style="text-align:center">
+                                <input type="hidden" id="action">
+                                <button onclick="populateField('{{ pkg.id }}', '{{ pkg.name }}', '{{ pkg.description }}', '{{ pkg.is_active}}', /{{ pkg.product_name }}/ );DisplayOverlay('edit'); " class="btn btn-link text-info text-gradient px-3 mb-0" style="font-size: 20px; padding: 0px !important;" data-toggle="tooltip" data-placement="top" title="Edit">
+                                  <i class="fas fa-edit" style=" vertical-align : middle;"></i>
+                                </button>
+                              </td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                      {% else %}
+                      <tbody id="{{page.number}}_packageList" hidden>
+                        {% for pkg in page %}
+                          <tr>
+                            {% widthratio 10 1 page.previous_page_number as count %}
+                              <td style="vertical-align : middle;text-align:center;">{{forloop.counter|add:count}}</td>
+                              <td style="vertical-align : middle;text-align:left;" id="{{pkg.id}}_name">{{pkg.package_name}}</td>
+                              <td style="vertical-align : middle;text-align:left;" id="{{pkg.id}}_description">{{pkg.description|default_if_none:""}}</td>
+                              {% for key, values in pkg.coverage.items %}
+                                  <td style="vertical-align : middle;text-align:right;" id="{{pkg.id}}_{{key}}">{{values}}</td>
+                              {% endfor %}
+                              <td style="vertical-align : middle;text-align:left;" id="{{pkg.id}}_status">{{pkg.is_active}}</td>
+                              <td><button onclick="populateField('{{ pkg.id }}', '{{ pkg.name }}', '{{ pkg.description }}', '{{ pkg.is_active}}', /{{ pkg.product_name }}/ );DisplayOverlay('edit');" class="btn btn-link text-info text-gradient px-3 mb-0" style="font-size: 20px; padding: 0px !important;" data-toggle="tooltip" data-placement="top" title="Edit">
+                                <i class="fas fa-edit" style=" vertical-align : middle;text-align:center;"></i></button>
+                              </td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                      {% endif %}
+                      {% endfor %}
+                    </table>
+                    <div class="d-flex align-items-center justify-content-center">
+                      <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                          <li class="page-item first" id="first_packageListBtn">
+                            <button class="page-link" onclick="first('packageList')"><i class="bx bx-chevrons-left"></i></button>
+                          </li>
+                          <li class="page-item prev" id="prev_packageListBtn">
+                            <button class="page-link" onclick="prev('packageList')"><i class="bx bx-chevron-left"></i></button>
+                          </li>
+                          <div id="divPackageList" style="display:inline-flex">
+                          {% for page in packageListQS.page_range %}
+                            <li class="page-item {% if page == 1 %}active{% endif %}" id="{{page}}_packageListBtn">
+                              <button class="page-link" onclick="pagePackageList('{{page}}')">{{page}}</button>
+                            </li>
+                          {% endfor %}
+                          </div>
+                          <li class="page-item next" id="next_packageListBtn">
+                            <button class="page-link" onclick="next('packageList', '{{packageListQS.num_pages}}')"><i class="bx bx-chevron-right"></i></button>
+                          </li>
+                          <li class="page-item last" id="last_packageListBtn">
+                            <button class="page-link" onclick="last('packageList', '{{packageListQS.num_pages}}')"><i class="bx bx-chevrons-right"></i></button>
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
+                  </div>
+                </div>
+                <div class="overlay" id="baseOverlayLeft">
+                </div>
+                <div class="overlayRight" style="background:#F8F4EE; height: 100vh; overflow-y: auto;" id="baseOverlayRight">
+                  <div class="container">
+                    <form method="POST" action="{{host_address}}/edit-package/{{companySalt}}" onsubmit="return enableSubmit();">
+                      <div class="modal-header">
+                        <h5 class="text-large mt-3" id="staticBackdropLabel" style="color: rgb(119, 28, 28);">Package Configuration</h5>
+                        <button type="button" class="buttonClose" aria-label="Close" onclick="clearField(/{{productName}}/); CloseOverlay()"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div style="left:0%">
+                            <h6>Package Details</h6>
+                            <input type="hidden" name="package_id" id="package_id">
+                              {% csrf_token %}
+                              <div class="input-group input-group-dynamic mb-2 mt-2">
+                                  <input type="text" class="form-control" name="name" id="name" placeholder="Name" onblur="populateNameTable()" oninput="toggleHasChanges('name')" required/>
+                              </div>
+                              <div class="input-group input-group-dynamic mb-2">
+                                  <input type="text" class="form-control" name="description" id="description" placeholder="Description" oninput="toggleHasChanges('description')"/>
+                              </div>
+                              <div>
+                                <input class="customCheckbox" type="checkbox" id="status" name="status" checked="true" oninput="toggleHasChanges('status')">
+                                <label class="custom-control-label" id="statusLbl">Active</label>
+                              </div><br>
+                            <div id="coverageSelection">
+                            <h6 id="productsCoveragesHeader">Products Coverages</h6>
+                              <div class="input-group input-group-dynamic mb-2 mt-2" id="productsCoveragesDiv">
+                                  <select class="form-select" id="productName_packageListModal" name="product_name" onchange="return ProductType('packageListModal')">
+                                    <option>Select Product</option>
+                                      {% for prd in productNameQS %}
+                                        <option id="{{ prd.product_name }}">{{prd.product_name}}</option>
+                                      {% endfor %}
+                                  </select>
+                              </div>
+                                <input type="hidden" name="deleteArr" id="deleteArr">
+                                {% for prd in productNameQS %}
+                                  <table class="tableCustom;" style="display: none; width:100%" id="{{ prd.product_name }}Coverage_packageListModal" name="{{ prd.product_name }}Coverage">
+                                      <thead>
+                                          <tr>
+                                              <th style="font-size:small;">{{ prd.product_name }} Coverage<button onclick="deleteCoverage('{{prd.product_name}}'); clearCoverage('{{prd.product_name}}');" class="btn btn-link text-info text-gradient px-3 mb-0" id="delete" type="button"><i class="fa fa-trash"></i></button>
+                                              </th>
+                                              <!-- <th><button styaria-label="Close" style="border:0px;"><i class='bx bx-x-circle'></i></button></th> -->
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                        {% if prd.product_name != 'Medical' %}
+                                          {% if prd.product_name == 'Death' or prd.product_name == 'Accident' %}
+                                            <tr style="border-style: unset;">
+                                                <td>RM <input type="number" class="form-control" id="{{ prd.product_name }}_packageListModal" name="{{ prd.product_name }}_packageListModal" min="0" max="500000" step="100" value="0" style="display:inline-block;border:thin solid darkgray" oninput="updateSliderValue('{{ prd.product_name }}Slider_packageListModal', '{{ prd.product_name }}_packageListModal', '{{ prd.product_name}}','packageListModal'); populateSummary('{{prd.product_name}}')" onblur="round('{{ prd.product_name }}'); checkCoverageConditions()"/></td>
+                                            </tr>
+                                            <tr style="border-style: unset;">
+                                                <td colspan="2" style="border-style: unset;"><input type="range" class="form-range" min="0" max="500000" value="0" style=" width: 100%;" id="{{ prd.product_name }}Slider_packageListModal" name="{{ prd.product_name }}Slider_packageListModal" step="100" oninput="updateRangeValue('{{ prd.product_name }}Slider_packageListModal', '{{ prd.product_name }}_packageListModal','{{ prd.product_name }}','packageListModal'); populateSummary('{{prd.product_name}}')" onblur="checkCoverageConditions()"/></td>
+                                            </tr>
+                                          {% elif prd.product_name == 'Critical Illness' or prd.product_name == 'Disability' %}
+                                            <tr style="border-style: unset;">
+                                              <td>RM <input type="number" class="form-control" id="{{ prd.product_name }}_packageListModal" name="{{ prd.product_name }}_packageListModal" min="0" max="350000" step="100" value="0" style="display:inline-block;border:thin solid darkgray" oninput="updateSliderValue('{{ prd.product_name }}Slider_packageListModal', '{{ prd.product_name }}_packageListModal', '{{ prd.product_name}}','packageListModal'); populateSummary('{{prd.product_name}}')" onblur="round('{{ prd.product_name }}'); checkCoverageConditions()"/></td>
+                                            </tr>
+                                            <tr style="border-style: unset;">
+                                                <td colspan="2" style="border-style: unset;"><input type="range" class="form-range" min="0" max="350000" value="0" style=" width: 100%;" id="{{ prd.product_name }}Slider_packageListModal" name="{{ prd.product_name }}Slider_packageListModal" step="100" oninput="updateRangeValue('{{ prd.product_name }}Slider_packageListModal', '{{ prd.product_name }}_packageListModal','{{ prd.product_name }}','packageListModal'); populateSummary('{{prd.product_name}}')" onblur="checkCoverageConditions()"/></td>
+                                            </tr>
+                                          {% endif %}
+                                        {% else %}
+                                          <tr style="border-style: unset;">
+                                            <td style="border-style: unset;" id="medicalSection">
+                                              <!-- <label id="errorMedical" style="color:red">LABEL</label> -->
+                                              <br>RM
+                                              <select class="form-select" id="medicalDropdown" name="Medical_POST" style="display:inline-block;width:50%" onchange="updateMedicalValue('medicalDropdown'); populateSummary('Medical')">
+                                                <option value="">0</option>
+                                                {% for plan in medicalPlanQS %}
+                                                  <option value="{{plan}}">{{plan}}</option>
+                                                {% endfor %}
+                                              </select>
+                                            </td>
+                                          </tr>
+                                        {% endif %}
+                                      </tbody>
+                                  </table>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div>
+                          <table class="tableCustom" id="summaryTable">
+                            <thead>
+                                  <tr>
+                                      <th style="width:60%"><label id="packageNameTable">Package Name</label></th>
+                                      <th></th>
+                                      <!-- <th><button class="buttonCloseSecondary float-end" aria-label="Close"></button></th> -->
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  {% for prd in productNameQS %}
+                                  <tr>
+                                      <td>{{prd.product_name}} Coverage</td>
+                                      <td><label id="{{prd.product_name}}_coverageTable">RM 0</label></td>
+                                  </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <label id="error" style="color:red"></label>
+                        </div>
+                      </div>
+                      <div class="bottomButton" style="background: #F8F4EE; margin-left: 0; width:100%;" id="packageListModalPOST"> 
+                        <input type="hidden" name="flag" id="flag">
+                        <button class="btn rounded-pill btn-primary my-3 mx-0" style="margin: 0px; text-transform: none; letter-spacing: -0.02em; display: inline; text-align: center;" id="add" type="submit" onclick="toggleFlag('add');">
+                          Add
+                        </button>
+                        <button class="btn rounded-pill btn-primary my-3 mx-0" style="margin: 0px; text-transform: none; letter-spacing: -0.02em; display: inline; text-align: center;" id="update" type="submit" onclick="toggleFlag('update')" disabled>
+                          Update
+                        </button>
+                      </div>       
+                  </div>
+                </div>
+                <div class="faqOverlayLeft" id="leftFaqOverlay">
+                </div>
+                <div class="faqOverlayRight" id="rightFaqOverlay">
+                  {% for prd in productNameQS %}
+                  <div class="container" id="{{prd.product_name}}_overlay" style="height:170px;">
+                    <div class="row" style="margin-top: 40px;">
+                      <div class="d-flex justify-content-between">
+                        <h4 class="text-large" style="color: black;">{{ prd.product_name }} Coverage</h4>
+                        <button class="buttonClose" aria-label="Close" onclick="return CloseOverlay()"></button>
+                      </div>
+                      <div class="description">
+                        Find out what the insured will be covered for.
+                      </div>
+                      <div class="modal-body" class="content-wrapper" style="margin-top: 15px;"">
+                        <!-- <div> -->
+                          <div class="info">
+                              <a href="{{host_address}}/static/product/details/PDS-{{prd.product_name}}.pdf" class="btn btn-outline-primary mx-3" style=" text-transform: none;" target="_blank">
+                                <i class="fa-regular fa-file-pdf"></i> Details
+                              </a>
+                              <a href="{{host_address}}/static/product/contract/Contract-{{prd.product_name}}.pdf" class="btn btn-outline-primary mx-3" style=" text-transform: none;" target="_blank">
+                                <i class="fa-regular fa-file-pdf"></i> Contract
+                              </a>
+                              <a href="{{host_address}}/static/product/faq/FAQ-{{prd.product_name}}.pdf" class="btn btn-outline-primary mx-3" style=" text-transform: none;" target="_blank">
+                                <i class="fa-regular fa-file-pdf"></i> FAQ
+                              </a>
+                          </div>
+                          
+                          <!-- <div>
+                            <h5 class="text-large" style="color: black;">FAQ</h5>
+                          </div>
+                          <div style="overflow-y: scroll;max-height: 550px;width:auto;position:relative">
+                            <div class="dropdown">
+                            {% for faq in prd.faq %}
+                              <div class="collapseDiv">
+                                <div class="flex-row">
+                                  <div class="col-12" style="display: inline-block;">
+                                    <button
+                                    class="astext"
+                                    style="text-align: left;max-width: 18vw;"
+                                    type="button"
+                                    data-toggle="dropdown"
+                                    aria-expanded="false"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapseGeneral{{ forloop.counter }}">
+                                      <b class="text-large" style="color: black;">{{ faq.title }}</b>
+                                    </button>
+                                    <button class="btn dropdown-toggle collapsed"
+                                      type="button"
+                                      style="height:20px;width:50px;float: right;margin:auto;"
+                                      data-bs-toggle="collapse"
+                                      data-bs-target="#collapseGeneral{{ forloop.counter }}"
+                                      aria-expanded="true"
+                                      aria-controls="collapseGeneral{{ forloop.counter }}"></button>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="collapse" style="max-width: 450px;width:auto" id="collapseGeneral{{ forloop.counter }}">
+                              {% autoescape off %}
+                                <a>{{ faq.description|linebreaksbr }}</a>
+                              {% endautoescape %}
+                              </div>
+                              <hr>
+                            {% endfor %}
+                          </div>
+                          </div> -->
+                        <!-- </div> -->
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+        </div>
+      </div>
+
+
+      {% endblock %}
+      <script>
+        var hasChanges = false;
+
+        function updateMedicalValue(field) {
+          var getHiddenInput = document.getElementById("Medical_POST");
+          var selectField = document.getElementById(field);
+
+          if (getHiddenInput == null){
+            var inputHidden = document.createElement("input");
+            inputHidden.setAttribute("type", "hidden");
+            inputHidden.setAttribute("id", 'Medical_POST');
+            inputHidden.setAttribute("name", 'Medical_POST');
+            inputHidden.setAttribute("value", selectField.options[selectField.selectedIndex].innerHTML);
+            document.getElementById("packageListModalPOST").appendChild(inputHidden);
+          } else {
+            document.getElementById("Medical_POST").value = selectField.options[selectField.selectedIndex].innerHTML;
+          }
+        }
+
+        function updateRangeValue(rangeId, inputValue, productName, overlayName){
+          const inputSlider = document.getElementById(rangeId);
+          const inputBox = document.getElementById(inputValue);
+
+          var getInputHidden = document.getElementById(productName+'_POST');
+          if(getInputHidden == null){
+            var inputHidden = document.createElement("input");
+            inputHidden.setAttribute("type", "hidden");
+            inputHidden.setAttribute("id", productName+'_POST');
+            inputHidden.setAttribute("name", productName+'_POST');
+            inputHidden.setAttribute("value", parseInt(inputSlider.value));
+
+            document.getElementById(overlayName+"POST").appendChild(inputHidden);
+          }
+          else {
+              document.getElementById(productName+'_POST').value = parseInt(inputSlider.value);
+          }
+          inputBox.value = parseInt(inputSlider.value);
+        }
+    
+        function updateSliderValue(rangeId, inputValue, productName, overlayName){
+            const inputSlider = document.getElementById(rangeId);
+            const inputBox = document.getElementById(inputValue);
+    
+            var getInputHidden = document.getElementById(productName+'_POST');
+            if(getInputHidden == null){
+                var inputHidden = document.createElement("input");
+                inputHidden.setAttribute("type", "hidden");
+                inputHidden.setAttribute("id", productName+'_POST');
+                inputHidden.setAttribute("name", productName+'_POST');
+                inputHidden.setAttribute("value", parseInt(inputBox.value));
+    
+                document.getElementById(overlayName+"POST").appendChild(inputHidden);
+            }
+            else {
+                document.getElementById(productName+'_POST').value = parseInt(inputBox.value);
+            }
+    
+            inputSlider.value = parseInt(inputBox.value);
+        }
+    
+        let lastProductSelected = ""
+        function ProductType(overlayCategory){
+            var selectField   = document.getElementById('productName_'+ overlayCategory);
+            var selectedValue = selectField.options[selectField.selectedIndex].id;
+    
+            var productType = document.getElementById("productName_"+overlayCategory);
+            if(lastProductSelected){
+                document.getElementById(lastProductSelected+"Coverage_"+overlayCategory).style.display = 'none';
+            }
+            lastProductSelected = selectedValue;
+            if(lastProductSelected != ""){
+              document.getElementById(selectedValue+"Coverage_"+overlayCategory).style.display = '';
+            }
+        }
+    
+        function populateField(id, name, description, status, productNameArr) {
+          document.getElementById("package_id").value = id;
+          document.getElementById("name").value = name;
+          if (description != 'None') {
+            document.getElementById("description").value = description;
+          } else {
+            document.getElementById("description").value = '';
+          }
+          document.getElementById("update").disabled = false;
+          document.getElementById("delete").hidden = false;
+          document.getElementById("packageNameTable").innerHTML = name;
+    
+          if (status == "Active") {
+            document.getElementById("status").checked = true;
+          } else {
+            document.getElementById("status").checked = false;
+          }
+    
+          var stringProductName = productNameArr.toString().replaceAll('/','')
+          var formattedProductName = stringProductName.replaceAll("'",'"')
+          var jsonProductName = JSON.parse(formattedProductName)
+          for (let i = 0; i < jsonProductName.length; i++) {
+            var product = jsonProductName[i];
+            var element = id.toString() + "_" + product;
+            if (document.getElementById(element).innerHTML != null && product != "Medical") {
+              document.getElementById(product+"_packageListModal").value = document.getElementById(element).innerHTML;
+              document.getElementById(product+"Slider_packageListModal").value = document.getElementById(element).innerHTML;
+              document.getElementById(product+"_coverageTable").innerHTML = "RM " + document.getElementById(element).innerHTML;
+              updateRangeValue(product+'Slider_packageListModal', product+'_packageListModal', product,'packageListModal');
+              updateSliderValue(product+'Slider_packageListModal', product+'_packageListModal', product,'packageListModal');
+            } else {
+              for (let j = 0; j < document.getElementById('medicalDropdown').options.length; j++) {
+                if (document.getElementById('medicalDropdown').options[j].value == document.getElementById(element).innerHTML) {
+                  document.getElementById('medicalDropdown').options[j].selected = true;
+                  document.getElementById('Medical_coverageTable').innerHTML = "RM " + document.getElementById('medicalDropdown').options[j].value;
+                  updateMedicalValue('medicalDropdown');
+                }
+              }
+            }
+          }
+          
+          // for (let i = 0; i < document.getElementById("medicalDropdown").options.length; i++) {
+          //   if (document.getElementById("medicalDropdown").options[i].value == document.getElementById(id.toString()+"_Medical").innerHTML) {
+          //     document.getElementById("medicalDropdown").options[i].selected = true
+          //     document.getElementById("Medical_coverageTable").innerHTML = "RM " + document.getElementById("medicalDropdown").options[i].value
+          //   }
+          // }
+          DisplayOverlay();
+        }
+        
+        function deleteCoverage(productName) {
+          if (document.getElementById("deleteArr").value == ""){
+            var toDelete = [];
+          } else {
+            var toDelete = [document.getElementById("deleteArr").value];
+          }
+          var found = false;
+    
+          for (let i = 0; i < toDelete.length; i++) {
+            if (toDelete[i] == productName) {
+              found = true;
+            }
+          }
+    
+          if (found==false) {
+            toDelete.push(productName);
+          }
+    
+          $('#deleteArr').val(JSON.stringify(toDelete));
+          var preparedArr = $('#deleteArr').val();
+          preparedArr = JSON.parse(preparedArr);
+          document.getElementById("deleteArr").value = preparedArr;
+        }
+    
+        function populateNameTable() {
+          var name = document.getElementById("name");
+          var tableName = document.getElementById("packageNameTable");
+          tableName.innerHTML = name.value;
+        }
+
+        function populateSummary(prd) {
+          var coverage = document.getElementById(prd+"_coverageTable");
+          if (prd == 'Medical') {
+            if (document.getElementById("medicalDropdown").options[document.getElementById("medicalDropdown").selectedIndex].value == "") {
+              coverage.innerHTML = "RM 0"
+            } else {
+              coverage.innerHTML = "RM " + document.getElementById("medicalDropdown").options[document.getElementById("medicalDropdown").selectedIndex].value;
+            }
+          } else {
+            coverage.innerHTML = "RM " + document.getElementById(prd+"_packageListModal").value;
+          }
+
+          if (document.getElementById('deleteArr').value != '') {
+            const arr = document.getElementById('deleteArr').value.split(",");
+            const remain = arr.indexOf(prd);
+            if (remain > -1) {
+              arr.splice(remain, 1);
+            }
+            $('#deleteArr').val(JSON.stringify(arr));
+            var preparedArr = $('#deleteArr').val();
+            preparedArr = JSON.parse(preparedArr);
+            document.getElementById("deleteArr").value = preparedArr;
+          }
+
+          if (document.getElementById('action').value == 'edit') {
+            checkCoverageChanges();
+          }
+        }
+
+        function DisplayOverlay(action) {
+          if (action!='Death'&& action!='Disability'&& action!='Critical Illness'&& action!='Accident'&& action!='Medical'){
+            var overlayLeft = document.getElementById("baseOverlayLeft");
+            var overlayRight = document.getElementById("baseOverlayRight");
+            overlayLeft.style.display = "block";
+            overlayRight.style.display = "block";
+            document.getElementById('productName_packageListModal').disabled = false;
+          }
+          else{
+            var faqoverlayLeft = document.getElementById("leftFaqOverlay");
+            var faqoverlayRight = document.getElementById("rightFaqOverlay");
+            var overlayLeft = document.getElementById("baseOverlayLeft");
+            var overlayRight = document.getElementById("baseOverlayRight");
+            overlayLeft.style.display = "none";
+            overlayRight.style.display = "none";
+            faqoverlayLeft.style.display = "none";
+            faqoverlayRight.style.display = "block";
+          }
+          if (action == 'edit') {
+            hasChanges = false;
+            
+            document.getElementById('action').value = 'edit';
+            document.getElementById('productsCoveragesDiv').hidden = true;
+            document.getElementById('productsCoveragesHeader').hidden = true;
+            document.getElementById('coverageSelection').hidden = true;
+            enableUpdate();
+          }else if(action=='Death'){
+            document.getElementById(action+'_overlay').style.display = "block";
+            document.getElementById('Disability_overlay').style.display = "none";
+            document.getElementById('Critical Illness_overlay').style.display = "none";
+            document.getElementById('Accident_overlay').style.display = "none";
+            document.getElementById('Medical_overlay').style.display = "none";
+          }else if(action=='Disability'){
+            document.getElementById(action+'_overlay').style.display = "block";
+            document.getElementById('Death_overlay').style.display = "none";
+            document.getElementById('Critical Illness_overlay').style.display = "none";
+            document.getElementById('Accident_overlay').style.display = "none";
+            document.getElementById('Medical_overlay').style.display = "none";
+          }
+          else if(action=='Critical Illness'){
+            document.getElementById(action+'_overlay').style.display = "block";
+            document.getElementById('Death_overlay').style.display = "none";
+            document.getElementById('Disability_overlay').style.display = "none";
+            document.getElementById('Accident_overlay').style.display = "none";
+            document.getElementById('Medical_overlay').style.display = "none";
+          }
+          else if(action=='Accident'){
+            document.getElementById(action+'_overlay').style.display = "block";
+            document.getElementById('Death_overlay').style.display = "none";
+            document.getElementById('Disability_overlay').style.display = "none";
+            document.getElementById('Critical Illness_overlay').style.display = "none";
+            document.getElementById('Medical_overlay').style.display = "none";
+          }
+          else if(action=='Medical'){
+            document.getElementById(action+'_overlay').style.display = "block";
+            document.getElementById('Death_overlay').style.display = "none";
+            document.getElementById('Disability_overlay').style.display = "none";
+            document.getElementById('Critical Illness_overlay').style.display = "none";
+            document.getElementById('Accident_overlay').style.display = "none";
+          }
+        }
+
+        function CloseOverlay(){
+          var overlayLeft = document.getElementById("baseOverlayLeft");
+          var overlayRight = document.getElementById("baseOverlayRight");
+          var faqoverlayLeft = document.getElementById("leftFaqOverlay");
+          var faqoverlayRight = document.getElementById("rightFaqOverlay");
+          overlayLeft.style.display = "none";
+          overlayRight.style.display = "none";
+          faqoverlayLeft.style.display = "none";
+          faqoverlayRight.style.display = "none";
+        }
+
+        function clearCoverage(prd) {
+          var coverage = document.getElementById(prd+"_coverageTable")
+          coverage.innerHTML = "RM 0"
+
+          if (prd != 'Medical') {
+            const inputBox = document.getElementById(prd+"_packageListModal")
+            const inputRange = document.getElementById(prd+"Slider_packageListModal")
+            inputBox.value = 0
+            inputRange.value = 0
+          } else {
+            var medical = document.getElementById("medicalDropdown")
+            medical.options[0].selected = true
+          }
+
+          if (document.getElementById('action').value == 'edit') {
+            if (parseInt(document.getElementById((document.getElementById('package_id').value)+"_"+prd).innerHTML) != 0) {
+              hasChanges = true;
+            } else {
+              hasChanges = false;
+            }
+            enableUpdate();
+          }
+        }
+
+        function toggleFlag(button) {
+          if (button == "add") {
+            document.getElementById("flag").value = "add";
+            if (document.getElementById("deleteArr").value != "") {
+              document.getElementById("flag").value = "add_delete";
+            }
+          } else {
+            document.getElementById("flag").value = "update";
+            if (document.getElementById("deleteArr").value != "") {
+              document.getElementById("flag").value = "update_delete";
+            }
+          }
+        }
+
+    function pagePackageList(p) {
+      var button = document.getElementById(p+"_packageListBtn");
+      var div = document.getElementById('divPackageList');
+  
+      for (let i = 0; i < div.children.length; i++) {
+        div.children[i].classList.remove("active");
+        document.getElementById((i+1)+'_packageList').hidden = true;
+      }
+      button.classList.add("active");
+      document.getElementById(p+"_packageList").hidden = false;
+    }
+  
+    function first(t) {
+      table = document.getElementById('1_'+t);
+      button = document.getElementById('1_'+t+'Btn');
+      div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+      for (let i = 0; i < div.children.length; i++) {
+        div.children[i].classList.remove('active');
+        document.getElementById((i+1)+'_'+t).hidden = true;
+      }
+      button.classList.add('active');
+      table.hidden = false;
+    }
+  
+    function last(t, num_pages) {
+      table = document.getElementById(num_pages+'_'+t);
+      button = document.getElementById(num_pages+'_'+t+'Btn');
+      div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+      for (let i = 0; i < div.children.length; i++) {
+        div.children[i].classList.remove('active');
+        document.getElementById((i+1)+'_'+t).hidden = true;
+      }
+      button.classList.add('active');
+      table.hidden = false;
+    }
+  
+    function prev(t) {
+      div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+      for (let i = 0; i < div.children.length; i++) {
+        if (div.children[i].classList.contains('active') && i+1!=1) {
+          div.children[i].classList.remove('active');
+          div.children[i-1].classList.add('active');
+          document.getElementById((i+1)+'_'+t).hidden = true;
+          document.getElementById(i+'_'+t).hidden = false;
+          break
+        }
+      }
+    }
+  
+    function next(t, num_pages) {
+      div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+      for (let i = 0; i < div.children.length; i++) {
+        if (div.children[i].classList.contains('active') && i+1!=num_pages) {
+          div.children[i].classList.remove('active');
+          div.children[i+1].classList.add('active');
+          document.getElementById((i+1)+'_'+t).hidden = true;
+          document.getElementById((i+2)+'_'+t).hidden = false;
+          break
+        }
+      }
+    }
+        function checkCoverageChanges() {
+          hasChanges = false;
+          var productNames = '{{productNameQS|escapejs}}'.replace("[", "").replace("]", "").replaceAll("'", "").split(", ");
+          for (let i = 0; i < productNames.length; i++) {
+            if (productNames[i] != 'Medical') {
+              if (document.getElementById((document.getElementById('package_id').value)+"_"+productNames[i]).innerHTML != '') {
+                if (document.getElementById((document.getElementById('package_id').value)+"_"+productNames[i]).innerHTML != document.getElementById(productNames[i]+"_coverageTable").innerHTML.replace("RM ", "")) {
+                  hasChanges = true;
+                }
+              } 
+            } else {
+              if (document.getElementById('medicalDropdown').selectedIndex != 0) {
+                if (parseInt(document.getElementById((document.getElementById('package_id').value)+"_"+productNames[i]).innerHTML) != document.getElementById('medicalDropdown').options[document.getElementById('medicalDropdown').selectedIndex].value) {
+                  hasChanges = true;
+                }
+              } else {
+                if (document.getElementById((document.getElementById('package_id').value)+"_"+productNames[i]).innerHTML != '0') {
+                  hasChanges = true;
+                }
+              }
+            }
+          }
+          enableUpdate();
+        }
+
+        function toggleHasChanges(field) {
+          if (document.getElementById('action').value == 'edit') {
+            var checkField = document.getElementById(field);
+            if (field != 'status') {
+              if (document.getElementById((document.getElementById('package_id').value)+"_"+field).innerHTML != checkField.value) {
+                hasChanges = true;
+              } else {
+                hasChanges = false;
+              }
+            } else {
+              if (checkField.checked) {
+                if (document.getElementById((document.getElementById('package_id').value)+"_"+field).innerHTML != 'Active') {
+                  hasChanges = true;
+                } else {
+                  hasChanges = false;
+                }
+              } else {
+                if (document.getElementById((document.getElementById('package_id').value)+"_"+field).innerHTML != 'Active') {
+                  hasChanges = false;
+                } else {
+                  hasChanges = true;
+                }
+              }
+            }
+            enableUpdate();
+          }
+        }
+
+        function enableUpdate() {
+          if (hasChanges) {
+            document.getElementById('update').disabled = false;
+          } else {
+            document.getElementById('update').disabled = true;
+          }
+        }
+
+        function clearField(productNameArr) {
+          var hidden = document.getElementById('packageListModalPOST').children;
+          var packageID = document.getElementById('package_id');
+          var packageName = document.getElementById('name');
+          var packageDesc = document.getElementById('description');
+          var packageNameTable = document.getElementById('packageNameTable');
+          var update = document.getElementById('update');
+          var header = document.getElementById('productsCoveragesHeader');
+          var div = document.getElementById('productsCoveragesDiv');
+          var slider = document.getElementById('coverageSelection');
+          for (let i = 0; i < hidden.length; i++) {
+            hidden[i].value = 0;
+          }
+          packageID.value = 0;
+          packageName.value = '';
+          packageDesc.value = '';
+          packageNameTable.innerHTML = 'Package Name';
+          update.disabled = true;
+          header.hidden = false;
+          div.hidden = false;
+          slider.hidden = false;
+          var stringProductName = productNameArr.toString().replaceAll('/','');
+          var formattedProductName = stringProductName.replaceAll("'",'"');
+          var jsonProductName = JSON.parse(formattedProductName);
+          for (let i = 0; i < jsonProductName.length; i++) {
+            var product = jsonProductName[i];
+            document.getElementById(product+'_coverageTable').innerHTML = 'RM 0';
+            if (product != 'Medical') {
+              document.getElementById(product+"_packageListModal").value = 0;
+              document.getElementById(product+"Slider_packageListModal").value = 0;
+            }
+          }
+          document.getElementById('medicalDropdown').options[0].selected = true;
+
+        }
+
+        var canSubmit = true;
+        function enableSubmit() {
+          return canSubmit;
+        }
+
+        function checkCoverageConditions() {
+          const products = ['Death', 'Disability', 'Critical Illness', 'Accident', 'Medical'];
+          var validatedAD = checkAccidentDeath(products);
+          if (validatedAD == false) {
+            canSubmit = false;
+          } else {
+            validatedMC = checkMinimumCoverage(products);
+            if (validatedMC == false) {
+              canSubmit = false;
+            } else {
+              validatedMaxC = checkMaximumCoverage(products);
+              if (validatedMaxC == false) {
+                canSubmit = false;
+              } else {
+                canSubmit = true;
+              }
+            }
+          }
+        }
+
+        function checkAccidentDeath(products) {
+            var death = document.getElementById('Death_packageListModal');
+            var accident = document.getElementById("Accident_packageListModal");
+            document.getElementById('error').innerHTML = '';
+            // for (let i = 0; i < products.length; i++) {
+            //   if (products[i] != 'Medical') {
+            //     var to_set = document.getElementById(products[i]+"_packageListModal");
+            //   } else {
+            //     var to_set = document.getElementById('medicalDropdown');
+            //   }
+
+            //   if (accident.value > death.value) {
+            //     to_set.setCustomValidity('Accident coverage must be lower than death coverage!');
+            //   } else {
+            //     to_set.setCustomValidity('');
+            //   }
+            // } 
+
+            if ((death.value == 0) && (accident.value != 0)) {
+              document.getElementById('error').innerHTML = 'Accident must be purchased together with death!';
+              return false;
+            } else {
+              if (parseInt(accident.value) > parseInt(death.value)) {
+                document.getElementById('error').innerHTML = 'Accident coverage must be lower than death coverage!';
+                return false;
+              } else {
+                document.getElementById('error').innerHTML = '';
+                return true;
+              }
+            }
+        }
+
+        var unmet_product = '';
+        function checkMinimumCoverage(products) {
+          document.getElementById('error').innerHTML = '';
+          unmet_product = '';
+          const minimum_coverage = {
+              'Death' : 2000,
+              'Disability' : 2000,
+              'Critical Illness' : 2000,
+              'Accident' : 2000,
+          }
+
+          // for (const [key,value] of Object.entries(minimum_coverage)) {
+          //   if (key != 'Medical') {
+          //     var to_reset = document.getElementById(key+"_packageListModal");
+          //   } else {
+          //     var to_reset = document.getElementById('medicalDropdown');
+          //   }
+
+          //   to_reset.setCustomValidity('');
+          // }
+
+          for (const [key, value] of Object.entries(minimum_coverage)) {
+              if (key != 'Medical') {
+                var to_check = document.getElementById(key+"_packageListModal");
+                if (parseInt(to_check.value) != 0) {
+                  if (parseInt(to_check.value) < value) {
+                    unmet_product = key;
+                  }
+                }
+              }
+          }
+
+          // for (const [key,value] of Object.entries(minimum_coverage)) {
+          //   if (key != 'Medical') {
+          //     var to_set = document.getElementById(key+"_packageListModal");
+          //   } else {
+          //     var to_set = document.getElementById('errorMedical');
+          //   }
+
+          //   if (unmet_product != '') {
+          //     if (key != 'Medical') {
+          //       to_set.setCustomValidity('Minimum coverage unmet for '+unmet_product+' coverage!');
+          //     } else {
+          //       if (document.getElementById('errorMedical') == null) {
+          //         var td = document.getElementById('medicalSection');
+          //         var label = document.createElement('label');
+          //         label.id = 'errorMedical';
+          //         label.style.color = 'red';
+          //         label.innerHTML = 'Minimum coverage unmet for'+unmet_product+' coverage!';
+          //         td.appendChild(label);
+          //       } else {
+          //         document.getElementById('errorMedical').innerHTML = 'Minimum coverage unmet for'+unmet_product+' coverage!';
+          //       }
+          //     }
+          //   } else {
+          //     if (document.getElementById('errorMedical') == null) {
+          //       var td = document.getElementById('medicalSection');
+          //       var label = document.createElement('label');
+          //       label.id = 'errorMedical';
+          //       label.style.color = 'red';
+          //       label.innerHTML = '';
+          //       td.appendChild(label);
+          //     } else {
+          //       document.getElementById('errorMedical').innerHTML = '';
+          //     }        
+          //   }
+          // }
+
+          if (unmet_product != '') {
+            document.getElementById('error').innerHTML = 'Minimum coverage unmet for '+unmet_product+' coverage!';
+            return false;
+          } else {
+            document.getElementById('error').innerHTML = '';
+            return true;
+          }
+        }
+
+        var exceed_product = '';
+        function checkMaximumCoverage(products) {
+          document.getElementById('error').innerHTML = '';
+          exceed_product = '';
+          const maximum_coverage = {
+              'Death' : 500000,
+              'Disability' : 350000,
+              'Critical Illness' : 350000,
+              'Accident' : 500000,
+          }
+
+          // for (const [key,value] of Object.entries(minimum_coverage)) {
+          //   if (key != 'Medical') {
+          //     var to_reset = document.getElementById(key+"_packageListModal");
+          //   } else {
+          //     var to_reset = document.getElementById('medicalDropdown');
+          //   }
+
+          //   to_reset.setCustomValidity('');
+          // }
+
+          for (const [key, value] of Object.entries(maximum_coverage)) {
+              if (key != 'Medical') {
+                var to_check = document.getElementById(key+"_packageListModal");
+                if (parseInt(to_check.value) != 0) {
+                  if (parseInt(to_check.value) > value) {
+                    exceed_product = key;
+                  }
+                }
+              }
+          }
+
+          // for (const [key,value] of Object.entries(minimum_coverage)) {
+          //   if (key != 'Medical') {
+          //     var to_set = document.getElementById(key+"_packageListModal");
+          //   } else {
+          //     var to_set = document.getElementById('errorMedical');
+          //   }
+
+          //   if (exceed_product != '') {
+          //     if (key != 'Medical') {
+          //       to_set.setCustomValidity('Minimum coverage unmet for '+exceed_product+' coverage!');
+          //     } else {
+          //       if (document.getElementById('errorMedical') == null) {
+          //         var td = document.getElementById('medicalSection');
+          //         var label = document.createElement('label');
+          //         label.id = 'errorMedical';
+          //         label.style.color = 'red';
+          //         label.innerHTML = 'Minimum coverage unmet for'+exceed_product+' coverage!';
+          //         td.appendChild(label);
+          //       } else {
+          //         document.getElementById('errorMedical').innerHTML = 'Minimum coverage unmet for'+exceed_product+' coverage!';
+          //       }
+          //     }
+          //   } else {
+          //     if (document.getElementById('errorMedical') == null) {
+          //       var td = document.getElementById('medicalSection');
+          //       var label = document.createElement('label');
+          //       label.id = 'errorMedical';
+          //       label.style.color = 'red';
+          //       label.innerHTML = '';
+          //       td.appendChild(label);
+          //     } else {
+          //       document.getElementById('errorMedical').innerHTML = '';
+          //     }        
+          //   }
+          // }
+
+          if (exceed_product != '') {
+            document.getElementById('error').innerHTML = 'Coverage limit exceeded for '+exceed_product+' coverage!';
+            return false;
+          } else {
+            document.getElementById('error').innerHTML = '';
+            return true;
+          }
+        }
+
+        function round(product) {
+            var to_round = document.getElementById(product+"_packageListModal");
+            var update_summary = document.getElementById(product+"_coverageTable");
+            if (parseInt(to_round.value) != 0) {
+              to_round.value = Math.round(to_round.value / 1000) * 1000;
+            }
+            var update_POST = document.getElementById(product+"_POST");
+            if(update_POST == null){
+              var inputHidden = document.createElement("input");
+              inputHidden.setAttribute("type", "hidden");
+              inputHidden.setAttribute("id", product+'_POST');
+              inputHidden.setAttribute("name", product+'_POST');
+              inputHidden.setAttribute("value", parseInt(to_round.value));
+
+              document.getElementById("packageListModalPOST").appendChild(inputHidden);
+            } else {
+              update_POST.value = parseInt(to_round.value);
+            }
+          
+            update_summary.innerHTML = 'RM ' + to_round.value;
+        }
+    </script>
+
+    <script src="{% static "portal/js/jquery.js" %}"></script>
+    <script src="{% static "portal/js/popper.js" %}"></script>
+    <script src="{% static "portal/js/bootstrap.js" %}"></script>
+    <script src="{% static "portal/js/perfect-scrollbar.js" %}"></script>
+
+    <script src="{% static "portal/js/menu.js" %}"></script>
+    <!-- endbuild -->
+
+    <!-- Main JS -->
+    <script src="{% static "portal/js/main.js" %}"></script>
+
+    <!-- Page JS -->
+    <script src="{% static "portal/js/dashboards-analytics.js" %}"></script>
+
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>
+

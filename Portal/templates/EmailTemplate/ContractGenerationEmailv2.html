@@ -1,0 +1,32 @@
+{% extends '../EmailTemplateBase.html' %}
+{% load static %}
+{% block content %}
+
+<h1 style="font-size: 28px; font-weight: bold; color: #000000; letter-spacing: -1px">We Got You Covered</h1>
+<br>
+<br>
+
+<p>Hi {{ member_name }},</p>
+
+<p>Your insurance coverage with DearTime is now active. Thank you for trusting DearTime as your life insurer. A copy of your Contract is attached to this email. The Contract can also be accessed in your policy menu.</p>
+
+<p>
+For security, the Contract is password protected. The password format to open the encrypted Contract is as follows:
+    <br>●	Last 4 digits/characters of your MyKad or Passport
+    <br>●	Followed by your year of birth in the format of “YYYY”
+</p>
+
+<p>
+    Example: 
+    <br>
+    MALAYSIAN
+    <br>●	MyKad: XXXX-XX-1234
+    <br>●	Birth Date: 01 Jan 1985
+    <br>●	Password: 12341985
+    <br>
+    <br>NON-MALAYSIAN
+    <br>●	Passport: FXXXXX6789
+    <br>●	Birth Date: 01 Jan 1985
+    <br>●	Password: 67891985
+</p>
+{% endblock %}

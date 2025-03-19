@@ -1,0 +1,424 @@
+{% extends "../AdminBaseMember.html" %}
+{% block title %}
+<title>DearTime | View Company - {{ company.company_name }}</title>
+{% endblock %}
+{% block css %}
+<style>
+</style> 
+{% endblock %}
+{% block page_title %}
+<div class="navbar-brand"><h5 class="fw-bold"><span class="text-muted fw-light"></div>
+{% endblock %}
+{% block content %}
+<div class="container-xxl flex-grow-1" style="padding: 0px;">
+    <div class="content-wrapper mt-3">
+        <div class="container my-3">
+            <div class="card-header mb-4">
+                <div class="row">
+                    <div class="col-4">
+                        <h5 class="mb-0">Viewing - {{ company.company_name }}</h5>
+                    </div>
+                    <div class="col-2">
+                        <a role="button" class="btn btn-outline-primary" href="{{host_address}}/company-approval">Back</a>
+                    </div>
+                </div>
+                <p>{{ company.registration_no }}</p>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <p class="text-uppercase">Company Profile</p>
+                    <div class="card mb-3" style="background: #F8F4EE;">
+                        <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;">
+                            <h6>Company Telephone Number</h6>
+                            <p>Your company land line.</p>
+                        </div>
+                        <div class="card-body pb-0">
+                            <div class="input-group input-group-dynamic mb-6">
+                                <label id="companyTelephone" class="form-label" name="companyTelephone">{{ company.contact1|default_if_none:"-" }}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-3" style="background: #F8F4EE;">
+                        <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;">
+                            <h6>Company Address</h6>
+                            <p>Your company address.</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="input-group input-group-dynamic mb-4">
+                                <label id="companyAddress1" class="form-label" name="companyAddress1">{{ company.address_line1|default_if_none:"-" }}</label>
+                            </div>
+                            <div class="input-group input-group-dynamic mb-4">
+                                <label id="companyAddress2" class="form-label" name="companyAddress2">{{ company.address_line2|default_if_none:"" }}</label>
+                            </div>
+                            <div class="input-group input-group-dynamic mb-4">
+                                <label id="companyAddress3" class="form-label" name="companyAddress3">{{ company.address_line3|default_if_none:"" }}</label>
+                            </div>
+                            <div class="input-group input-group-dynamic mb-4">
+                                <label id="companyState" class="form-label" name="companyState">{{ company.state|default_if_none:"" }}</label>
+                            </div>
+                            <div class="input-group input-group-dynamic mb-4">
+                                <label id="companyCity" class="form-label" name="companyCity">{{ company.city|default_if_none:"" }}</label>
+                            </div>
+                            <div class="input-group input-group-dynamic mb-4">
+                                <label id="companyPostcode" class="form-label" name="companyPostcode">{{ company.postcode|default_if_none:"" }}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-3" style="background: #F8F4EE;">
+                        <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;">
+                            <h6>Relationship with DearTime</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="input-group input-group-dynamic mb-4">
+                                <label id="relationship" class="form-label" name="relationship">{{ relationships.relationship_type.relationship_name }}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-3" style="background: #F8F4EE;">
+                        <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;">
+                            <h6>Payment Due Date</h6>
+                            <p>This is the anniversary payment due date for all your members.</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="input-group input-group-dynamic mb-4">
+                                <label id="paymentDueDate" class="form-label" name="paymentDueDate">{{company.payment_due_date|default_if_none:"-"}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <p class="text-uppercase">Support Documents</p>
+                    <div class="card mb-3" style="background: #F8F4EE;">
+                        <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;">
+                            <h6>Company Documents</h6>
+                        </div>
+
+                        {% if hasBrd %}
+                            {% if forms != None %}
+                            <div class="card-body pt-1">
+                                <h6>Borang D (Kaedah 13)</h6>
+                                {% for brd in forms %}
+                                    {% if brd.form_code == 'brd-form' %}
+                                        <div id="div_{{ brd.form_code }}{{ brd.id }}">
+                                            <label><a href="{{ path }}/media/{{ company.company_name }}/{{ brd.attachment }}{{ brd.attachment_type }}" target="_blank">{{ brd.attachment }}{{ brd.attachment_type }}</a></label>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div id="div_{{ brd.form_code }}{{ brd.id }}">
+                                <label>-</label>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if hasCopd %}
+                            {% if forms != None %}
+                            <div class="card-body pt-1">
+                                <h6>Copy of Partnership Deed</h6>
+                                {% for copd in forms %}
+                                    {% if copd.form_code == 'copd-form' %}
+                                        <div id="div_{{ copd.form_code }}{{ copd.id }}">
+                                            <label><a href="{{ path }}/media/{{ company.company_name }}/{{ copd.attachment }}{{ copd.attachment_type }}" target="_blank">{{ copd.attachment }}{{ copd.attachment_type }}</a></label>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div id="div_{{ copd.form_code }}{{ copd.id }}">
+                                <label>-</label>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if has917 %}
+                            {% if forms != None %}
+                            <div class="card-body pt-1">
+                                <h6>Form 9 Section 17</h6>
+                                {% for f917 in forms %}
+                                    {% if f917.form_code == '917-form' %}
+                                        <div id="div_{{ f917.form_code }}{{ f917.id }}">
+                                            <label><a href="{{ path }}/media/{{ company.company_name }}/{{ f917.attachment }}{{ f917.attachment_type }}" target="_blank">{{ f917.attachment }}{{ f917.attachment_type }}</a></label>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div id="div_{{ f917.form_code }}{{ f917.id }}">
+                                <label>-</label>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if has1328 %}
+                            {% if forms != None %}
+                            <div class="card-body pt-1">
+                                <h6>Form 13 or Section 28</h6>
+                                {% for f1328 in forms %}
+                                    {% if f1328.form_code == '1328-form' %}
+                                    <div id="div_{{ f1328.form_code }}{{ f1328.id }}">
+                                        <label><a href="{{ path }}/media/{{ company.company_name }}/{{ f1328.attachment }}{{ f1328.attachment_type }}" target="_blank">{{ f1328.attachment }}{{ f1328.attachment_type }}</a></label>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div id="div_{{ f1328.form_code }}{{ f1328.id }}">
+                                <label>-</label>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if has2478 %}
+                            {% if forms != None %}
+                            <div class="card-body pt-1">
+                                <h6>Form 24 or Section 78</h6>
+                                {% for f2478 in forms %}
+                                    {% if f2478.form_code == '2478-form' %}
+                                        <div id="div_{{ f2478.form_code }}{{ f2478.id }}">
+                                            <label><a href="{{ path }}/media/{{ company.company_name }}/{{ f2478.attachment }}{{ f2478.attachment_type }}" target="_blank">{{ f2478.attachment }}{{ f2478.attachment_type }}</a></label>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div id="div_{{ f2478.form_code }}{{ f2478.id }}">
+                                <label>-</label>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+                        
+                        {% if has4958 %}
+                            {% if forms != None %}
+                            <div class="card-body pt-1">
+                                <h6>Form 49 or Section 58</h6>
+                                {% for f4958 in forms %}
+                                    {% if f4958.form_code == '4958-form' %}
+                                        <div id="div_{{ ros.form_code }}{{ ros.id }}">
+                                            <label><a href="{{ path }}/media/{{ company.company_name }}/{{ f4958.attachment }}{{ f4958.attachment_type }}" target="_blank">{{ f4958.attachment }}{{ f4958.attachment_type }}</a></label>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                                </div>
+                            {% else %}
+                            <div id="div_{{ f4958.form_code }}{{ f4958.id }}">
+                                <label>-</label>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if hasLrfc %}
+                            {% if forms != None %}
+                            <div class="card-body pt-1">
+                                <h6>LLP Registration Form/Certificate</h6>
+                                {% for lrfc in forms %}
+                                    {% if lrfc.form_code == 'lrfc-form' %}
+                                        <div id="div_{{ lrfc.form_code }}{{ lrfc.id }}">
+                                            <label><a href="{{ path }}/media/{{ company.company_name }}/{{ lrfc.attachment }}{{ lrfc.attachment_type }}" target="_blank">{{ lrfc.attachment }}{{ lrfc.attachment_type }}</a></label>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>        
+                            {% else %}
+                            <div id="div_{{ lrfc.form_code }}{{ lrfc.id }}">
+                                <label>-</label>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if has8 %}
+                            {% if forms != None %}
+                            <div class="card-body pt-1">
+                                <h6>Form 8</h6>
+                                {% for f8 in forms %}
+                                    {% if f8.form_code == '8-form' %}
+                                        <div id="div_{{ f8.form_code }}{{ f8.id }}">
+                                            <label><a href="{{ path }}/media/{{ company.company_name }}/{{ f8.attachment }}{{ f8.attachment_type }}" target="_blank">{{ f8.attachment }}{{ f8.attachment_type }}</a></label>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div id="div_{{ f8.form_code }}{{ f8.id }}">
+                                <label>-</label>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if hasRos %}
+                            {% if forms != None %}
+                            <div class="card-body pt-1">
+                                <h6>Certificate of Registration from Registrar of Societies (ROS)</h6>
+                                {% for ros in forms %}
+                                    {% if ros.form_code == 'ros-form' %}
+                                        <div id="div_{{ ros.form_code }}{{ ros.id }}">
+                                            <label><a href="{{ path }}/media/{{ company.company_name }}/{{ ros.attachment }}{{ ros.attachment_type }}" target="_blank">{{ ros.attachment }}{{ ros.attachment_type }}</a></label>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div id="div_{{ ros.form_code }}{{ ros.id }}">
+                                <label>-</label>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                      
+                    {% if hasAuth %}
+                        <div class="card mb-3" style="background: #F8F4EE;">
+                            <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;">
+                                <h6>Additional Documents</h6>
+                            </div>
+
+                            <div class="card-body pt-1">
+                                <h6>Upload Authorization Form for Authorized Person (AP)</h6>
+                                {% if forms != None %}
+                                    {% for af in forms %}
+                                        {% if af.form_code == 'authorization-form' %}
+                                            <div id="div_{{ af.form_code }}{{ af.id }}">
+                                                <label><a href="{{ path }}/media/{{ company.company_name }}/{{ af.attachment }}{{ af.attachment_type }}" target="_blank">{{ af.attachment|default_if_none:"-" }}{{ af.attachment_type }}</a></label>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <div id="div_{{ af.form_code }}{{ af.id }}">
+                                        <label>-</label>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="card-body pt-1">
+                                <h6>Optional : </h6>
+                                <h6>Upload Copy of NRIC or Passport of Authorized Person (AP).</h6>
+                                <h6>Note: Expired copy of the passport will not be accepted</h6>
+                                {% if forms != None %}
+                                    {% for icp in forms %}
+                                        {% if icp.form_code == 'icPass-form' %}
+                                            <div id="div_{{ icp.form_code }}{{ icp.id }}">
+                                                <label><a href="{{ path }}/media/{{ company.company_name }}/{{ icp.attachment }}{{ icp.attachment_type }}" target="_blank">{{ icp.attachment|default_if_none:"-" }}{{ icp.attachment_type }}</a></label>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <div id="div_{{ icp.form_code }}{{ icp.id }}">
+                                        <label>-</label>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="container-sm mt-4">
+                <div class="d-flex justify-content-center">
+                    <div class="row">
+                        <div class="col-3">
+                            {% if company.submitted %}
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#approvalModal" onclick="populateModal('{{ company.id }}', '{{ company.company_name }}')">Approve</button>
+                            {% else %}
+                                <button type="button" class="btn btn-success" disabled>Approve</button>
+                            {% endif %}
+                        </div>
+                        <div class="col-3">
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deferModal" onclick="populateModal('{{ company.id }}', '{{ company.company_name }}')">Defer</button>
+                        </div>
+                        <div class="col-3">
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal" onclick="populateModal('{{ company.id }}', '{{ company.company_name }}')">Reject</button>
+                        </div>
+                        <div class="col-3">
+                            <a type="button" class="btn btn-secondary" href="{{host_address}}/company-approval">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" style="z-index: 5;" id="approvalModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="staticBackdropLabel" style="color: black;">Approval Confirmation</h5>
+                </div>
+                <div class="modal-body">
+                  <p>Are you sure to approve,<label id="lblCompanyNameApprove" style="font-weight: bold;"></label>?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="formType" value="Approve">
+                    <input type="hidden" id="modalCompanyIDApprove" name="modalCompanyID">
+                    <button type="submit" class="btn btn-primary">Approve</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" style="z-index: 5;" id="deferModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="staticBackdropLabel" style="color: black;">Defer Confirmation</h5>
+                </div>
+                <div class="modal-body">
+                  <p>Are you sure to defer,<label id="lblCompanyNameDefer" style="font-weight: bold;"></label>?</p>
+                  <form method="POST">
+                    <div class="input-group input-group-dynamic mb-4 mt-4">
+                        <label class="form-label text-capitalize">Defer Reason</label>
+                        <input id="deferReason" type="text" name="deferReason" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    {% csrf_token %}
+                    <input type="hidden" name="formType" value="Defer">
+                    <input type="hidden" id="modalCompanyIDDefer" name="modalCompanyID">
+                    <button type="submit" class="btn btn-primary">Defer</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" style="z-index: 5;" id="rejectModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="staticBackdropLabel" style="color: black;">Reject Confirmation</h5>
+                </div>
+                <div class="modal-body">
+                  <p>Are you sure to reject,<label id="lblCompanyNameReject" style="font-weight: bold;"></label>?</p>
+                  <form method="POST">
+                    <div class="input-group input-group-dynamic mb-4 mt-4">
+                        <label class="form-label text-capitalize">Reject Reason</label>
+                        <input id="reason" type="text" name="rejectReason" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    {% csrf_token %}
+                    <input type="hidden" name="formType" value="Reject">
+                    <input type="hidden" id="modalCompanyIDReject" name="modalCompanyID">
+                    <button type="submit" class="btn btn-primary">Reject</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>
+{% endblock %}
+{% block footerContent %} 
+
+{% endblock %}
+{% block javascript %}
+<script>
+    function populateModal(companyID, companyName){
+        document.getElementById('lblCompanyNameApprove').innerHTML = companyName;
+        document.getElementById('lblCompanyNameReject').innerHTML = companyName;
+        document.getElementById('lblCompanyNameDefer').innerHTML = companyName;
+        document.getElementById('modalCompanyIDApprove').value = companyID;
+        document.getElementById('modalCompanyIDReject').value = companyID;
+        document.getElementById('modalCompanyIDDefer').value = companyID;
+    }
+</script>
+{% endblock %}

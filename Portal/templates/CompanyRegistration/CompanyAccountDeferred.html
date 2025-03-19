@@ -1,0 +1,36 @@
+{% extends "../Base.html" %}
+{% block title %}
+<title>DearTime | Company Registration</title>
+{% endblock %}
+{% block css %}
+<style>
+</style> 
+{% endblock %}
+{% block content %}
+<div class="container-xxl flex-grow-1" style="padding: 0px;">
+    <div class="content-wrapper mt-3">
+        <div class="container" style="margin: 0px; max-width: 1920px;">
+            <h4>Registration Deferred</h4>
+        </div>
+        <hr>
+        <div class="container my-3">
+            <div class="card-header mb-4 text-center">
+                <h5 class="mb-0">{{ company_info.company_name }}</h5>
+                <p>{{ company_info.registration_no }}</p>
+            </div>
+            <div class="container-sm">
+                <div class="mx-12">
+                    <p class="text-center">The registration submitted was deferred with the following reason: <b>{{company_info.remarks}}</b></p>
+                    <p class="text-center">Please edit your company details and reattempt submission.</p>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <a class="btn btn-outline-primary mx-3" style="margin: 0px; text-transform: none;" href="{{host_address}}/edit-company-account/{{companySalt}}">Edit Company Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block footerContent %} 
+
+{% endblock %}

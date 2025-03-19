@@ -1,0 +1,10 @@
+{% extends '../EmailTemplateBase.html' %}
+{% load static %}
+{% block content %}
+<p>Greetings from DearTime,</p>
+
+<!-- <p>Please use the below link to proceed with the account verification process</p> -->
+<p>Please verify your DearTime corporate account by using the link below:</p>
+<a href="{{ Url }}">{{Url}}</a>
+    
+{% endblock %}

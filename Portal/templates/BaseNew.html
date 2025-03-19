@@ -1,0 +1,1511 @@
+{% load static %}
+<!DOCTYPE html>
+
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
+    {% block title %} {% endblock %}
+    <title>DearTime | Dashboard</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static "portal/img/favicon.png" %}" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons. Uncomment required icon fonts -->
+    <link rel="stylesheet" href="{% static "fontawesome-free-6.2.1-web/css/all.css" %}" />
+    <link rel="stylesheet" href="{% static "fontawesome-free-6.2.1-web/css/fontawesome.css" %}" />
+    <link rel="stylesheet" href="{% static "fontawesome-free-6.2.1-web/css/regular.css" %}" />
+    <link rel="stylesheet" href="{% static "portal/fonts/boxicons.css" %}" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{% static "external/css/dropzone.css" %}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{% static "portal/css/core.css" %}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{% static "portal/css/theme-default.css" %}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{% static "material/css/material-kit.css" %}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{% static "material/css/loading.css" %}" class="template-customizer-core-css"/>
+    
+    <!-- <link rel="stylesheet" href="../assets/css/demo.css" /> -->
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{% static "portal/libs/perfect-scrollbar.css" %}" />
+
+    <link rel="stylesheet" href="{% static "portal/css/toastr.css" %}">
+
+    <!-- Page CSS -->
+    <script src="https://kit.fontawesome.com/c3c32dbdee.js" crossorigin="anonymous"></script>
+    <!-- Helpers -->
+    <script src="{% static "fontawesome-free-6.2.1-web/js/all.js" %}"></script>
+    <script src="{% static "fontawesome-free-6.2.1-web/js/fontawesome.js" %}"></script>
+    <script src="{% static "fontawesome-free-6.2.1-web/js/regular.js" %}"></script>
+    <script src="{% static "portal/js/helpers.js" %}"></script>
+
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="{% static "portal/js/config.js" %}"></script>
+    <script src="{% static "material/js/material-kit.js" %}"></script>
+    <script src="{% static "external/js/jquery-3.6.4.min.js" %}"></script>
+    <script src="{% static "external/js/dropzone.js" %}"></script>
+    <script src="{% static "portal/js/toastr.js" %}"></script>
+    <script src="{% static "material/js/bodymovin/5.7.4/lottie.min.js" %}"></script>
+    <style>
+        .break {
+            flex-basis: 100%;
+            height: 0;
+        }
+        .overlay {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            background-color: #000000;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+            transition: .5s linear;
+            display: none;
+            z-index: 4;
+        }
+
+        .overlayRight {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            background-color: #fff;
+            overflow: hidden;
+            width: 40%;
+            height: 100%;
+            opacity: 1;
+            transition: .5s linear;
+            display: none;
+            z-index: 4;
+            max-width: 560px;
+        }
+        .input-group:focus-within input[type=text] {
+            box-shadow: none;
+        }
+        select.form-select {
+            padding: 8px;
+            background-position-x: 98%;
+        }
+        #collapsePackages table input, #collapsePackages table select {
+            width: 80%;
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid #999;
+        }
+        #collapsePackages table select {
+            display: inline-block;
+            background-color: white;
+            background-position-x: 98%;
+            font-size: 16px;
+        }
+        div.bottomButton {
+            /* padding: 0 32px; */
+            right: 0;
+            display: flex;
+            position: relative;
+            gap: 20px;
+            margin-top: auto;
+        }
+        div.bottomButton button {
+            width: 100%;
+            left: 0;
+            box-shadow: none;
+            font-size: 16px;
+            height: auto;
+        }
+        div.bottomButton button:hover {
+            background-color: #836E49;
+            opacity: .8;
+            color: white;
+            transform: translateY(0);
+        }
+        .overlayRight .container form  {
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .pclassCustom{
+          color: #78716C;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 20px;
+        }
+        .dropzone {
+            background: #F8F4EE;
+            border-radius: 15px;
+            border: 1.5px dashed #A8A29E;
+            border-image: none;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .bottomButton{
+            position: absolute; 
+            bottom: 0;
+            width: 100%; 
+            background: #E7E0D6;
+            width: 100%;
+            height: 75px;
+        }
+        .collapseDiv{
+        width: 100%;
+        outline: none;
+        background: #F5F5F4;
+        border-radius: 8px;
+        height: 48px;
+      }
+
+      .collapseDiv:hover,.collapseDiv:active,.collapseDiv:focus{
+          width: 100%;
+          outline: none;
+          background: #F5F5F4;
+          border-radius: 8px;
+          height: 48px;
+      }
+      .dropdown .dropdown-toggle.collapsed:after {
+          transform: rotate(180deg);
+          float:right;
+      }
+      .dropdown .dropdown-toggle:after
+      {
+          content: "\f106";
+          font: normal normal normal 14px/1 FontAwesome;
+          border: none;
+          vertical-align: middle;
+          font-weight: 600;
+          float:right;
+      }
+      .containerCustom {
+          border : 1px solid #CBC2B2;
+          border-radius: 15px;
+          background: #F8F4EE;
+          color: #000;
+      }
+      .form-range{
+          background: #DBEAFE;
+          border-radius: 15px;
+          width: 350px;
+          height: 52px;
+          padding: 10px 16px;
+          color: #BFDBFE;
+      }
+      .buttonClose{
+        border-radius: 50%;
+        padding: 0.5em;
+        width: 30px;
+        height: 30px;
+        border: 1.5px solid #000000;
+        color: #000000;
+        position: relative;
+      }
+      .buttonClose::before {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #000000;
+        width: 2px;
+        left: 12px;
+        top: 5px;
+        bottom: 5px;
+        transform: rotate(45deg);
+    }
+    .buttonClose::after {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #000000;
+        height: 2px;
+        top:12px;
+        left: 5px;
+        right: 5px;
+        transform: rotate(45deg);
+    }
+    .buttonCloseSecondary{
+        border-radius: 50%;
+        padding: 0.5em;
+        width: 30px;
+        height: 30px;
+        border: 1.5px solid #2563EB;
+        color: #000000;
+        position: relative;
+      }
+      .buttonCloseSecondary::before {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #2563EB;
+        width: 2px;
+        left: 12px;
+        top: 5px;
+        bottom: 5px;
+        transform: rotate(45deg);
+    }
+    .buttonCloseSecondary::after {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #2563EB;
+        height: 2px;
+        top:12px;
+        left: 5px;
+        right: 5px;
+        transform: rotate(45deg);
+    }
+    
+    .tableCustom {
+      --bs-table-bg: transparent;
+      --bs-table-accent-bg: transparent;
+      --bs-table-striped-color: #697a8d;
+      --bs-table-striped-bg: #f9fafb;
+      --bs-table-active-color: #697a8d;
+      --bs-table-active-bg: rgba(67, 89, 113, 0.1);
+      --bs-table-hover-color: #697a8d;
+      --bs-table-hover-bg: rgba(67, 89, 113, 0.06);
+      width: auto;
+      margin-bottom: 1rem;
+      color: #697a8d;
+      vertical-align: middle;
+      border : 2px solid #2563EB;
+      border-radius: 15px;
+      background: #EFF6FF;
+      border-collapse:unset; 
+    }
+    .tableCustom > :not(caption) > * > * {
+      padding: 0.625rem 1.25rem;
+      background-color: var(--bs-table-bg);
+      border-bottom-width: 1px;
+      box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+    }
+    .tableCustom > tbody {
+      vertical-align: inherit;
+    }
+    .tableCustom > thead {
+      vertical-align: bottom;
+    }
+    .tableCustom > :not(:first-child) {
+      border-top: 2px solid #d9dee3;
+    }
+    .tableCustom tr:last-child > td {
+      border-bottom-width: 0px;
+    }
+    
+    .tableCustom:not(.table-dark) th{
+          color: #60A5FA;
+      }
+    .collapseCustom{
+        --bs-btn-padding-x: 1.5rem;
+        --bs-btn-padding-y: 0.625rem;
+        --bs-btn-font-family: ;
+        --bs-btn-font-size: 0.75rem;
+        --bs-btn-font-weight: 700;
+        --bs-btn-line-height: 1.667;
+        --bs-btn-color: #7b809a;
+        --bs-btn-bg: transparent;
+        --bs-btn-border-width: 1px;
+        --bs-btn-border-color: transparent;
+        --bs-btn-border-radius: 0.5rem;
+        --bs-btn-box-shadow: 0 4px 7px -1px rgba(0, 0, 0, 0.11), 0 2px 4px -1px rgba(0, 0, 0, 0.07);
+        --bs-btn-disabled-opacity: 0.65;
+        --bs-btn-focus-box-shadow: 0 0 0 0.2rem rgba(var(--bs-btn-focus-shadow-rgb), .5);
+        display: inline-block;
+        padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
+        font-family: var(--bs-btn-font-family);
+        font-size: var(--bs-btn-font-size);
+        font-weight: var(--bs-btn-font-weight);
+        line-height: var(--bs-btn-line-height);
+        color: var(--bs-btn-color);
+        text-align: center;
+        vertical-align: middle;
+        user-select: none;
+        border: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
+        border-radius: var(--bs-btn-border-radius);
+        background-color: var(--bs-btn-bg);
+        text-transform: uppercase;
+    }
+    .form-control[disabled]{
+        padding: 0.65rem 0;
+    }
+
+    .form-floating>.form-control,
+    .form-floating>.form-control-plaintext,
+    .form-floating>.form-select {
+        height: calc(3.5rem + 2px);
+        line-height: 0.5;
+    }
+    .dropzone .dz-preview .dz-error-message {
+        top: 150px!important;
+    }
+    #addMemberOverlay {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
+    #addMemberOverlay .bottomButton {
+        background-color: white;
+        padding-inline: 32px;
+    }
+    #addMemberOverlay > div:first-child {
+        margin: 32px 32px 0;
+        gap: 20px;
+    }
+    #editMemberOverlay {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
+    #editMemberOverlay .bottomButton {
+        background-color: white;
+        padding-inline: 32px;
+    }
+    #importMemberOverlay .bottomButton {
+        background-color: white;
+        padding-inline: 32px;
+    }
+    #importMemberOverlay {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
+    #importMemberOverlay > div:first-child {
+        margin: 32px 32px 0;
+        gap: 20px;
+    }
+    </style>
+    {% block css %} {% endblock %}
+  </head>
+
+  <body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar" style="overflow:hidden;background: #F8F4EE;height:100%vh">
+      <div class="layout-container">
+        <div class="overlay" id="baseOverlayLeft">
+        </div>
+        <div class="overlayRight" style="overflow-y: auto;" id="baseOverlayRight">
+            <div class="login d-flex">
+                <div class="container" style="padding: 0px;" id="importMemberOverlay" style="display: none;">
+                    <form method="POST" enctype="multipart/form-data" action="{{host_address}}/upload-member-spreadsheet" id="memberUploadForm">
+                        <div class="row m-3">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="text-large" style="color: black;">Spreadsheet</h5>
+                            <button type="button" class="buttonClose" aria-label="Close" onclick="return CloseOverlay()"></button></div>
+                            <p class="pclassCustom">The blank spreadsheet helps you to quickly enter the purchase data of your member such as product coverage and coverage amount. You may enter data for multiple members.</p>
+                            <p class="pclassCustom">This is strictly a quotation. The final product and coverage amount offered, as well as the premium amount will be subjected to an underwriting assessment.</p>
+                            
+                            <div class="mb-3">
+                                <span class="badge badge-center rounded-pill bg-label-primary mb-2">1</span>
+                                <h6>Download</h6>
+                                <p class="pclassCustom">Click the button below to download the spreadsheet.</p>
+                                <a href="{{host_address}}/download/templates/Upload Member Template.xlsx?path_name={{path}}" class="btn btn-outline-primary me-1" style="margin: 0px; text-transform: none;">
+                                    Download &nbsp;
+                                    <span class="tf-icons bx bx-download"></span>
+                                </a> 
+                            </div>
+                            <hr style="border: 1px solid #D6D3D1;">
+                            <div class="mb-5">
+                                <span class="badge badge-center rounded-pill bg-label-primary mb-2">2</span>
+                                <h6>Upload</h6>
+                                <p class="pclassCustom">Please make sure the completeness and accuracy of data before upload.</p>
+                                <div>
+                                    <div class="dropzone" id="my-member-spreadsheet"></div>
+                                    <!-- <form method="POST" enctype="multipart/form-data" class="dropzone needsclick" id="my-member-spreadsheet" action="{% url 'corporateportal:upload-member-spreadsheet'%}">
+                                        {% csrf_token %}
+                                        <div class="dz-message needsclick">   
+                                            <i class='bx bx-upload'></i>
+                                            <p class="pclassCustom">Drop your file here or <span style="color: #2563EB;">click to browse</span></p>
+                                        </div>
+                                    </form> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bottomButton" id="bottomButtonForm"> 
+                            <button type="submit" id="memberUploadBtn" class="btn rounded-pill btn-primary my-3 mx-3" style="margin: 0px; text-transform: none; letter-spacing: -0.02em;" onclick="show_loader('0')" disabled>
+                                Upload
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="loading_overlay">
+                    <div id="loading-bird-1" class="loading-bird"></div>
+                </div>
+                <div class="container" style="padding: 0px;" id="addMemberOverlay" style="display: none;">
+                  <div class="row m-3">
+                    <div class="d-flex justify-content-between">
+                      <h5 class="text-large" style="color: black;">Add Member</h5>
+                      <button class="buttonClose" aria-label="Close" onclick="return CloseOverlay()"></button>
+                  </div>
+                  <p class="pclassCustom">This is strictly a quotation. The final product and coverage amount offered, as well as the premium amount will be subjected to an underwriting assessment.</p>
+                  <!-- <div class="row">
+                      <div class="col-12 d-flex">
+                          <span class="badge bg-label-warning border-label-warning me-1">Pending Sign Up/ Sign In</span>
+                      </div>
+                  </div> -->
+                  <form method="POST" action="{{host_address}}/add-member" id="addMemberForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="tentative_premium" value="0">
+                  <div class="mt-3 dropdown">
+                    <div class="collapseDiv">
+                        <div class="row">
+                            <div class="col-10" style="display: inline-block;">
+                                <p class="collapseCustom letter-spacing-1 pe-1" style="margin: 0px; text-align: left;">General</p>
+                            </div>
+                            <div class="col-2">
+                                <button class="btn dropdown-toggle py-3 collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseGeneral"
+                                aria-expanded="true"
+                                aria-controls="collapseGeneral"></button>
+                            </div>
+                        </div>
+                    </div>
+                  <div class="collapse" id="collapseGeneral">
+                      
+                      <div class="input-group input-group-dynamic mb-2 mt-2">
+                          <label class="form-label text-capitalize" for="memberNo">Staff/Member No</label>
+                          <input type="text" class="form-control" name="employment_no" id="memberNo"/>
+                      </div>
+                      <div class="input-group input-group-dynamic mb-2">
+                          <label class="form-label text-capitalize" for="memberName">Full Name</label>
+                          <input type="text" class="form-control" name="employee_name" id="memberName" required/>
+                      </div>
+                      <div class="input-group input-group-dynamic mb-2">
+                          <label class="form-label text-capitalize" for="memberEmail">Email Address</label>
+                          <input type="text" class="form-control" name="employee_email" id="memberEmail" help_text="A valid email address, please." required/>
+                      </div>
+                      <div class="input-group input-group-static mb-2">
+                        <label class="ms-0 text-capitalize" for="memberMobileNo">Mobile No</label>
+                     </div>
+                     <div class="row">
+                        <div class="col-sm-1 input-group input-group-dynamic" style="width: 20%;">
+                           <select class="form-control" name="employee_countrycode" id="memberCountryCode">
+                               <option value="+60">+60</option>
+                           </select>
+                        </div>
+                        <div class="col-sm-1 input-group input-group-dynamic" style="width: 80%;">
+                            <input type="tel" class="form-control" name="employee_mobile" id="memberMobileNo" placeholder="123456789" pattern="[0-9]{9,10}" required/>
+                        </div>
+                    </div>
+                      <div class="input-group input-group-dynamic form-floating mb-3">
+                        <label class="form-label text-capitalize" for="nric">MyKad</label>
+                        <input type="text" class="form-control" name="employee_nric" id="nric" placeholder="990101011000" pattern="[0-9]{12}" required/>
+                     </div>
+                      <div class="row">
+                          <div class="col-sm-1 input-group input-group-dynamic mb-2" style="width: 50%;">
+                             <select class="form-control" name="employee_nationality" id="nationality">
+                                 <option>Malaysian</option>
+                             </select>
+                          </div>
+                          <div class="col-sm-1 input-group input-group-dynamic mb-2" style="width: 50%;">
+                            <select class="form-control" name="employee_gender" id="gender">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                          </div>
+                      </div>
+                      <div class="input-group input-group-static mb-2">
+                          <label class="ms-0 text-capitalize" for="dob">DOB</label>
+                          <input type="date" class="form-control" name="employee_dob" id="dob" onchange="checkAgeLimit('add', '-'); calculateAge();" required/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-3 dropdown">
+                    <div class="collapseDiv">
+                        <div class="row">
+                            <div class="col-10" style="display: inline-block;">
+                                <p class="collapseCustom letter-spacing-1 pe-1" style="margin: 0px; text-align: left;">Packages</p>
+                                <!-- <btn type="button" class="text-uppercase" style="color:#2563EB;font-size: 12px;" data-bs-toggle="modal" data-bs-target="#addPackageModal"><u>Add</u></btn> -->
+                            </div>
+                            <div class="col-2">
+                                <button class="btn dropdown-toggle py-3 collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapsePackages"
+                                aria-expanded="false"
+                                aria-controls="collapsePackages"></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                  <div class="collapse" id="collapsePackages">
+                    {% comment %} <div class="input-group input-group-static m-3">
+                        <input type="checkbox" id="show-code-field" name="show-code-field"> <label for="show-code-field" class="p-2">Having campaign code?</label>
+                    </div>
+
+                    <div class="input-group input-group-dynamic mb-2">
+                        <label class="form-label text-capitalize" for="campaign_code">Voucher Code</label>
+                        <input type="text" class="form-control" name="campaign_code" id="campaignCode" disabled required/>
+                    </div> {% endcomment %}
+
+                      {% if packageQS and activePackage and underCampaign %}
+                      <div class="input-group input-group-dynamic mb-2 mt-2">
+                          <select type="text" class="form-select" name="package" id="package_addMember" onchange="PackageSelection('addMember'); checkAgeLimit('add', '-')">
+                            <option value="">Select packages</option>
+                              {% comment %} {% for package in packageQS %}
+                              <option value="{{package.id}}">{{package.package_name}}</option>
+                              {% endfor %} {% endcomment %}
+
+                              {% comment %} only show active packages{% endcomment %}
+                            {% for package in packageQS %} 
+                              {% if package.is_active %}
+                                  <option value="{{package.id}}">{{package.package_name}}</option>
+                              {% endif %}
+                            {% endfor %}
+
+                            {%if company.corporate_campaign_code %}
+                                {% for cpackage in underCampaign %} 
+                                    {% if cpackage.under_campaign == company.corporate_campaign_code and cpackage.is_active %}
+                                        <option value="{{cpackage.id}}">{{cpackage.package_name}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                          </select>
+                      </div>
+                      
+                      {% comment %} starts here {% endcomment %}
+                      {% for package in packageProductQS %}
+                        {% for product, coverage in package.product_list.items %}
+                            <input type="hidden" id="{{package.package_id}}_{{product}}_addMemberPOST" name="{{package.package_id}}_{{product}}_addMemberPOST" value="{{coverage}}">
+                        {% endfor %}
+                      <table class="tableCustom" id="{{package.package_id}}_package_addMember" style="border-collapse:unset;display: none;">
+                        <thead>
+                              <tr>
+                                  <th>{{package.package_name}}</th>
+                                  <th></th>
+                                  <!-- <th><button class="buttonCloseSecondary float-end" aria-label="Close"></button></th> -->
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for product, coverage in package.product_list.items %}
+                              <tr>
+                                {% if product != 'Medical' %} 
+                                    {% if product == 'Death'%}
+                                        <td>{{product}} Coverage</td>
+                                        <td>RM <input type="number" min="0" max="500000" step="100" 
+                                            id="{{package.package_id}}_{{product}}_coverageSummary" 
+                                            value="{{coverage|default_if_none:0}}" 
+                                            oninput="populateHidden('{{product}}', 
+                                            '{{package.package_id}}');; 
+                                            checkCoverageConditions('add', '{{package.package_id}}');" required></td>
+                                    {% elif product == 'Accident' %}
+                                        <td>{{product}} Coverage</td>
+                                        <td>RM <input type="number" min="0" max="500000" step="100" id="{{package.package_id}}_{{product}}_coverageSummary" value="{{coverage|default_if_none:0}}" oninput="populateHidden('{{product}}', '{{package.package_id}}');; checkCoverageConditions('add', '{{package.package_id}}');" onblur="round('{{product}}', '{{package.package_id}}', 'add')" required></td>                      
+                                    {% elif product == 'Critical Illness' or product == 'Disability' %}
+                                        <td>{{product}} Coverage</td>
+                                        <td>RM <input type="number" min="0" max="350000" id="{{package.package_id}}_{{product}}_coverageSummary" value="{{coverage|default_if_none:0}}" oninput="populateHidden('{{product}}', '{{package.package_id}}');; checkCoverageConditions('add', '{{package.package_id}}');" onblur="round('{{product}}', '{{package.package_id}}', 'add')"></td>
+                                    {% endif %}        
+                                {% else %}
+                                    <td>Medical Coverage</td>
+                                    <td>RM 
+                                        <select class="form-select" id="{{package.package_id}}_Medical_coverageSummary" onchange="populateHidden('Medical', '{{package.package_id}}'); checkCoverageConditions('add', '{{package.package_id}}');">
+                                            {% if coverage == None %}
+                                                <option selected value="0">0</option>
+                                            {% else %}
+                                                <option value="0">0</option>
+                                            {% endif %}
+                                            {% for med in medical_coverage %}
+                                                {% if coverage == med %}
+                                                    <option selected value="{{med}}">{{med}}</option>
+                                                {% else %}
+                                                    <option value="{{med}}">{{med}}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                {% endif %}
+                              </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                      {% endfor %}
+                      {% else %}
+                      <div class="container text-center containerCustom my-4" style="background: #fff;">
+                        <p class="fw-bold mt-4">Custom Package</p>
+                        <p class="pclassCustom mb-2" style="font-size: 12px; margin: 0px;">You can combine multiple policies into one custom package for easy maintenance.</p>
+                        <a class="btn btn-outline-primary" href="{{host_address}}/package-list/{{companySalt}}">Add Package</a>
+                      </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                        <div class="bottomButton" id="addMemberPOST"> 
+                            <button class="btn rounded-pill btn-primary my-3 mx-3" style="margin: 0px; text-transform: none;letter-spacing: -0.02em; " type="submit" form="addMemberForm">
+                                Save
+                            </button>
+                        </div>
+                </form>
+                </div>
+                <div class="container" style="padding: 0px;" id="editMemberOverlay" style="display: none;">
+                  <div class="row m-3">
+                    <div class="d-flex justify-content-between">
+                      <h5 class="text-large" style="color: black;">Edit Member</h5>
+                      <button class="buttonClose" aria-label="Close" onclick="return CloseOverlay()"></button>
+                  </div>
+                  <p class="pclassCustom">This is strictly a quotation. The final product and coverage amount offered, as well as the premium amount will be subjected to an underwriting assessment.</p>
+                  <p class="pclassCustom" style="margin-bottom: 0px;">Batch No.: <span id="batchNo_editMember">-</span></p>
+                  <p class="pclassCustom">Premium Date.: <span>{{company.payment_due_date|date:'M d, Y'}}</span></p>
+                  <div class="row">
+                      <div class="col-12 d-flex">
+                          <span class="badge bg-label-warning border-label-warning me-1" id="memberStatus_editMember">Pending Sign Up/ Sign In</span>
+                      </div>
+                  </div>
+                  <!-- form action edit_member -->
+                  <form method="POST" action="{{host_address}}/edit-member">
+                    {% csrf_token %}
+                    <input type="hidden" name="tentative_premium" value="0">
+                    <input type="hidden" name="member_id" id="member_id">
+                  <div class="mt-3 dropdown">
+                    <div class="collapseDiv">
+                        <div class="row">
+                            <div class="col-10" style="display: inline-block;">
+                                <p class="collapseCustom letter-spacing-1 pe-1" style="margin: 0px; text-align: left;">General</p>
+                            </div>
+                            <div class="col-2">
+                                <button class="btn dropdown-toggle py-3 collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseGeneral"
+                                aria-expanded="true"
+                                aria-controls="collapseGeneral"></button>
+                            </div>
+                        </div>
+                    </div>
+                  <div class="collapse" id="collapseGeneral">
+                      <div class="input-group input-group-dynamic mb-2 mt-2">
+                          <!-- <label class="form-label text-capitalize" for="memberNo">Staff/Member No</label> -->
+                          <input type="text" class="form-control" name="employment_no" id="memberNo_editMember" placeholder="Staff/Member No"/>
+                      </div>
+                      <div class="input-group input-group-dynamic mb-2">
+                          <!-- <label class="form-label text-capitalize" for="memberName">Full Name</label> -->
+                          <input type="text" class="form-control" name="employee_name" id="memberName_editMember" placeholder="Full Name" required/>
+                      </div>
+                      <div class="input-group input-group-dynamic mb-2">
+                          <!-- <label class="form-label text-capitalize" for="memberEmail">Email Address</label> -->
+                          <input type="text" class="form-control" name="employee_email" id="memberEmail_editMember" help_text="A valid email address, please." placeholder="Email Address" disabled/>
+                      </div>
+                      <div class="input-group input-group-dynamic mb-2">
+                        <!-- <label class="form-label text-capitalize" for="memberMobileNo">Mobile No</label> -->
+                        <input type="text" class="form-control phone-mask" name="employee_mobile" id="memberMobileNo_editMember" placeholder="Mobile No" disabled/>
+                    </div>
+                    <div class="input-group input-group-dynamic mb-2">
+                        <!-- <label class="form-label text-capitalize" for="nric">MyKad</label> -->
+                        <input type="text" class="form-control" name="employee_nric" id="nric_editMember" placeholder="MyKad" pattern="[0-9]{12}" required/>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-1 input-group input-group-dynamic mb-2" style="width: 50%;">
+                        <select class="form-control" name="employee_nationality" id="nationality_editMember">
+                            <option>Malaysian</option>
+                        </select>
+                        </div>
+                        <div class="col-sm-1 input-group input-group-dynamic mb-2" style="width: 50%;">
+                        <select class="form-control" name="employee_gender" id="gender_editMember">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                        </div>
+                    </div>
+                    <div class="input-group input-group-static mb-2">
+                        <label class="ms-0 text-capitalize" for="dob">DOB</label>
+                        <input type="date" class="form-control" name="employee_dob" id="dob_editMember" onchange="checkAgeLimit('edit', '-');checkCoverageConditions('edit', '-'); calculateAndReturnPrice()" required/>
+                    </div>
+                    </div>
+                  </div>
+                  <div class="mt-3 dropdown">
+                    <div class="collapseDiv">
+                        <div class="row">
+                            <div class="col-10" style="display: inline-block;">
+                                <p class="collapseCustom letter-spacing-1 pe-1" style="margin: 0px; text-align: left;">Packages</p>
+                                <!-- <btn type="button" class="text-uppercase" style="color:#2563EB;font-size: 12px;" data-bs-toggle="modal" data-bs-target="#addPackageModal"><u>Add</u></btn> -->
+                            </div>
+                            <div class="col-2">
+                                <button class="btn dropdown-toggle py-3 collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapsePackages"
+                                aria-expanded="false"
+                                aria-controls="collapsePackages"></button>
+                            </div>
+                        </div>
+                    </div>
+                  <div class="collapse" id="collapsePackages">
+                    {% if packageQS %}
+                    <div class="input-group input-group-dynamic mb-2 mt-2">
+                        <select type="text" class="form-select" name="package" id="package_editMember" onchange="PackageSelection('editMember'); checkCoverageConditions('edit', '-')">
+                            {% if not activePackage %}
+                                <option value="">No active packages</option>
+                            {% else %}
+                                <option value="">Select packages</option>
+                            {% endif %}
+                            {% for package in packageQS %}
+                            {% if package.is_active == False %}
+                                <option value="{{package.id}}" hidden>{{package.package_name}}</option>
+                            {% else %}
+                                <option value="{{package.id}}">{{package.package_name}}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% for package in packageProductQS %}
+                        {% for product, coverage in package.product_list.items %}
+                            <input type="hidden" id="{{package.package_id}}_{{product}}_editMemberPOST" name="{{package.package_id}}_{{product}}_editMemberPOST" value="{{coverage}}">
+                        {% endfor %}
+                      <table class="tableCustom" id="{{package.package_id}}_package_editMember" style="border-collapse:unset;display: none;">
+                        <thead>
+                              <tr>
+                                  <th>{{package.package_name}}</th>
+                                  <th></th>
+                                  <!-- <th><button class="buttonCloseSecondary float-end" aria-label="Close"></button></th> -->
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for product, coverage in package.product_list.items %}
+                              <tr>
+                                {% if product != 'Medical' %}
+                                    {% if product == 'Death'%}
+                                        <td>{{product}} Coverage</td>
+                                        <td>RM <input type="number" min="0" max="500000" id="{{package.package_id}}_{{product}}_coverageSummaryEdit" value="{{coverage|default_if_none:0}}" onchange="populateHiddenEdit('{{product}}', '{{package.package_id}}'); checkCoverageConditions('edit', '{{package.package_id}}');" onblur="round('{{product}}', '{{package.package_id}}', 'edit')" required></td>  
+                                    {% elif product == 'Accident' %}
+                                        <td>{{product}} Coverage</td>
+                                        <td>RM <input type="number" min="0" max="500000" id="{{package.package_id}}_{{product}}_coverageSummaryEdit" value="{{coverage|default_if_none:0}}" onchange="populateHiddenEdit('{{product}}', '{{package.package_id}}'); checkCoverageConditions('edit', '{{package.package_id}}');" onblur="round('{{product}}', '{{package.package_id}}', 'edit')" required></td>  
+                                    {% elif product == 'Critical Illness' or product == 'Disability' %}
+                                        <td>{{product}} Coverage</td>
+                                        <td>RM <input type="number" min="0" max="350000" id="{{package.package_id}}_{{product}}_coverageSummaryEdit" value="{{coverage|default_if_none:0}}" onchange="populateHiddenEdit('{{product}}', '{{package.package_id}}'); checkCoverageConditions('edit', '{{package.package_id}}');" onblur="round('{{product}}', '{{package.package_id}}', 'edit')" required></td>     
+                                    {% endif %}    
+                                {% else %}
+                                    <td>Medical Coverage</td>
+                                    <td>RM 
+                                        <select class="form-select" id="{{package.package_id}}_Medical_coverageSummaryEdit" onchange="populateHiddenEdit('Medical', '{{package.package_id}}'); checkCoverageConditions('edit', '{{package.package_id}}');">
+                                            {% if coverage == None %}
+                                                <option selected value="0">0</option>
+                                            {% else %}
+                                                <option value="0">0</option>
+                                            {% endif %}
+                                            {% for med in medical_coverage %}
+                                                {% if coverage == med %}
+                                                    <option selected value="{{med}}">{{med}}</option>
+                                                {% else %}
+                                                    <option value="{{med}}">{{med}}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                {% endif %}
+                              </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                      {% endfor %}
+                      {% else %}
+                      <div class="container text-center containerCustom my-4" style="background: #fff;">
+                        <p class="fw-bold mt-4">Custom Package</p>
+                        <p class="pclassCustom mb-2" style="font-size: 12px; margin: 0px;">You can combine multiple policies into one custom package for easy maintenance.</p>
+                        <a class="btn btn-outline-primary" href="{{host_address}}/package-list/{{companySalt}}">Add Package</a>
+                      </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                <div class="bottomButton"> 
+                    <button class="btn rounded-pill btn-primary my-3 mx-3" style="margin: 0px; text-transform: none;letter-spacing: -0.02em; " type="submit">
+                        Save
+                    </button>
+                </div>
+            </form>
+                </div>
+            </div>
+        </div>
+        <div class="content-wrapper">
+        <div class="loading_overlay" id="loading-overlay-2">
+            <div id="loading-bird-2" class="loading-bird"></div>
+        </div>
+        <div class="container-xxl flex-shrink-1" style="padding: 0px;">
+            <!-- Content wrapper -->
+            <nav class="navbar navbar-example navbar-expand-lg bg-light" style="padding: 0px;">
+                <div class="container-fluid">
+                    {% block page_title %}{% endblock %}
+                  
+                    <ul class="navbar-nav flex-row align-items-center ms-auto">
+                        <li>
+                            <a style="color:black; padding:10px;" href="{{ host_address }}/package-list/{{ companySalt }}">Packages</a>
+                        </li>
+                        <li style="align-items:left">
+                            <a style="color:black;padding:10px;" href="{{ host_address }}/invoice-list">Invoices</a>
+                        </li>
+                        <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                          <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                            <div class="avatar avatar-online">
+                              <img src="{% static "portal/img/user-icon.png" %}" alt class="w-px-30 h-auto rounded-circle" />
+                            </div>
+                          </a>
+                          <ul class="dropdown-menu dropdown-menu-end">
+                            <!-- <li>
+                              <a class="dropdown-item" href="#">
+                                <i class="bx bx-user me-2"></i>
+                                <span class="align-middle">Account</span>
+                              </a>
+                            </li>
+                            <li>
+                              <a class="dropdown-item" href="#">
+                                <i class="bx bx-cog me-2"></i>
+                                <span class="align-middle">Help</span>
+                              </a>
+                            </li>
+                            <li>
+                              <div class="dropdown-divider"></div>
+                            </li> -->
+                            <li>
+                                <a class="dropdown-item" href="{{host_address}}/change-password">
+                                  <i class="bx bx-lock-open-alt me-2"></i>
+                                  <span class="align-middle">Change Password</span>
+                                </a>
+                            </li>
+                            {% if company.verified %}
+                            <li>
+                                <a class="dropdown-item" href="{{host_address}}/general">
+                                  <i class="bx bx-cog me-2" aria-hidden="true"></i>
+                                  <span class="align-middle">Settings</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            <li>
+                              <a class="dropdown-item" href="{{host_address}}/logout">
+                                <i class="bx bx-power-off me-2"></i>
+                                <span class="align-middle">Log Out</span>
+                              </a>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                </div>
+              </nav>
+              </div>
+              {% if messages %}
+                {% for message in messages %}
+                    <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+                {% endfor %}
+              {% endif %}
+              {% block content %} {% endblock %}
+                <!-- Footer -->
+                <footer class="content-footer footer">
+                    <!-- <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+                        <div class="mb-2 mb-md-0">
+                            © DearTime
+                            <script>
+                            document.write(new Date().getFullYear());
+                            </script>
+                        </div>
+                    </div> -->
+                    
+                    <div class="container-xxl d-flex flex-wrap py-2 flex-md-row flex-column">
+                        {% block footerContent %} {% endblock %}
+                        <div class="mb-2 mb-md-0">
+                            <img src="{% static "portal/img/favicon-removebg-preview.png" %}" width="40px" height="40px">
+                            <!-- © <script>
+                                document.write(new Date().getFullYear())
+                              </script> -->
+                              <span class="nav-link-text">Version: <span class="nav-link-text" style="font-weight: bold;">2.34.6</span></span>
+                        </div>
+                    </div>
+                </footer>
+                <!-- / Footer -->
+                <div class="content-backdrop fade"></div>
+            </div>
+        </div>
+      </div>
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+    <!-- / Layout wrapper -->
+
+    <script>
+        let filename
+        let imageData
+        Dropzone.options.myMemberSpreadsheet = { // camelized version of the `id`
+            url: "{{host_address}}/upload-member-spreadsheet",
+            paramName: "member-spreadsheet", // The name that will be used to transfer the file
+            addRemoveLinks: true, //Add a link to every file preview to remove or cancel (if already uploading) the file
+            autoProcessQueue: false,
+            uploadMultiple: false,
+            acceptedFiles: '.xlsx',
+            accept: function (file, done) {
+                reader = new FileReader();
+                reader.onload = function (event) {
+                    imageData = event.target.result;
+                    var inputHidden = document.createElement("input");
+                    filename = document.getElementById('my-member-spreadsheet').getElementsByClassName("dz-filename")[0].innerText
+                    inputHidden.setAttribute("type", "hidden");
+                    inputHidden.setAttribute("name", "member-form");
+                    inputHidden.setAttribute("value", filename + '|' + imageData);
+    
+                    document.getElementById('memberUploadBtn').disabled=false;
+                    //append to form element that you want .
+                    document.getElementById("bottomButtonForm").appendChild(inputHidden);
+                };
+                reader.readAsDataURL(file);
+                done();
+            },
+            init: function() {
+                dzClosure = this; // Makes sure that 'this' is understood inside the functions below.
+
+                // for Dropzone to process the queue (instead of default form behavior):
+                document.getElementById('memberUploadBtn').addEventListener('click', function(e){
+                    // Make sure that the form isn't actually being sent.
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dzClosure.processQueue();
+                });
+
+                this.on('removedfile', function(file, response) {
+                    if(dzClosure.files.length==0){
+                        document.getElementById('memberUploadBtn').disabled=true;
+                    }
+                });
+                
+                this.on('sending', function(data, xhr, formData) {
+                    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+                    formData.append('member-form', filename + '|' + imageData);
+                });
+                //send all the form data along with the files:
+                // this.on('sendingmultiple', function(data, xhr, formData) {
+                //     formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+                // });
+
+                this.on('success', function(file, response) {
+                    location.reload();
+                });
+
+                this.on('error', function(file, response) {
+                    location.reload();
+                });
+            },
+        };
+
+        {% comment %} var check = document.getElementById('show-code-field');
+        var dropdown = document.getElementById('package_addMember');
+        var hiddenOption = document.getElementById('hidden');
+        var voucher_field = document.getElementById('campaignCode');
+        
+        check.addEventListener('change', function() {
+            if (check.checked) {
+                voucher_field.removeAttribute("disabled");
+                voucher_field.setAttribute("required","required");
+                for (var i = 0; i < dropdown.options.length; i++) {
+                    if (dropdown.options[i].id === 'hidden') {
+                        dropdown.options[i].style.display = 'block'; 
+                    } else {
+                        dropdown.options[i].style.display = 'none';  
+                    }
+                }
+            } else {
+                voucher_field.setAttribute("disabled","disabled");
+                voucher_field.removeAttribute("required");
+                for (var i = 0; i < dropdown.options.length; i++) {
+                    if (dropdown.options[i].id === 'hidden') {
+                        dropdown.options[i].style.display = 'none';  
+                    } else {
+                        dropdown.options[i].style.display = 'block'; 
+                    }
+                }
+            }
+        }); {% endcomment %}
+
+        function calculateAge(){
+            var dob = new Date(document.getElementById('dob').value);
+            const today = new Date();
+            const price1 = 5000;
+            const price2 = 2500;
+
+            let age = today.getFullYear() - dob.getFullYear();
+            const month = today.getMonth() - dob.getMonth();
+
+            if (month < 0 || (month === 0 && today.getDate() < dob.getDate())){
+                age--;
+            }
+            if (age >= 20 && age <= 40){
+                console.log("The death coverage for campaign code is 5000");
+            }
+            else if (age >= 41 && age <= 60){
+                console.log("The death coverage for campaign code is : 2500");
+            }
+            else{
+                console.log("You are not applicable with this");
+            }
+        }
+
+
+        function CloseOverlay(){
+            var overlayLeft = document.getElementById("baseOverlayLeft");
+            var overlayRight = document.getElementById("baseOverlayRight");
+            var overlayAddMember = document.getElementById("addMemberOverlay");
+            var overlayImportMember = document.getElementById("importMemberOverlay");
+            overlayLeft.style.display = "none";
+            overlayRight.style.display = "none";
+            overlayImportMember.style.display = "none";
+            overlayAddMember.style.display = "none";
+        }
+
+        function updateRangeValue(rangeId, inputValue, productName, overlayName){
+            const inputSlider = document.getElementById(rangeId);
+            const inputBox = document.getElementById(inputValue);
+
+            var getInputHidden = document.getElementById(productName+'_POST');
+            if(getInputHidden == null){
+                var inputHidden = document.createElement("input");
+                inputHidden.setAttribute("type", "hidden");
+                inputHidden.setAttribute("id", productName+'_POST');
+                inputHidden.setAttribute("name", productName+'_POST');
+                inputHidden.setAttribute("value", parseInt(inputSlider.value));
+
+                document.getElementById(overlayName+"POST").appendChild(inputHidden);
+            }
+            else {
+                document.getElementById(productName+'_POST').value = parseInt(inputSlider.value);
+            }
+            inputBox.value = parseInt(inputSlider.value);
+        }
+
+        function updateSliderValue(rangeId, inputValue, productName, overlayName){
+            const inputSlider = document.getElementById(rangeId);
+            const inputBox = document.getElementById(inputValue);
+
+            var getInputHidden = document.getElementById(productName+'_POST');
+            if(getInputHidden == null){
+                var inputHidden = document.createElement("input");
+                inputHidden.setAttribute("type", "hidden");
+                inputHidden.setAttribute("id", productName+'_POST');
+                inputHidden.setAttribute("name", productName+'_POST');
+                inputHidden.setAttribute("value", parseInt(inputBox.value));
+
+                document.getElementById(overlayName+"POST").appendChild(inputHidden);
+            }
+            else {
+                document.getElementById(productName+'_POST').value = parseInt(inputBox.value);
+            }
+
+            inputSlider.value = parseInt(inputBox.value);
+        }
+
+        function MemberAction(actionType){
+            var overlayLeft = document.getElementById("baseOverlayLeft");
+            var overlayRight = document.getElementById("baseOverlayRight");
+            var overlayAddMember = document.getElementById("addMemberOverlay");
+            var overlayImportMember = document.getElementById("importMemberOverlay");
+            var overlayEditMember = document.getElementById("editMemberOverlay");
+            if (actionType == "ImportMember"){
+                overlayLeft.style.display = "block";
+                overlayRight.style.display = "block";
+                overlayImportMember.style.display = "block";
+                overlayAddMember.style.display = "none";
+                overlayEditMember.style.display = "none";
+            }
+            else if(actionType == "AddMember"){
+                overlayLeft.style.display = "block";
+                overlayRight.style.display = "block";
+                overlayImportMember.style.display = "none";
+                overlayAddMember.style.display = "block";
+                overlayEditMember.style.display = "none";
+            }
+            else if(actionType == "AddPackage"){
+                overlayLeft.style.display = "block";
+                overlayRight.style.display = "block";
+                overlayImportMember.style.display = "none";
+                overlayAddMember.style.display = "none";
+                overlayEditMember.style.display = "none";
+            }
+        }
+
+        function EditMember(id, employment_no, name, email_address, nationality, dob, gender, mobile_no, mykad, passport, batch_no, status, tentative_premium, package_id){
+            var overlayLeft = document.getElementById("baseOverlayLeft");
+            var overlayRight = document.getElementById("baseOverlayRight");
+            var overlayAddMember = document.getElementById("addMemberOverlay");
+            var overlayImportMember = document.getElementById("importMemberOverlay");
+            var overlayEditMember = document.getElementById("editMemberOverlay");
+
+            overlayLeft.style.display = "block";
+            overlayRight.style.display = "block";
+            overlayImportMember.style.display = "none";
+            overlayAddMember.style.display = "none";
+            overlayEditMember.style.display = "block";
+
+            var formattedDate = "";
+            var d = new Date(dob);
+            var year = d.getFullYear();
+            var month = '' + (d.getMonth()+1);
+            var day = '' + d.getDate();
+            if(month.length <2)
+                month = '0' + month;
+            if(day.length <2)
+                day = '0' + day;
+            formattedDate = [year,month,day].join('-');
+
+            document.getElementById('member_id').value = id;
+            document.getElementById('memberNo_editMember').value = employment_no;
+            document.getElementById('memberName_editMember').value = name;
+            document.getElementById('memberEmail_editMember').value = email_address;
+            if (mykad != '') {
+                document.getElementById('nationality_editMember').value = 'Malaysian';
+            } else {
+                document.getElementById('nationality_editMember').value = nationality;
+            }
+
+            document.getElementById('dob_editMember').value = formattedDate;
+
+            for (let i = 0; i < document.getElementById('gender_editMember').options.length; i++) {
+                if (gender.toUpperCase() == 'M'.toUpperCase() || gender.toUpperCase() == 'Male'.toUpperCase()){
+                    document.getElementById('gender_editMember').options[0].selected = true;
+                } else {
+                    document.getElementById('gender_editMember').options[1].selected = true;
+                }
+            }
+
+            document.getElementById('memberMobileNo_editMember').value = mobile_no;
+            if(mykad != ''){
+                document.getElementById('nric_editMember').value = mykad;
+            }
+            else{
+                document.getElementById('nric_editMember').value = passport;
+            }
+            document.getElementById('batchNo_editMember').innerHTML = batch_no;
+            document.getElementById('memberStatus_editMember').innerHTML = status;
+            //document.getElementById('member_id').value = tentative_premium;
+            document.getElementById('package_editMember').value = package_id;
+
+            var selectedValue = package_id;
+
+            var selectedPackage = document.getElementById(selectedValue+'_package_editMember');
+            if(lastPackageSelected){
+                document.getElementById(lastPackageSelected+"_package_editMember").style.display = "none";
+            }
+            lastPackageSelected = selectedValue;
+            document.getElementById(selectedValue+"_package_editMember").style.display = "";
+
+        }
+
+        let lastProductSelected = ""
+        function ProductType(overlayCategory){
+            var selectField   = document.getElementById('productName_'+ overlayCategory);
+            var selectedValue = selectField.options[selectField.selectedIndex].id;
+
+            var productType = document.getElementById("productName_"+overlayCategory);
+            if(lastProductSelected){
+                document.getElementById(lastProductSelected+"Coverage_"+overlayCategory).style.display = "none";
+            }
+            lastProductSelected = selectedValue;
+            if(lastProductSelected != "defaultProduct"){
+                document.getElementById(selectedValue+"Coverage_"+overlayCategory).style.display = "";
+            }
+        }
+        
+        let lastPackageSelected = ""
+        function PackageSelection(overlayCategory){
+            var selectField   = document.getElementById('package_'+overlayCategory);
+            var selectedValue = selectField.options[selectField.selectedIndex].value;
+
+            var selectedPackage = document.getElementById(selectedValue+'_package_'+overlayCategory);
+            if(lastPackageSelected){
+                document.getElementById(lastPackageSelected+"_package_"+overlayCategory).style.display = "none";
+            }
+            lastPackageSelected = selectedValue;
+            if(lastPackageSelected != ""){
+                document.getElementById(selectedValue+"_package_"+overlayCategory).style.display = "";
+            }
+        }
+
+        function populateHidden(prd, packageID) {
+            var selectField = document.getElementById(packageID+'_Medical_coverageSummary');
+            
+            if (prd != 'Medical') {
+                if (document.getElementById(packageID+"_"+prd+'_coverageSummary').value != '0') {
+                    document.getElementById(packageID+"_"+prd+"_addMemberPOST").value = parseInt(document.getElementById(packageID+"_"+prd+'_coverageSummary').value);
+                } else {
+                    document.getElementById(packageID+"_"+prd+"_addMemberPOST").value = 0;
+                }
+            } else {
+                document.getElementById(packageID+"_Medical_addMemberPOST").value = parseInt(selectField.options[selectField.selectedIndex].value);
+            }
+        }
+
+        function populateHiddenEdit(prd, packageID) {
+            var selectField = document.getElementById(packageID+'_Medical_coverageSummaryEdit');
+            
+            if (prd != 'Medical') {
+                if (document.getElementById(packageID+"_"+prd+'_coverageSummaryEdit').value != '0') {
+                    document.getElementById(packageID+"_"+prd+"_editMemberPOST").value = parseInt(document.getElementById(packageID+"_"+prd+'_coverageSummaryEdit').value);
+                } else {
+                    document.getElementById(packageID+"_"+prd+"_editMemberPOST").value = 0;
+                }
+            } else {
+                document.getElementById(packageID+"_Medical_editMemberPOST").value = parseInt(selectField.options[selectField.selectedIndex].value);
+            }
+        }
+
+        // $('[data-check-accident-match]').bind('input', function() {
+        //     var to_check = $(this);
+        //     var to_match = $('#' + to_check.data('checkAccidentMatch'));
+
+        //     if (parseInt(to_check.val()) > parseInt(to_match.val())) {
+        //         this.setCustomValidity('Accident coverage must be lower than death coverage!');
+        //     } else {
+        //         this.setCustomValidity('');
+        //     }
+        // });
+
+        function checkCoverageConditions(module, packageID) {
+            if (packageID == '-') {
+                if (module == 'edit') {
+                    var package_id = document.getElementById('package_editMember').options[document.getElementById('package_editMember').selectedIndex].value;
+                } else {
+                    var package_id = document.getElementById('package_addMember').options[document.getElementById('package_addMember').selectedIndex].value;
+                }
+            } else {
+                var package_id = packageID;
+            }
+
+            if (module == 'edit') {
+                checkAccidentDeath('edit', package_id);
+                checkAgeLimit('edit', package_id);
+                checkMinimumCoverage('edit', package_id);
+            } else {
+                checkAccidentDeath('add', package_id);
+                checkAgeLimit('add', package_id);
+                checkMinimumCoverage('add', package_id);
+            }
+        }
+
+        function checkAccidentDeath(module, packageID) {
+            const products = ['Death', 'Disability', 'Critical Illness', 'Accident', 'Medical'];
+
+            for (let i = 0; i < products.length; i++) {
+                if (module == 'edit') {
+                    var to_reset = document.getElementById(packageID+"_"+products[i]+"_coverageSummaryEdit");
+                } else {
+                    var to_reset = document.getElementById(packageID+"_"+products[i]+"_coverageSummary");
+                }
+                to_reset.setCustomValidity('');
+            }
+
+            if (module == 'edit') {
+                var death = document.getElementById(packageID+'_Death_coverageSummaryEdit');
+                var accident = document.getElementById(packageID+"_Accident_coverageSummaryEdit");
+            } else {
+                var death = document.getElementById(packageID+'_Death_coverageSummary');
+                var accident = document.getElementById(packageID+"_Accident_coverageSummary");
+            }
+
+            for (let i = 0; i < products.length; i++) {
+                if (module == 'edit') {
+                    var to_set = document.getElementById(packageID+"_"+products[i]+"_coverageSummaryEdit");
+                } else {
+                    var to_set = document.getElementById(packageID+"_"+products[i]+"_coverageSummary");
+                }
+
+                if (parseInt(accident.value) > parseInt(death.value)) {
+                    to_set.setCustomValidity('Accident coverage must be lower than death coverage!');
+                } else {
+                    to_set.setCustomValidity('');
+                }
+            } 
+        }
+
+        function checkAgeLimit(module, packageID) {
+            if (packageID == '-') {
+                if (module == 'edit') {
+                    var packageID = document.getElementById('package_editMember').options[document.getElementById('package_editMember').selectedIndex].value;
+                } else {
+                    var packageID = document.getElementById('package_addMember').options[document.getElementById('package_addMember').selectedIndex].value;
+                }
+            }
+            
+            if (!packageID){
+                return;
+            }
+            
+            if (module == 'edit') {
+                var dob_element = document.getElementById('dob_editMember');
+                var dob = dob_element.value;
+            } else {
+                var dob_element = document.getElementById('dob');
+                var dob = dob_element.value;
+            }
+            dob_element.setCustomValidity('');
+            var formattedDate = "";
+            var d = new Date(dob);
+            var year = d.getFullYear();
+            var month = '' + (d.getMonth()+1);
+            var day = '' + d.getDate();
+            if(month.length <2)
+                month = '0' + month;
+            if(day.length <2)
+                day = '0' + day;
+            formattedDate = [year,month,day].join('-');
+
+            var today = new Date(); // Get the current date
+            if (d > today) {
+                dob_element.setCustomValidity('Birthdate cannot be in the future.');
+                return;
+            }
+
+            var time_diff = today - d; 
+            var age_dt = new Date(time_diff);
+            var age = Math.abs(age_dt.getUTCFullYear() - 1970);
+
+            const age_limits = {
+                'Death' : 65,
+                'Disability' : 65,
+                'Critical Illness' : 60,
+                'Accident' : 65,
+                'Medical' : 55
+            }
+            
+            for (const [key, value] of Object.entries(age_limits)) {
+                if (key != 'Medical') {
+                    if (module == 'edit') {
+                        var to_check = document.getElementById(packageID+"_"+key+"_coverageSummaryEdit");
+                    } else {
+                        var to_check = document.getElementById(packageID+"_"+key+"_coverageSummary");
+                    }
+                } else {
+                    if (module == 'edit') {
+                        var to_check = document.getElementById(packageID+"_"+key+"_coverageSummaryEdit").options[document.getElementById(packageID+"_"+key+"_coverageSummaryEdit").selectedIndex];
+                    } else {
+                        var to_check = document.getElementById(packageID+"_"+key+"_coverageSummary").options[document.getElementById(packageID+"_"+key+"_coverageSummary").selectedIndex];
+                    }                
+                }
+
+                if (parseInt(to_check.value) != 0) {
+                    if (age > value) {
+                        dob_element.setCustomValidity('Age exceeded limit for '+key+' coverage!');
+                        break;
+                    } else {
+                        dob_element.setCustomValidity('');
+                    }
+                } else {
+                    dob_element.setCustomValidity('');
+                }
+            }
+        }
+
+        function checkMinimumCoverage(module, packageID) {
+            const minimum_coverage = {
+                'Death' : 2000,
+                'Disability' : 2000,
+                'Critical Illness' : 2000,
+                'Accident' : 2000,
+            }
+
+            var unmet_product = ''
+            for (const [key, value] of Object.entries(minimum_coverage)) {
+                if (key != 'Medical') {
+                    if (module == 'edit') {
+                        var to_check = document.getElementById(packageID+"_"+key+'_coverageSummaryEdit');
+                    } else {
+                        var to_check = document.getElementById(packageID+"_"+key+'_coverageSummary');
+                    }
+
+                    if (parseInt(to_check.value) != 0) {
+                        if (parseInt(to_check.value) < value) {
+                            unmet_product = key;
+                        }
+                    }
+                }
+            }
+
+            for (const [key, value] of Object.entries(minimum_coverage)) {
+                if (key != 'Medical') {
+                    if (module == 'edit') {
+                        var to_set = document.getElementById(packageID+"_"+key+'_coverageSummaryEdit');
+                    } else {
+                        var to_set = document.getElementById(packageID+"_"+key+'_coverageSummary');
+                    }
+
+                    if (unmet_product != '') {
+                        to_set.setCustomValidity('Minimum coverage unmet for '+unmet_product+' coverage!');
+                        unmet_product='';
+                    } else {
+                        to_set.setCustomValidity('');
+                    }
+                }
+            }   
+        }
+
+        function round(product, packageID, module) {
+            if (module == 'edit') {
+                var to_round = document.getElementById(packageID+"_"+product+"_coverageSummaryEdit");
+            } else {
+                var to_round = document.getElementById(packageID+"_"+product+"_coverageSummary");
+            }
+            var update_POST = document.getElementById(packageID+"_"+product+"_"+module+"MemberPOST");
+            to_round.value = Math.round(to_round.value / 1000) * 1000;
+            update_POST.value = to_round.value;
+        }
+
+        document.getElementsByClassName("loading_overlay")[0].style.display = "none";
+        document.getElementsByClassName("loading_overlay")[1].style.display = "none";
+        function show_loader(overlayNumber) {
+            var lottieContainers = document.querySelectorAll('.loading-bird');
+            var animation = bodymovin.loadAnimation({
+                container: document.getElementsByClassName("loading-bird")[overlayNumber],
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: '{% static "material/js/bird.json" %}' // Replace with the actual path to your Lottie JSON file
+            });
+            document.getElementsByClassName("loading_overlay")[overlayNumber].style.display = "block";
+        }
+        
+    </script>
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="{% static "portal/js/jquery.js" %}"></script>
+    <script src="{% static "portal/js/popper.js" %}"></script>
+    <script src="{% static "portal/js/bootstrap.js" %}"></script>
+    <script src="{% static "portal/js/perfect-scrollbar.js" %}"></script>
+
+    <script src="{% static "portal/js/menu.js" %}"></script>
+    <!-- endbuild -->
+
+    <!-- Main JS -->
+    <script src="{% static "portal/js/main.js" %}"></script>
+
+    <!-- Page JS -->
+    <script src="{% static "portal/js/dashboards-analytics.js" %}"></script>
+
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    {% block javascript %}
+    {% endblock %}
+  </body>
+</html>

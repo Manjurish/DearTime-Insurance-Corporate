@@ -1,0 +1,12 @@
+{% extends '../EmailTemplateBase.html' %}
+{% load static %}
+{% block content %}
+<p>Hi {{ payor }},</p>
+
+<p>We regret to inform you that DearTime is currently unable to cover {{ owner }} with one or more of our insurance products.<br>
+We are working hard on this matter and will keep you updated on {{ owner }}'s eligibility.</p>
+
+
+<a href="{{ Url }}">Login Now</a>
+    
+{% endblock %}

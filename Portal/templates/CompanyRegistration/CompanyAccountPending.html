@@ -1,0 +1,1150 @@
+{% extends "../Base.html" %}
+{% block title %}
+<title>DearTime | Company Registration</title>
+{% endblock %}
+{% block css %}
+<style>
+</style> 
+{% endblock %}
+{% block content %}
+<div class="container-xxl flex-grow-1" style="padding: 0px;">
+    <div class="content-wrapper mt-3">
+        <div class="container" style="margin: 0px; max-width: 1920px;">
+            <h4>Registration</h4>
+            <p style="margin:0px; color: #57534E;">Fill up the form below to complete the registration process with DearTime. The process should take between 2 - 3 working days.</p>
+            <p style="color: #57534E;">You will be notified via this email address: <a href="mailto:{{ company_info.email_address }}" style="color: #3498DB;">{{ company_info.email_address }}</a>.</p>
+        </div>
+        <hr>
+        <div class="container my-3">
+            <div class="card-header mb-4">
+                <h5 class="mb-0">{{ company_info.company_name }}</h5>
+                <p>{{ company_info.registration_no }}</p>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <p class="text-uppercase">Company Profile</p>
+                    <div class="card mb-3" style="background: #F8F4EE;">
+                        <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;">
+                            <h6>Company Telephone Number <b style="color: red;">*</b></h6>
+                            <p>Your company land line.</p>
+                        </div>
+                        <div class="card-body pb-0">
+                            <div class="row">
+                                <div class="col-sm-1 input-group input-group-dynamic mb-2" style="width: 15%;">
+                                   <select class="form-control" name="companyCountryCode" id="companyCountryCode" onselect="populateHiddenValue('companyCountryCode')">
+                                       <option value="+60">(+60)</option>
+                                   </select>
+                                </div>
+                                <div class="col-sm-1 input-group input-group-dynamic mb-2" style="width: 85%;">
+                                    <input type="tel" class="form-control" name="companyTelephone" id="companyTelephone" placeholder="312345678" pattern="[0-9]{9,10}" onchange="populateHiddenValue('companyTelephone');populateHiddenValue('companyCountryCode');"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-3" style="background: #F8F4EE;">
+                        <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;">
+                            <h6>Company Address <b style="color: red;">*</b></h6>
+                            <p>Your company address.</p>
+                        </div>
+                        <div class="card-body pb-0">
+                            <div class="input-group input-group-dynamic mb-4">
+                                <input id="companyAddress1" class="form-control" type="text" name="companyAddress1" placeholder="Address 1" onchange="populateHiddenValue('companyAddress1')">
+                            </div>
+                            <div class="input-group input-group-dynamic mb-4">
+                                <input id="companyAddress2" class="form-control" type="text" name="companyAddress2" placeholder="Address 2" onchange="populateHiddenValue('companyAddress2')">
+                            </div>
+                            <div class="input-group input-group-dynamic mb-4">
+                                <input id="companyAddress3" class="form-control" type="text" name="companyAddress3" placeholder="Address 3" onchange="populateHiddenValue('companyAddress3')">
+                            </div>
+                            <div class="input-group input-group-dynamic mb-4">
+                                <select id="companyState" class="form-control" name="companyState" onchange="enableField(); getMapping('companyState', 'companyCity', /{{cities}}/); populateHiddenValue('companyState', 'dropdown');">
+                                    <option selected>State</option>
+                                    {% for st in states %}
+                                        <option>{{st}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="input-group input-group-dynamic mb-4">
+                                <select id="companyCity" class="form-control" name="companyCity" onchange="getMapping('companyCity', 'companyPostcode', /{{postal_codes}}/); populateHiddenValue('companyCity', 'dropdown');" disabled>
+                                    <option selected>City</option>
+                                </select>
+                            </div>
+                            <div class="input-group input-group-dynamic mb-4">
+                                <select id="companyPostcode" class="form-control" name="companyPostcode" onchange="populateHiddenValue('companyPostcode', 'dropdown')" disabled>
+                                    <option selected>Postcode</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-3" style="background: #F8F4EE;">
+                        <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;">
+                            <h6>Relationship with DearTime <b style="color: red;">*</b></h6>
+                            <p>Select the type of relationship between your company and DearTime.</p>
+                        </div>
+                        <div class="card-body pb-0">
+                            <div class="input-group input-group-dynamic mb-4">
+                                <select id="relationship" class="form-control" name="relationship" onchange="populateHiddenValue('relationship', 'dropdown')">
+                                    <option selected>----------------</option>
+                                    {% for rel in relationship %}
+                                    <option id="{{ rel.id }}" value="{{ rel.id }}">{{ rel.relationship_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-3" style="background: #F8F4EE;">
+                        <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;">
+                            <h6>Payment <b style="color: red;">*</b></h6>
+                            <p hidden>You can pay monthly or annually. This apply to all policies you are paying for.</p>
+                        </div>
+                        <div class="card-body pb-0">
+                            <div class="mb-3">
+                                <label class="btn btn-outline-primary me-1" style="margin-top: 15px; text-transform: none;">
+                                    <input class="paymentCb" type="radio" value="1" name="payment" id="monthlyMode" onclick="visibilityPaymentTab('monthlyMode', 'monthlyPaymentTab', 'yearlyPaymentTab')">
+                                    <span>Pay Monthly</span>
+                                </label>
+                                <label class="btn btn-outline-primary me-1" style="margin-top: 15px; text-transform: none;">
+                                    <input checked="checked" class="paymentCb" type="radio" value="2" name="payment" id="yearlyMode" onclick="visibilityPaymentTab('yearlyMode', 'yearlyPaymentTab', 'monthlyPaymentTab')">
+                                    <span>Pay Yearly</span>
+                                </label>
+
+                                <div class="card-body pb-0" id="monthlyPaymentTab" style="padding: 24px 0px 0px;">
+                                    <div class = "row">
+                                        <div class="col-sm-1 input-group input-group-dynamic mb-4" style="width: 75%;">
+                                            <select required id="monthlyDueDate" class="form-control px-0" name="paymentDueDate" onchange="populateHiddenValue('monthlyDueDate')">
+                                                <option value="" disabled selected hidden>Select Day</option>
+                                            </select>
+                                        </div>
+                                        <div style="width: 25%;">
+                                            <p>of every month.</p>
+                                        </div>
+                                    </div>
+                                    <p>This is the monthly payment due date for all your members.</p>
+                                </div>
+                                <div class="card-body pb-0 px-0" id="yearlyPaymentTab">
+                                    <div class="row">
+                                        <div class="col-sm-1 input-group input-group-dynamic mb-4" style="width: 40%;">
+                                            <select required id="yearlyDueDateDay" class="form-control pe-4" name="paymentDueDate" onchange="populateHiddenValue('yearlyDueDateDay')">
+                                                <option value="" disabled selected hidden>Select Day</option>
+                                            </select> 
+                                         </div>
+                                         <div class="col-sm-1 input-group input-group-dynamic mb-4" style="width: 40%;">
+                                            <select required id="yearlyDueDateMonth" class="form-control px-2" name="paymentDueDate" onchange="populateHiddenValue('yearlyDueDateMonth')">
+                                                <option value="" disabled selected hidden>Select Month</option>
+                                            </select>
+                                         </div>
+                                         <div style="width: 20%;">
+                                            <p>of every year.</p>
+                                        </div>
+                                    </div>
+                                    <p>This is the anniversary payment due date for all your members.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <p class="text-uppercase">Support Documents (MAXIMUM UPLOAD FILE SIZE : 2MB)</p>
+                    <div class="card mb-3" style="background: #F8F4EE;">
+                        <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;">
+                            <h6>Company Documents <b style="color: red;">*</b></h6>
+                            <p>Upload your company supporting documents.</p>
+                        </div>
+                        <div class="card-body pt-4">
+                            <div class="input-group input-group-dynamic mb-4">
+                                <!-- <select id="entity" class="form-control" name="entity" onchange="populateHiddenValue('entity')" onclick="visibilityEntityTab(this)"> -->
+                                    <select id="entity" class="form-control" name="entity" onchange="visibilityEntityTab(this)">
+                                    <option value="" disabled selected hidden>Type of Entity</option>
+                                    {% for en in entity_data %}
+                                        <option id="{{ en.entity_type_id }}" value="{{ en.form_types }}">{{ en.entity_type_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div id="my-brd-form-section">
+                                <h6>Upload Borang D (Kaedah 13)</h6>
+                                <form method="POST" enctype="multipart/form-data" class="dropzone needsclick" id="my-brd-form" action="{{host_address}}/upload-corporate-form/{{companySalt}}/brd-form" required>
+                                    
+                                        {% csrf_token %}
+                                        <div class="dz-message needsclick">   
+                                            <i class='bx bx-upload'></i>
+                                            <p>Drop your file here or <span style="color: #2563EB;">click to browse</span></p>
+                                        </div>
+                                    
+                                </form>
+                            </div>
+                            <div id="my-917-form-section" style="padding-top: 15px;">
+                                <h6>Upload Form 9 or Section 17</h6>
+                                <form method="POST" enctype="multipart/form-data" class="dropzone needsclick" id="my-917-form" action="{{host_address}}/upload-corporate-form/{{companySalt}}/917-form" required>
+                                    
+                                        {% csrf_token %}
+                                        <div class="dz-message needsclick">   
+                                            <i class='bx bx-upload'></i>
+                                            <p>Drop your file here or <span style="color: #2563EB;">click to browse</span></p>
+                                        </div>
+                                    
+                                </form>
+                            </div>
+
+                            <div id="my-2478-form-section" style="padding-top: 15px;">
+                                <h6>Upload Form 24 or Section 78</h6>
+                                <form method="POST" enctype="multipart/form-data" class="dropzone needsclick" id="my-2478-form" action="{{host_address}}/upload-corporate-form/{{companySalt}}/2478-form" required>
+                                    
+                                        {% csrf_token %}
+                                        <div class="dz-message needsclick">   
+                                            <i class='bx bx-upload'></i>
+                                            <p>Drop your file here or <span style="color: #2563EB;">click to browse</span></p>
+                                        </div>
+                                    
+                                </form>
+                            </div>
+
+                            <div id="my-4958-form-section" style="padding-top: 15px;">
+                                <h6>Upload Form 49 or Section 58</h6>
+                                <form method="POST" enctype="multipart/form-data" class="dropzone needsclick" id="my-4958-form" action="{{host_address}}/upload-corporate-form/{{companySalt}}/4958-form" required>
+                                    
+                                        {% csrf_token %}
+                                        <div class="dz-message needsclick">   
+                                            <i class='bx bx-upload'></i>
+                                            <p>Drop your file here or <span style="color: #2563EB;">click to browse</span></p>
+                                        </div>
+                                    
+                                </form>
+                            </div>
+
+                            <div id="my-lrfc-form-section" style="padding-top: 15px;">
+                                <h6>Upload LLP Registration Form/Certificate</h6>
+                                <form method="POST" enctype="multipart/form-data" class="dropzone needsclick" id="my-lrfc-form" action="{{host_address}}/upload-corporate-form/{{companySalt}}/lrfc-form" required>
+                                    
+                                        {% csrf_token %}
+                                        <div class="dz-message needsclick">   
+                                            <i class='bx bx-upload'></i>
+                                            <p>Drop your file here or <span style="color: #2563EB;">click to browse</span></p>
+                                        </div>
+                                    
+                                </form>
+                            </div>
+
+                            <div id="my-8-form-section" style="padding-top: 15px;">
+                                <h6>Upload Form 8</h6>
+                                <form method="POST" enctype="multipart/form-data" class="dropzone needsclick" id="my-8-form" action="{{host_address}}/upload-corporate-form/{{companySalt}}/8-form" required>
+                                    
+                                        {% csrf_token %}
+                                        <div class="dz-message needsclick">   
+                                            <i class='bx bx-upload'></i>
+                                            <p>Drop your file here or <span style="color: #2563EB;">click to browse</span></p>
+                                        </div>
+                                    
+                                </form>
+                            </div>
+
+                            <div id="my-ros-form-section" style="padding-top: 15px;">
+                                <h6>Upload Certificate of Registration from Registrar of Societies (ROS)</h6>
+                                <form method="POST" enctype="multipart/form-data" class="dropzone needsclick" id="my-ros-form" action="{{host_address}}/upload-corporate-form/{{companySalt}}/ros-form" required>
+                                    
+                                        {% csrf_token %}
+                                        <div class="dz-message needsclick">   
+                                            <i class='bx bx-upload'></i>
+                                            <p>Drop your file here or <span style="color: #2563EB;">click to browse</span></p>
+                                        </div>
+                                    
+                                </form>
+                            </div>
+
+                            <div id="my-copd-form-section" style="padding-top: 15px;">
+                                <h6>Upload Copy of Partnership Deed (if any)</h6>
+                                <form method="POST" enctype="multipart/form-data" class="dropzone needsclick" id="my-copd-form" action="{{host_address}}/upload-corporate-form/{{companySalt}}/copd-form" required>
+                                    
+                                        {% csrf_token %}
+                                        <div class="dz-message needsclick">   
+                                            <i class='bx bx-upload'></i>
+                                            <p>Drop your file here or <span style="color: #2563EB;">click to browse</span></p>
+                                        </div>
+                                    
+                                </form>
+                            </div>
+
+                            <div id="my-1328-form-section" style="padding-top: 15px;">
+                                <h6>Upload Form 13 or Section 28 (if any)</h6>
+                                <form method="POST" enctype="multipart/form-data" class="dropzone needsclick" id="my-1328-form" action="{{host_address}}/upload-corporate-form/{{companySalt}}/1328-form" required>
+                                    
+                                        {% csrf_token %}
+                                        <div class="dz-message needsclick">   
+                                            <i class='bx bx-upload'></i>
+                                            <p>Drop your file here or <span style="color: #2563EB;">click to browse</span></p>
+                                        </div>
+                                    
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card mb-3" style="background: #F8F4EE;" id="additionalDocs">
+                        <div class="card-header pb-0" style="background: #F5F0E8; border: 1px solid #E7E0D6;">
+                            <h6>Additional Documents<b style="color: red;">*</b></h6>
+                            <p>Download, fill up the form and upload below.</p>
+                        </div>
+                        <div class="card-body pt-4">
+                            <div class="mb-3">
+                                <a href="{{host_address}}/download/form/DearTime Appointment of Authorized Personnel 20230503 Finalized_UW.pdf?path_name={{path}}" class="btn btn-outline-primary me-1" style="margin: 0px; text-transform: none;">
+                                    Download Forms &nbsp;
+                                    <span class="tf-icons bx bx-download"></span>
+                                </a> 
+                            </div>
+                            <div>
+                                <h6>Upload Authorization Form for Authorized Person (AP)</h6>
+                                <form method="POST" enctype="multipart/form-data" class="dropzone needsclick" id="my-authorization-form" action="{{host_address}}/upload-corporate-form/{{companySalt}}/authorization-form" required>
+                                    
+                                        {% csrf_token %}
+                                        <div class="dz-message needsclick">   
+                                            <i class='bx bx-upload'></i>
+                                            <p>Drop your file here or <span style="color: #2563EB;">click to browse</span></p>
+                                        </div>
+                                </form>
+                            </div>
+
+                            <div style="margin-top: 25px;">
+                                <h6>Optional : </h6>
+                                <h6>Upload Copy of NRIC or Passport of Authorized Person (AP).</h6>
+                                <h6>Note: Expired copy of the passport will not be accepted</h6>
+                                <!-- Action URL will need to be updated -->
+                                <form method="POST" enctype="multipart/form-data" class="dropzone needsclick" id="my-icPass-form" action="{{host_address}}/upload-corporate-form/{{companySalt}}/icPass-form">
+                                    
+                                        {% csrf_token %}
+                                        <div class="dz-message needsclick">   
+                                            <i class='bx bx-upload'></i>
+                                            <p>Drop your file here or <span style="color: #2563EB;">click to browse</span></p>
+                                        </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <form method="POST" id="companyDetailForm" action="{{host_address}}/company-registration-login/{{companySalt}}">
+                {% csrf_token %}
+                <input type="hidden" id="companyTelephone_post" name="companyTelephone_post">
+                <input type="hidden" id="companyCountryCode_post" name="companyCountryCode_post">
+                <input type="hidden" id="companyAddress1_post" name="companyAddress1_post">
+                <input type="hidden" id="companyAddress2_post" name="companyAddress2_post">
+                <input type="hidden" id="companyAddress3_post" name="companyAddress3_post">
+                <input type="hidden" id="companyState_post" name="companyState_post">
+                <input type="hidden" id="companyCity_post" name="companyCity_post">
+                <input type="hidden" id="companyPostcode_post" name="companyPostcode_post">
+                <input type="hidden" id="relationship_post" name="relationship_post">
+                <input type="hidden" id="paymentDueDate_post" name="paymentDueDate_post">
+                <input type="hidden" id="entityType_post" name="entityType_post">
+                <input type="hidden" id="paymentMode_post" name="paymentMode_post">
+                <input type="hidden" id="companyID" name="companyID" value="{{ company_info.id }}">
+                <div class="container-sm">
+                    <div class="mx-12">
+                        <h6 class="text-center">Before you submit your information, please take a moment to double check that all the details are accurate. If you notice any errors, please make the necessary corrections before submitting.</h6>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button style="border: 0px; border-radius:15px; padding: 8px 16px; background: #E7E5E4;" type="submit" onclick="return checkEmpty()">Submit</button>
+                        <button style="border: 0px; border-radius:15px; padding: 8px 16px; background: #E7E5E4;" id="cancelBtn" formaction="{{host_address}}/logout">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block footerContent %} 
+
+{% endblock %}
+{% block javascript %}
+<script>
+    var monthlyPaymentVisibility = document.getElementById('monthlyPaymentTab');
+    monthlyPaymentVisibility.style.display = 'none';
+    var days = [];
+    var yearlyDays = [];
+    var yearlyMonth = [];
+    var yearlyMonthWord = [];
+    var getDayFieldValue;
+    var getMonthFieldValue;
+
+    if (document.getElementById('yearlyMode').checked == true) {
+        document.getElementById('paymentMode_post').value = 'Annually';
+        dropdownDayAndMonthOnly();
+    }
+
+    // Hide container tab by default
+    // Payment Container
+    companyDocForm();
+
+    // Set variables
+    var days = [];
+    var yearlyDays = [];
+    var yearlyMonth = [];
+    var getDayFieldValue;
+    var getMonthFieldValue;
+
+    function companyDocForm() {
+        document.getElementById('my-brd-form-section').style.display = 'none';
+        document.getElementById('my-copd-form-section').style.display = 'none';
+        document.getElementById('my-917-form-section').style.display = 'none';
+        document.getElementById('my-1328-form-section').style.display = 'none';
+        document.getElementById('my-2478-form-section').style.display = 'none';
+        document.getElementById('my-4958-form-section').style.display = 'none';
+        document.getElementById('my-lrfc-form-section').style.display = 'none';
+        document.getElementById('my-8-form-section').style.display = 'none';
+        document.getElementById('my-ros-form-section').style.display = 'none';
+        document.getElementById('additionalDocs').style.display = 'none';
+    }
+
+    function visibilityEntityTab(element) {
+
+        entityData = element.value;
+        splitEntity = entityData.split(',');
+
+        var selectEntityElement = document.getElementById("entity");
+        var selectedOption = selectEntityElement.options[selectEntityElement.selectedIndex];
+        var selectedName = selectedOption.text;
+
+        document.getElementById('entityType_post').value = selectedOption.id;
+
+        companyDocForm();
+        for (i = 0; i < splitEntity.length; i++) {
+            document.getElementById(splitEntity[i]+'-section').style.display = 'block';
+        }
+
+        if (selectedName == 'Private Limited Company' || selectedName == 'Public Limited Company') {
+            document.getElementById('additionalDocs').style.display = 'block';
+        }
+        
+    }
+
+    addBrsFormCount = 0;
+    Dropzone.options.myBrsForm = { // camelized version of the `id`
+        //url : "{{host_address}}/upload-corporate-form/{{company_info.id}}/brs-form",
+        paramName: "brs-form", // The name that will be used to transfer the file
+        addRemoveLinks: true, //Add a link to every file preview to remove or cancel (if already uploading) the file
+        // autoProcessQueue: false,
+        // uploadMultiple: false,
+        maxFilesize: 2,
+        acceptedFiles: 'application/pdf',
+        removedfile: function(file) {
+            var name = file.name
+            $.ajax({
+                url: "{{host_address}}/remove-corporate-form/{{companySalt}}/brs-form", //path to remove file
+                type: "POST",
+                data:{
+                    filename: name,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+            }).done(function() {
+                file.previewElement.remove();
+            });
+        },
+        accept: function (file) {
+            reader = new FileReader();
+            reader.onload = function (event) {
+                imageData = event.target.result;
+                var inputHidden = document.createElement("input");
+                filename = document.getElementById('my-brs-form').getElementsByClassName("dz-filename")[addBrsFormCount].innerText
+                inputHidden.setAttribute("type", "hidden");
+                inputHidden.setAttribute("name", "base64-brs-form_"+addBrsFormCount);
+                inputHidden.setAttribute("value", filename + '|' + imageData);
+
+                //append to form element that you want .
+                document.getElementById("companyDetailForm").appendChild(inputHidden);
+                addBrsFormCount = addBrsFormCount + 1;
+            };
+            reader.readAsDataURL(file);
+        },
+    };
+
+    addBrdFormCount = 0;
+    Dropzone.options.myBrdForm = { // camelized version of the `id`
+        //url : "{{host_address}}/upload-corporate-form/{{company_info.id}}/brs-form",
+        paramName: "brd-form", // The name that will be used to transfer the file
+        addRemoveLinks: true, //Add a link to every file preview to remove or cancel (if already uploading) the file
+        // autoProcessQueue: false,
+        // uploadMultiple: false,
+        maxFilesize: 2,
+        acceptedFiles: 'application/pdf',
+        removedfile: function(file) {
+            var name = file.name
+            $.ajax({
+                url: "{{host_address}}/remove-corporate-form/{{companySalt}}/brd-form", //path to remove file
+                type: "POST",
+                data:{
+                    filename: name,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+            }).done(function() {
+                file.previewElement.remove();
+            });
+        },
+        accept: function (file) {
+            reader = new FileReader();
+            reader.onload = function (event) {
+                imageData = event.target.result;
+                var inputHidden = document.createElement("input");
+                filename = document.getElementById('my-brd-form').getElementsByClassName("dz-filename")[addBrdFormCount].innerText
+                inputHidden.setAttribute("type", "hidden");
+                inputHidden.setAttribute("name", "base64-brd-form_"+addBrdFormCount);
+                inputHidden.setAttribute("value", filename + '|' + imageData);
+
+                //append to form element that you want .
+                document.getElementById("companyDetailForm").appendChild(inputHidden);
+                addBrdFormCount = addBrdFormCount + 1;
+            };
+            reader.readAsDataURL(file);
+        },
+    };
+
+    addformCopdCount = 0
+    Dropzone.options.myCopdForm = { // camelized version of the `id`
+        paramName: "copd-form", // The name that will be used to transfer the file
+        addRemoveLinks: true, //Add a link to every file preview to remove or cancel (if already uploading) the file
+        maxFilesize: 2,
+        acceptedFiles: 'application/pdf',
+        removedfile: function(file) {
+            var name = file.name
+            $.ajax({
+                url: "{{host_address}}/remove-corporate-form/{{companySalt}}/copd-form", //path to remove file
+                type: "POST",
+                data:{
+                    filename: name,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+            }).done(function() {
+                file.previewElement.remove();
+            });
+        },
+        accept: function (file) {
+            reader = new FileReader();
+            reader.onload = function (event) {
+                imageData = event.target.result;
+                var inputHidden = document.createElement("input");
+                filename = document.getElementById('my-copd-form').getElementsByClassName("dz-filename")[addformCopdCount].innerText
+                inputHidden.setAttribute("type", "hidden");
+                inputHidden.setAttribute("name", "base64-copd-form_"+addformCopdCount);
+                inputHidden.setAttribute("value", filename + '|' + imageData);
+
+                //append to form element that you want .
+                document.getElementById("companyDetailForm").appendChild(inputHidden);
+                addformCopdCount = addformCopdCount + 1;
+            };
+            reader.readAsDataURL(file);
+        },
+    };
+
+    addform917Count = 0;
+    Dropzone.options.my917Form = { // camelized version of the `id`
+        paramName: "917-form", // The name that will be used to transfer the file
+        addRemoveLinks: true, //Add a link to every file preview to remove or cancel (if already uploading) the file
+        maxFilesize: 2,
+        acceptedFiles: 'application/pdf',
+        removedfile: function(file) {
+            var name = file.name
+            $.ajax({
+                url: "{{host_address}}/remove-corporate-form/{{companySalt}}/917-form", //path to remove file
+                type: "POST",
+                data:{
+                    filename: name,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+            }).done(function() {
+                file.previewElement.remove();
+            });
+        },
+        accept: function (file) {
+            reader = new FileReader();
+            reader.onload = function (event) {
+                imageData = event.target.result;
+                var inputHidden = document.createElement("input");
+                filename = document.getElementById('my-917-form').getElementsByClassName("dz-filename")[addform917Count].innerText
+                inputHidden.setAttribute("type", "hidden");
+                inputHidden.setAttribute("name", "base64-917-form_"+addform917Count);
+                inputHidden.setAttribute("value", filename + '|' + imageData);
+
+                //append to form element that you want .
+                document.getElementById("companyDetailForm").appendChild(inputHidden);
+                addform917Count = addform917Count + 1;
+            };
+            reader.readAsDataURL(file);
+        },
+    };
+
+    addform1328Count = 0;
+    Dropzone.options.my1328Form = { // camelized version of the `id`
+        paramName: "1328-form", // The name that will be used to transfer the file
+        addRemoveLinks: true, //Add a link to every file preview to remove or cancel (if already uploading) the file
+        maxFilesize: 2,
+        acceptedFiles: 'application/pdf',
+        removedfile: function(file) {
+            var name = file.name
+            $.ajax({
+                url: "{{host_address}}/remove-corporate-form/{{companySalt}}/1328-form", //path to remove file
+                type: "POST",
+                data:{
+                    filename: name,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+            }).done(function() {
+                file.previewElement.remove();
+            });
+        },
+        accept: function (file) {
+            reader = new FileReader();
+            reader.onload = function (event) {
+                imageData = event.target.result;
+                var inputHidden = document.createElement("input");
+                filename = document.getElementById('my-1328-form').getElementsByClassName("dz-filename")[addform1328Count].innerText
+                inputHidden.setAttribute("type", "hidden");
+                inputHidden.setAttribute("name", "base64-1328-form_"+addform1328Count);
+                inputHidden.setAttribute("value", filename + '|' + imageData);
+
+                //append to form element that you want .
+                document.getElementById("companyDetailForm").appendChild(inputHidden);
+                addform1328Count = addform1328Count + 1;
+            };
+            reader.readAsDataURL(file);
+        },
+    };
+
+    addform2478Count = 0;
+    Dropzone.options.my2478Form = { // camelized version of the `id`
+        paramName: "2478-form", // The name that will be used to transfer the file
+        addRemoveLinks: true, //Add a link to every file preview to remove or cancel (if already uploading) the file
+        maxFilesize: 2,
+        acceptedFiles: 'application/pdf',
+        removedfile: function(file) {
+            var name = file.name
+            $.ajax({
+                url: "{{host_address}}/remove-corporate-form/{{companySalt}}/2478-form", //path to remove file
+                type: "POST",
+                data:{
+                    filename: name,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+            }).done(function() {
+                file.previewElement.remove();
+            });
+        },
+        accept: function (file) {
+            reader = new FileReader();
+            reader.onload = function (event) {
+                imageData = event.target.result;
+                var inputHidden = document.createElement("input");
+                filename = document.getElementById('my-2478-form').getElementsByClassName("dz-filename")[addform2478Count].innerText
+                inputHidden.setAttribute("type", "hidden");
+                inputHidden.setAttribute("name", "base64-2478-form_"+addform2478Count);
+                inputHidden.setAttribute("value", filename + '|' + imageData);
+
+                //append to form element that you want .
+                document.getElementById("companyDetailForm").appendChild(inputHidden);
+                addform2478Count = addform2478Count + 1;
+            };
+            reader.readAsDataURL(file);
+        },
+    };
+
+    addform4958Count = 0;
+    Dropzone.options.my4958Form = { // camelized version of the `id`
+        paramName: "4958-form", // The name that will be used to transfer the file
+        addRemoveLinks: true, //Add a link to every file preview to remove or cancel (if already uploading) the file
+        maxFilesize: 2,
+        acceptedFiles: 'application/pdf',
+        removedfile: function(file) {
+            var name = file.name
+            $.ajax({
+                url: "{{host_address}}/remove-corporate-form/{{companySalt}}/4958-form", //path to remove file
+                type: "POST",
+                data:{
+                    filename: name,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+            }).done(function() {
+                file.previewElement.remove();
+            });
+        },
+        accept: function (file) {
+            reader = new FileReader();
+            reader.onload = function (event) {
+                imageData = event.target.result;
+                var inputHidden = document.createElement("input");
+                filename = document.getElementById('my-4958-form').getElementsByClassName("dz-filename")[addform4958Count].innerText
+                inputHidden.setAttribute("type", "hidden");
+                inputHidden.setAttribute("name", "base64-4958-form_"+addform4958Count);
+                inputHidden.setAttribute("value", filename + '|' + imageData);
+
+                //append to form element that you want .
+                document.getElementById("companyDetailForm").appendChild(inputHidden);
+                addform4958Count = addform4958Count + 1;
+            };
+            reader.readAsDataURL(file);
+        },
+    };
+
+    addformLrfcCount = 0;
+    Dropzone.options.myLrfcForm = { // camelized version of the `id`
+        paramName: "lrfc-form", // The name that will be used to transfer the file
+        addRemoveLinks: true, //Add a link to every file preview to remove or cancel (if already uploading) the file
+        maxFilesize: 2,
+        acceptedFiles: 'application/pdf',
+        removedfile: function(file) {
+            var name = file.name
+            $.ajax({
+                url: "{{host_address}}/remove-corporate-form/{{companySalt}}/lrfc-form", //path to remove file
+                type: "POST",
+                data:{
+                    filename: name,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+            }).done(function() {
+                file.previewElement.remove();
+            });
+        },
+        accept: function (file) {
+            reader = new FileReader();
+            reader.onload = function (event) {
+                imageData = event.target.result;
+                var inputHidden = document.createElement("input");
+                filename = document.getElementById('my-lrfc-form').getElementsByClassName("dz-filename")[addformLrfcCount].innerText
+                inputHidden.setAttribute("type", "hidden");
+                inputHidden.setAttribute("name", "base64-lrfc-form_"+addformLrfcCount);
+                inputHidden.setAttribute("value", filename + '|' + imageData);
+
+                //append to form element that you want .
+                document.getElementById("companyDetailForm").appendChild(inputHidden);
+                addformLrfcCount = addformLrfcCount + 1;
+            };
+            reader.readAsDataURL(file);
+        },
+    };
+
+    addformRosCount = 0;
+    Dropzone.options.myRosForm = { // camelized version of the `id`
+        paramName: "ros-form", // The name that will be used to transfer the file
+        addRemoveLinks: true, //Add a link to every file preview to remove or cancel (if already uploading) the file
+        maxFilesize: 2,
+        acceptedFiles: 'application/pdf',
+        removedfile: function(file) {
+            var name = file.name
+            $.ajax({
+                url: "{{host_address}}/remove-corporate-form/{{companySalt}}/ros-form", //path to remove file
+                type: "POST",
+                data:{
+                    filename: name,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+            }).done(function() {
+                file.previewElement.remove();
+            });
+        },
+        accept: function (file) {
+            reader = new FileReader();
+            reader.onload = function (event) {
+                imageData = event.target.result;
+                var inputHidden = document.createElement("input");
+                filename = document.getElementById('my-ros-form').getElementsByClassName("dz-filename")[addformRosCount].innerText
+                inputHidden.setAttribute("type", "hidden");
+                inputHidden.setAttribute("name", "base64-ros-form_"+addformRosCount);
+                inputHidden.setAttribute("value", filename + '|' + imageData);
+
+                //append to form element that you want .
+                document.getElementById("companyDetailForm").appendChild(inputHidden);
+                addformRosCount = addformRosCount + 1;
+            };
+            reader.readAsDataURL(file);
+        },
+    };
+
+    addform8Count = 0;
+    Dropzone.options.my8Form = { // camelized version of the `id`
+        paramName: "8-form", // The name that will be used to transfer the file
+        addRemoveLinks: true, //Add a link to every file preview to remove or cancel (if already uploading) the file
+        maxFilesize: 2,
+        acceptedFiles: 'application/pdf',
+        removedfile: function(file) {
+            var name = file.name
+            $.ajax({
+                url: "{{host_address}}/remove-corporate-form/{{companySalt}}/8-form", //path to remove file
+                type: "POST",
+                data:{
+                    filename: name,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+            }).done(function() {
+                file.previewElement.remove();
+            });
+        },
+        accept: function (file) {
+            reader = new FileReader();
+            reader.onload = function (event) {
+                imageData = event.target.result;
+                var inputHidden = document.createElement("input");
+                filename = document.getElementById('my-8-form').getElementsByClassName("dz-filename")[addform8Count].innerText
+                inputHidden.setAttribute("type", "hidden");
+                inputHidden.setAttribute("name", "base64-8-form_"+addform8Count);
+                inputHidden.setAttribute("value", filename + '|' + imageData);
+
+                //append to form element that you want .
+                document.getElementById("companyDetailForm").appendChild(inputHidden);
+                addform8Count = addform8Count + 1;
+            };
+            reader.readAsDataURL(file);
+        },
+    };
+
+    addformIcPassCount = 0;
+    Dropzone.options.myIcPassForm = { // camelized version of the `id`
+        paramName: "icPass-form", // The name that will be used to transfer the file
+        addRemoveLinks: true, //Add a link to every file preview to remove or cancel (if already uploading) the file
+        maxFilesize: 2,
+        acceptedFiles: 'application/pdf',
+        removedfile: function(file) {
+            var name = file.name
+            $.ajax({
+                url: "{{host_address}}/remove-corporate-form/{{companySalt}}/icPass-form", //path to remove file
+                type: "POST",
+                data:{
+                    filename: name,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+            }).done(function() {
+                file.previewElement.remove();
+            });
+        },
+        accept: function (file) {
+            reader = new FileReader();
+            reader.onload = function (event) {
+                imageData = event.target.result;
+                var inputHidden = document.createElement("input");
+                filename = document.getElementById('my-icPass-form').getElementsByClassName("dz-filename")[addformIcPassCount].innerText
+                inputHidden.setAttribute("type", "hidden");
+                inputHidden.setAttribute("name", "base64-icPass-form_"+addformIcPassCount);
+                inputHidden.setAttribute("value", filename + '|' + imageData);
+
+                //append to form element that you want .
+                document.getElementById("companyDetailForm").appendChild(inputHidden);
+                addformIcPassCount = addformIcPassCount + 1;
+            };
+            reader.readAsDataURL(file);
+        },
+    };
+
+    addAuthFormCount = 0
+    Dropzone.options.myAuthorizationForm = { // camelized version of the `id`
+        paramName: "authorization-form", // The name that will be used to transfer the file
+        addRemoveLinks: true, //Add a link to every file preview to remove or cancel (if already uploading) the file
+        maxFilesize: 2,
+        acceptedFiles: 'application/pdf',
+        removedfile: function(file) {
+            var name = file.name
+            $.ajax({
+                url: "{{host_address}}/remove-corporate-form/{{companySalt}}/authorization-form", //path to remove file
+                type: "POST",
+                data:{
+                    filename: name,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+            }).done(function() {
+                file.previewElement.remove();
+            });
+        },
+        accept: function (file) {
+            reader = new FileReader();
+            reader.onload = function (event) {
+                imageData = event.target.result;
+                var inputHidden = document.createElement("input");
+                filename = document.getElementById('my-authorization-form').getElementsByClassName("dz-filename")[addAuthFormCount].innerText
+                inputHidden.setAttribute("type", "hidden");
+                inputHidden.setAttribute("name", "base64-authorization-form_"+addAuthFormCount);
+                inputHidden.setAttribute("value", filename + '|' + imageData);
+
+                //append to form element that you want .
+                document.getElementById("companyDetailForm").appendChild(inputHidden);
+                addAuthFormCount = addAuthFormCount + 1;
+            };
+            reader.readAsDataURL(file);
+        },
+    };
+
+    function enableField(){
+        document.getElementById('companyCity').disabled = false;
+        document.getElementById('companyPostcode').disabled = false;
+    }
+
+    function populateHiddenValue(fieldName, fieldType){
+        var todayDate = new Date();
+        var year = todayDate.getFullYear();
+        var month = todayDate.getMonth() + 1;
+
+        if(fieldType != undefined) {
+            if(fieldType == 'dropdown'){
+                var selectField   = document.getElementById(fieldName);
+                var selectedValue = selectField.options[selectField.selectedIndex].value;
+                document.getElementById(fieldName+'_post').value = selectedValue;
+            }
+        }
+        else {
+            getFieldValue = document.getElementById(fieldName).value;
+            if (fieldName == 'monthlyDueDate') {
+                // document.getElementById('paymentDueDate_post').value = getFieldValue
+
+                // // Alternative Option
+                var formatMonth = ('0' + month).slice(-2);
+                getFieldValue = year + '-' + formatMonth + '-' + getFieldValue
+                document.getElementById('paymentDueDate_post').value = getFieldValue;
+            // } else if (fieldName == 'yearlyDueDate') {
+            //     document.getElementById('paymentDueDate_post').value = getFieldValue;
+            // }
+            } else if (fieldName == 'yearlyDueDateDay' || fieldName == 'yearlyDueDateMonth') {
+                if (fieldName == 'yearlyDueDateDay') {
+                    getDayFieldValue = getFieldValue;
+                } else if (fieldName == 'yearlyDueDateMonth') {
+                    getMonthFieldValue = getFieldValue;
+                }
+
+                formatYearlyFieldValue = year + '-' + getMonthFieldValue + '-' + getDayFieldValue;
+                document.getElementById('paymentDueDate_post').value = formatYearlyFieldValue;
+            }
+             else {
+                document.getElementById(fieldName+'_post').value = getFieldValue;
+            }
+        }
+    }
+
+    function dropdownDayOnly() {
+        var todayDate = new Date();
+
+        for (var i = 1; i <= 31; i++) {
+            var day = i < 10 ? '0' + i : i.toString();
+            days.push(day);
+        }
+
+        dropdown = document.getElementById('monthlyDueDate');
+        for (var i = 0; i < days.length; i++) {
+            var option = document.createElement('option');
+            option.value = days[i];
+            option.text = days[i];
+            dropdown.appendChild(option);
+        }
+    }
+
+    function dropdownDayAndMonthOnly() {
+        var currentDate = new Date();
+        var currentYear = currentDate.getFullYear();
+        
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+        ];
+        for (var month = 0; month < 12; month++) {
+            var daysInMonth = new Date(currentYear, month + 1, 0).getDate();
+            var formattedMonth = ('0' + (month + 1)).slice(-2);
+            var formattedDateMonth = formattedMonth
+
+            // for (var day = 1; day <= daysInMonth; day++) {
+            //     var formattedDay = ('0' + day).slice(-2);
+            //     var formattedDateDay = formattedDay;
+                
+            //     yearlyDays.push(formattedDateDay);
+            // }
+            yearlyMonth.push(formattedDateMonth);
+            yearlyMonthWord.push(monthNames[month]);
+        }
+
+        for (var day = 1; day <= daysInMonth; day++) {
+            var formattedDay = ('0' + day).slice(-2);
+            var formattedDateDay = formattedDay;
+            
+            yearlyDays.push(formattedDateDay);
+        }
+        
+        dropdown = document.getElementById('yearlyDueDateDay');
+        for (var i = 0; i < yearlyDays.length; i++) {
+            var option = document.createElement('option');
+            option.value = yearlyDays[i];
+            option.text = yearlyDays[i];
+            dropdown.appendChild(option);
+        }
+
+        dropdownMonth = document.getElementById('yearlyDueDateMonth');
+        for (var m = 0; m < yearlyMonth.length; m++) {
+            var option = document.createElement('option');
+            option.value = yearlyMonth[m];
+            option.text = yearlyMonthWord[m];
+            dropdownMonth.appendChild(option);
+        }
+    }
+
+
+    function visibilityPaymentTab(mode, activate, deactivate) {
+        // If Yearly Mode Date Format "DD/MM", "YY" will be current year
+        // If Monthly Mode Date Format "DD", "MM/YY" will be current month and year
+        var paymentMode = "";
+        var today = new Date();
+        var year = new Date().getFullYear();
+        var cb = document.getElementById(mode).checked;
+        var cbMode = document.getElementById(mode).id;
+
+        if (cb == true && cbMode == 'yearlyMode') {
+            // if(document.getElementById('yearlyDueDate').value == "") {
+            //     document.getElementById('paymentDueDate_post').value = "";
+            // }
+            if (document.getElementById('yearlyDueDateDay').value == "" && document.getElementById('yearlyDueDateMonth').value == "") {
+                document.getElementById('paymentDueDate_post').value = "";
+            }
+
+            document.getElementById('paymentMode_post').value = 'Annually';
+
+            document.getElementById(activate).style.display = 'block';
+            document.getElementById(deactivate).style.display = 'none';
+
+            // document.getElementById('yearlyDueDate').setAttribute("min", year + "-01-01");
+            // document.getElementById('yearlyDueDate').setAttribute("max", year + "-12-31");
+
+            // Reset Monthly Payment Date Input Value
+            // Append date value to variable
+            // document.getElementById('monthlyDueDate').value = "";
+            // this.paymentMode = 'yearlyDueDate'
+            
+            // Alternative Date Option Seletion, Simple and Direct
+            document.getElementById('monthlyDueDate').value = "";
+            this.paymentMode = 'yearlyDueDate'
+            if (yearlyDays == '' || yearlyMonth == '') {
+                dropdownDayAndMonthOnly();
+            }
+            
+        } else if (cb == true && cbMode == 'monthlyMode') {
+            if(document.getElementById('monthlyDueDate').value == "") {
+                document.getElementById('paymentDueDate_post').value = "";
+            }
+            
+            document.getElementById('paymentMode_post').value = 'Monthly';
+
+            document.getElementById(activate).style.display = 'block';
+            document.getElementById(deactivate).style.display = 'none';
+            
+            // Reset Annual Payment Date Input Value
+            // Append date value to variable
+            document.getElementById('yearlyDueDateDay').value = "";
+            document.getElementById('yearlyDueDateMonth').value = "";
+            this.paymentMode = 'monthlyDueDate'
+            
+
+            // Alternate Date Option Selection, Simple and Direct
+            if (days == '') {
+                dropdownDayOnly();
+            }
+        } else {
+            document.getElementById(activate).style.display = 'none';
+            document.getElementById(deactivate).style.display = 'none';
+        }
+    }
+
+    function removeOptions(fieldName) {
+        var l_city = document.getElementById('companyCity').options.length - 1;
+        var l_post = document.getElementById('companyPostcode').options.length - 1;
+        if (fieldName == 'companyState') {
+            for (var i = l_city; i >= 1; i--) {
+                document.getElementById('companyCity').remove(i);
+            }
+
+            for (var j = l_post; j >= 1; j--) {
+                document.getElementById('companyPostcode').remove(j);
+            }
+        } else if (fieldName == 'companyCity') {
+            for (var j = l_post; j >= 1; j--) {
+                document.getElementById('companyPostcode').remove(j);
+            }
+        }
+    }
+
+    function getMapping(fieldName, targetField, dict){
+        var selectField = document.getElementById(fieldName);
+        var addField = document.getElementById(targetField);
+
+        var stringDict = dict.toString().replaceAll('/','');
+        var formattedDict = stringDict.replaceAll("'",'"');
+        var jsonDict = JSON.parse(formattedDict);
+
+        removeOptions(fieldName);
+
+        for (const key in jsonDict) {
+            if (jsonDict[key] == selectField.options[selectField.selectedIndex].value) {
+                var option = document.createElement('option');
+                option.text = key;
+                addField.add(option);
+            }
+        }
+    }
+
+    function checkEmpty(event) {
+        if ((document.getElementById('companyTelephone').value == "") ||
+            (document.getElementById('companyAddress1').value == "") ||
+            (document.getElementById('companyState').selectedIndex == 0) ||
+            (document.getElementById('companyCity').selectedIndex == 0) ||
+            (document.getElementById('companyPostcode').selectedIndex == 0) ||
+            (document.getElementById('relationship').selectedIndex == 0) ||
+            (document.getElementById('entity').selectedIndex == 0)
+            ) {
+                toastr.error('Please fill in all the fields before submitting!');
+                return false;
+            } else {
+                var selectEntityElement = document.getElementById("entity");
+                var selectedOption = selectEntityElement.options[selectEntityElement.selectedIndex];
+                var selectedName = selectedOption.text;
+                if (selectedName == 'Sole Proprietor') {
+                    if ((document.getElementById('my-brd-form').childElementCount <= 2)) {
+                        toastr.error('Please fill in all the fields before submitting!');
+                        return false
+                    } else {
+                        return true;
+                    }
+                } else if (selectedName == 'Partnership') {
+                    if (document.getElementById('my-brd-form').childElementCount <= 2){
+                            toastr.error('Please fill in all the fields before submitting!');
+                            return false
+                    } else {
+                        return true;
+                    }
+                } else if (selectedName == 'Private Limited Company') {
+                    if ((document.getElementById('my-917-form').childElementCount <= 2) || 
+                        (document.getElementById('my-2478-form').childElementCount <= 2) ||
+                        (document.getElementById('my-4958-form').childElementCount <= 2) ||
+                        (document.getElementById('my-authorization-form').childElementCount <= 2)) {
+                        toastr.error('Please fill in all the fields before submitting!');
+                        return false
+                    } else {
+                        return true;
+                    }
+                } else if (selectedName == 'Limited Liability Partnership (LLP)') {
+                    if ((document.getElementById('my-lrfc-form').childElementCount <= 2)) {
+                            toastr.error('Please fill in all the fields before submitting!');
+                            return false
+                    } else {
+                        return true;
+                    }
+                } else if (selectedName == 'Public Limited Company') {
+                    if ((document.getElementById('my-2478-form').childElementCount <= 2) ||
+                        (document.getElementById('my-4958-form').childElementCount <= 2) ||
+                        (document.getElementById('my-8-form').childElementCount <= 2) ||
+                        (document.getElementById('my-authorization-form').childElementCount <= 2)) {
+                            toastr.error('Please fill in all the fields before submitting!');
+                            return false
+                    } else {
+                        return true;
+                    }
+                } else if (selectedName == 'Cooperative/Associations') {
+                    if ((document.getElementById('my-ros-form').childElementCount <= 2)) {
+                        toastr.error('Please fill in all the fields before submitting!');
+                        return false
+                    }
+                    else {
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
+            } 
+        }
+</script>
+{% endblock %}

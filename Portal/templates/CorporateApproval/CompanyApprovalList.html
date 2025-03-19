@@ -1,0 +1,994 @@
+{% extends "../AdminBase.html" %}
+{% block title %}
+<title>DearTime | Corporate Approval List</title>
+{% endblock %}
+{% block css %}
+<style>
+  .blankStateButton {
+    width: 250px;
+    height: 60px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #9B8A6C;
+  }
+
+  .pClassCustomLabel{
+    font-size: 12px;
+  }
+  
+  .pClassCustomDescription{
+    font-size: 14px;
+    color:black;
+  }
+</style> 
+{% endblock %}
+{% block content %}
+<div class="container-xxl flex-grow-1">
+  <div class="content-wrapper mt-3">
+    <div class="container mb-4" style="margin: 0px; max-width: 1920px; display: flex; justify-content: flex-end; align-items: center;">
+      <a role="button" class="btn btn-outline-primary" href="{{host_address}}/company-modify-PDD" style="margin-right: 10px; margin-bottom: 0;">Change Current Date</a>
+      <a role="button" class="btn btn-outline-primary" href="{{host_address}}/user-enquiry" style ="margin-bottom: 0;">User Enquiry</a>
+    </div>
+    <div class="container mb-4" style="margin: 0px; max-width: 1920px; display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; align-items: center;">
+        <h4 style="margin: 0;">Corporate Lists</h4>
+      </div>
+      <!-- <div style="display: flex; align-items: center;">
+        <a role="button" class="btn btn-outline-primary" href="{{host_address}}/company-modify-PDD" style="margin-right: 10px; margin-bottom: 0;">Change Current Date</a>
+        <a role="button" class="btn btn-outline-primary" href="{{host_address}}/user-enquiry" style="margin-bottom: 0;">User Enquiry</a>
+      </div>
+      <h4 style = "margin: 0;">Corporate Lists</h4> -->
+      <a href="{{host_address}}/export-corporate-list" class="btn btn-outline-primary me-1" style="margin: 0px; text-transform: none;">
+        Export &nbsp;
+        <span class="tf-icons bx bx-export"></span>
+      </a> 
+    </div>
+    <div class="container" style="margin: 0px; max-width: 1920px;">
+      <!-- <div class="card-header">
+        <div class="navbar-nav">
+          <div class="row">
+            <div class="col-10">
+              <div class="nav-item d-flex align-items-center">
+                <i class="bx bx-search fs-4 lh-0 me-3"></i>
+                <input
+                  type="text"
+                  class="form-control border-0 shadow-none"
+                  placeholder="Search corporates by name..."
+                  aria-label="Search corporates by name..."
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <div class="text-nowrap" >
+        <table class="table" style="display:block;">
+          <thead>
+            <tr>
+              <th rowspan="2" style="text-align: center;width:5%;">#</th>
+              <th class="text-uppercase" rowspan="2" style="text-align: left;width:20%;">Company</th>
+              <th class="text-uppercase text-muted" rowspan="2" style="text-align: left;width:10%;">Relationship</th>
+              <th class="text-uppercase text-muted" style="text-align: center; width:10%;" rowspan="2">Payment Due Date</th>
+              <th class="text-uppercase text-muted" style="text-align: center;width:10%;">Attachments</th>
+              <th class="text-uppercase text-muted" style="text-align: left; width:15%;" rowspan="2">Status</th>
+              <th class="text-uppercase text-muted" style="text-align: left; width:25%;" rowspan="2">Remarks</th>
+              <th class="text-uppercase text-muted" rowspan="2" style="text-align: center;width:5%;">Actions</th>
+            </tr>
+          </thead>
+          {% for page in company_lists %}
+          {% if not page.has_previous %}
+          <tbody id="1_companyTable">
+            {% for cmp in page %}
+            {% if cmp.rejected == False %}
+            <tr>
+              <td style="font-size: 15px;">{{ forloop.counter }}.</td>
+              <td style="text-align:left">
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px; text-align: center;">
+                    {{ cmp.company_name }}
+                  </button>
+                    <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                      <div class="px-3 py-2 text-muted">
+                      {% if cmp.submitted %}
+                        <p class="mb-0">Company Registration Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.registration_no }}</p>
+                        <p class="mb-0">Company Email</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.email_address }}</p>
+                        <p class="mb-0">Company Telephone Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.contact1|default_if_none:"-"}}</p>
+                        <p class="mb-0">Company Address</p>
+                        <p class="mb-0" style="font-weight: bold;">
+                          {{ cmp.address_line1 }}<br>
+                          {% if cmp.address_line2 %}
+                            {{ cmp.address_line2 }}<br>
+                          {% else %}
+                          {% endif %}
+                          {% if cmp.address_line3 %}
+                            {{ cmp.address_line3 }}<br>
+                          {% else %}
+                          {% endif %}
+                          {{ cmp.city }}<br>
+                          {{ cmp.state }}<br>
+                          {{ cmp.postcode }}
+                        </p>
+
+                      {% else %}
+                        <p class="mb-0">Company Registration Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.registration_no }}</p>
+                        <p class="mb-0">Company Email</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.email_address }}</p>
+                        <p class="mb-0">Company Telephone Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.contact1|default_if_none:"-"}}</p>
+                        <p class="mb-0">Company Address</p>
+                        <p class="mb-0" style="font-weight: bold;">-</p>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px;text-align: left;">
+                {% if cmp.submitted %}
+                  {% for rel in cmp.relationships %}
+                    {% if forloop.last %}
+                      {{ rel.relationship_type.relationship_name }}
+                    {% else %}
+                      {{ rel.relationship_type.relationship_name }},
+                    {% endif %}
+                  {% endfor %}
+                {% else %}
+                  <label>-</label>
+                {% endif %}
+              </td>
+              {% if cmp.submitted %}
+                <td style="font-size: 15px; text-align: center;">{{ cmp.payment_due_date|slice:"8:"|default_if_none:"-" }}-{{ cmp.payment_due_date|slice:"5:7"|default_if_none:"-" }}-{{ cmp.payment_due_date|slice:":4"|default_if_none:"-" }}</td>
+              {% else %}
+                <td style="font-size: 15px; text-align: center;">-</td>
+              {% endif %}
+              <td style="font-size: 15px;text-align: center;">
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;" data-toggle="tooltip" data-placement="top" title="View Attachments">
+                    View Forms
+                  </button>
+                  <div class="dropdown-menu" >
+                    <div class="px-3 py-2 text-muted">
+                      {% if cmp.forms != None %}
+                        {% for form in cmp.forms %}
+                          {% if form.form_code == 'brd-form' %}
+                            <p class="mb-0" style="font-size: 12px">Borang D (Kaedah 13) Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                            <br>
+                          {% elif form.form_code == 'copd-form' %}
+                            <p class="mb-0" style="font-size: 12px">Copy of Partnership Deed Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                            <br>
+                          {% elif form.form_code == '917-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 9 or Section 17</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == '1328-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 12 or Section 28</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == '2478-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 24 or Section 78</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == '4958-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 49 or Section 58</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == 'lrfc-form' %}
+                            <p class="mb-0" style="font-size: 12px">LLP Registration Form/Certificate</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == '8-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 8</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == 'ros-form' %}
+                            <p class="mb-0" style="font-size: 12px">Certificate of Registration from Registrar of Societies (ROS) Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == 'authorization-form' %}
+                            <p class="mb-0 text-uppercase" style="font-size: 12px">Authorization Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == 'icPass-form' %}
+                            <p class="mb-0" style="font-size: 12px">Copy of IC or Passport Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align: left;"><span class="badge {% if cmp.status == 'Incomplete Document' %}bg-label-danger border-label-danger{% elif cmp.status == 'Document Submitted' %}bg-label-warning border-label-warning{% elif cmp.status == 'Verified' %}bg-label-success border-label-succss{% endif %} me-1">{{ cmp.status }}</span></td>
+              <td style="font-size: 15px; text-align: left;">{{ cmp.remarks|default_if_none:""|truncatechars_html:15 }}
+                {% if cmp.remarks|length > 15 %}
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 10px;">
+                    read more
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ cmp.remarks }}</p>
+                    </div>
+                  </div>
+                {% endif %}
+              </td>
+              <td style="text-align:center">
+                <div class="ms-auto" style="text-align: center;">
+                  {% if cmp.verified %}
+                  <div class="row">
+                    <div class="col-4">
+                      <a class="btn btn-link text-info text-gradient px-3 mb-0" href="{{host_address}}/company-approval-member/{{cmp.companySalt}}" style="font-size: 20px !important" data-toggle="tooltip" data-placement="top" title="Show Members">
+                        <i class="fas fa-users"></i>
+                      </a>
+                    </div>
+                  </div>
+                  {% else %}
+                  <div class="row">
+                    <a class="btn btn-link text-info text-gradient px-3 mb-0" href="{{host_address}}/view-company-account/{{cmp.companySalt}}" style="font-size: 20px !important;" data-toggle="tooltip" data-placement="top" title="View Applications">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </div>
+                  {% endif %}
+                  
+                </div>
+              </td>
+            </tr>
+            {% else %}
+            {% endif %}
+            {% endfor %}
+          </tbody>
+          {% else %}
+          <tbody id="{{page.number}}_companyTable" hidden>
+            {% for cmp in page %}
+            {% if not cmp.rejected %}
+            <tr>
+              <td style="font-size: 15px;">{{ forloop.counter }}.</td>
+              <td style="text-align:left">
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px; text-align: center;">
+                    {{ cmp.company_name }}
+                  </button>
+                    <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                      <div class="px-3 py-2 text-muted">
+                      {% if cmp.submitted %}
+                        <p class="mb-0">Company Registration Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.registration_no }}</p>
+                        <p class="mb-0">Company Email</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.email_address }}</p>
+                        <p class="mb-0">Company Telephone Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.contact1|default_if_none:"-"}}</p>
+                        <p class="mb-0">Company Address</p>
+                        <p class="mb-0" style="font-weight: bold;">
+                          {{ cmp.address_line1 }}<br>
+                          {% if cmp.address_line2 %}
+                            {{ cmp.address_line2 }}<br>
+                          {% else %}
+                          {% endif %}
+                          {% if cmp.address_line3 %}
+                            {{ cmp.address_line3 }}<br>
+                          {% else %}
+                          {% endif %}
+                          {{ cmp.city }}<br>
+                          {{ cmp.state }}<br>
+                          {{ cmp.postcode }}
+                        </p>
+
+                      {% else %}
+                        <p class="mb-0">Company Registration Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.registration_no }}</p>
+                        <p class="mb-0">Company Email</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.email_address }}</p>
+                        <p class="mb-0">Company Telephone Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.contact1|default_if_none:"-"}}</p>
+                        <p class="mb-0">Company Address</p>
+                        <p class="mb-0" style="font-weight: bold;">-</p>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px;text-align: left;">
+                {% if cmp.submitted %}
+                  {% for rel in cmp.relationships %}
+                    {% if forloop.last %}
+                      {{ rel.relationship_type.relationship_name }}
+                    {% else %}
+                      {{ rel.relationship_type.relationship_name }},
+                    {% endif %}
+                  {% endfor %}
+                {% else %}
+                  <label>-</label>
+                {% endif %}
+              </td>
+              {% if cmp.submitted %}
+                <td style="font-size: 15px; text-align: center;">{{ cmp.payment_due_date|slice:"8:"|default_if_none:"-" }}-{{ cmp.payment_due_date|slice:"5:7"|default_if_none:"-" }}-{{ cmp.payment_due_date|slice:":4"|default_if_none:"-" }}</td>
+              {% else %}
+                <td style="font-size: 15px; text-align: center;">-</td>
+              {% endif %}
+              <td style="font-size: 15px;text-align: center;">
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;" data-toggle="tooltip" data-placement="top" title="View Attachments">
+                    View Forms
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="px-3 py-2 text-muted">
+                      {% if cmp.forms != None %}
+                        {% for form in cmp.forms %}
+                          {% if form.form_code == 'brd-form' %}
+                            <p class="mb-0" style="font-size: 12px">Borang D (Kaedah 13) Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                            <br>
+                          {% elif form.form_code == 'copd-form' %}
+                            <p class="mb-0" style="font-size: 12px">Copy of Partnership Deed Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                            <br>
+                          {% elif form.form_code == '917-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 9 or Section 17</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == '1328-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 12 or Section 28</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == '2478-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 24 or Section 78</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == '4958-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 49 or Section 58</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == 'lrfc-form' %}
+                            <p class="mb-0" style="font-size: 12px">LLP Registration Form/Certificate</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == '8-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 8</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == 'ros-form' %}
+                            <p class="mb-0" style="font-size: 12px">Certificate of Registration from Registrar of Societies (ROS) Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == 'authorization-form' %}
+                            <p class="mb-0 text-uppercase" style="font-size: 12px">Authorization Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == 'icPass-form' %}
+                            <p class="mb-0" style="font-size: 12px">Copy of IC or Passport Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align: left;"><span class="badge {% if cmp.status == 'Incomplete Document' %}bg-label-danger border-label-danger{% elif cmp.status == 'Document Submitted' %}bg-label-warning border-label-warning{% elif cmp.status == 'Verified' %}bg-label-success border-label-succss{% endif %} me-1">{{ cmp.status }}</span></td>
+              <td style="font-size: 15px; text-align: left;">{{ cmp.remarks|default_if_none:""|truncatechars_html:15 }}
+                {% if cmp.remarks|length > 15 %}
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 10px;">
+                    read more
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ cmp.remarks }}</p>
+                    </div>
+                  </div>
+                {% endif %}
+              </td>
+              <td style="text-align:center">
+                <div class="ms-auto" style="text-align: center;">
+                  {% if cmp.verified %}
+                  <div class="row">
+                    <div class="col-4">
+                      <a class="btn btn-link text-info text-gradient px-3 mb-0" href="{{host_address}}/company-approval-member/{{cmp.companySalt}}" style="font-size: 20px !important;" data-toggle="tooltip" data-placement="top" title="Show Members">
+                        <i class="fas fa-users"></i>
+                      </a>
+                    </div>
+                  </div>
+                  {% else %}
+                    <div class="row">
+                      <a class="btn btn-link text-info text-gradient px-3 mb-0" href="{{host_address}}/view-company-account/{{cmp.companySalt}}" style="font-size: 20px !important;" data-toggle="tooltip" data-placement="top" title="View Applications">
+                        <i class="fas fa-eye"></i>
+                      </a>
+                    </div>
+
+                  {% endif %}
+                  
+                </div>
+              </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+          {% endif %}
+          {% endfor %}
+        </table>
+        <div class="d-flex align-items-center justify-content-center">
+          <nav aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item first" id="first_companyTableBtn">
+                <button class="page-link" onclick="first('companyTable')"><i class="bx bx-chevrons-left"></i></button>
+              </li>
+              <li class="page-item prev" id="prev_companyTableBtn">
+                <button class="page-link" onclick="prev('companyTable')"><i class="bx bx-chevron-left"></i></button>
+              </li>
+              <div id="divCompanyTable" style="display:inline-flex">
+              {% for page in company_lists.page_range %}
+                <li class="page-item {% if page == 1 %}active{% endif %}" id="{{page}}_companyTableBtn">
+                  <button class="page-link" onclick="pageCompany('{{page}}')">{{page}}</button>
+                </li>
+              {% endfor %}
+              </div>
+              <li class="page-item next" id="next_companyTableBtn">
+                <button class="page-link" onclick="next('companyTable', '{{company_lists.num_pages}}')"><i class="bx bx-chevron-right"></i></button>
+              </li>
+              <li class="page-item last" id="last_companyTableBtn">
+                <button class="page-link" onclick="last('companyTable', '{{company_lists.num_pages}}')"><i class="bx bx-chevrons-right"></i></button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <!-- <div class="modal fade" style="z-index: 5;" id="approvalModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel" style="color: black;">Approval Confirmation</h5>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure to approve,<label id="lblCompanyName" style="font-weight: bold;"></label>?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" id="modalCompanyID" name="modalCompanyID">
+                  <button type="submit" class="btn btn-primary">Approve</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+  <div class="content-wrapper mt-3 mb-5">
+    <div class="container mb-4" style="margin: 0px; max-width: 1920px;">
+      <div class="row">
+        <div class="container mb-4" style="margin: 0px; max-width: 1920px; display: flex; justify-content: space-between; align-items: center;">
+          <h4 style = "margin: 0;">Rejected Corporate Lists</h4>
+          <a href="{{host_address}}/export-rejected-corporate-list" class="btn btn-outline-primary me-1" style="margin: 0px; text-transform: none;">
+            Export &nbsp;
+            <span class="tf-icons bx bx-export"></span>
+          </a> 
+        </div>
+      </div>
+    </div>
+    
+    <div class="container" style="margin: 0px; max-width: 1920px;">
+      <div class="text-nowrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th rowspan="2" style="text-align: center;width:5%">#</th>
+              <th class="text-uppercase" rowspan="2" style="text-align: left;width:20%">Company</th>
+              <th class="text-uppercase text-muted" rowspan="2" style="text-align: left;width:10%">Relationship</th>
+              <th class="text-uppercase text-muted" style="text-align: center; width:10%" rowspan="2">Payment Due Date</th>
+              <th class="text-uppercase text-muted" style="text-align: center;width:10%">Attachments</th>
+              <th class="text-uppercase text-muted" rowspan="2" style="text-align: left; width:45%">Rejected Reason</th>
+            </tr>
+          </thead>
+          {% for page in rejected_company_lists %}
+          {% if not page.has_previous %}
+          <tbody id="1_rejectedTable">
+            {% for cmp in page %}
+            {% if cmp.rejected == True %}
+            <tr>
+              <td style="font-size: 15px;text-align: center;">{{ forloop.counter }}.</td>
+              <td style="text-align:left">
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px; text-align: center;">
+                    {{ cmp.company_name }}
+                  </button>
+                  <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                    <div class="px-3 py-2 text-muted">
+                      {% if cmp.submitted %}
+                        <p class="mb-0">Company Registration Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.registration_no }}</p>
+                        <p class="mb-0">Company Email</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.email_address }}</p>
+                        <p class="mb-0">Company Telephone Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.contact1 }}</p>
+                        <p class="mb-0">Company Address</p>
+                        <p class="mb-0" style="font-weight: bold;">
+                          {{ cmp.address_line1 }}<br>
+                          {% if cmp.address_line2 %}
+                            {{ cmp.address_line2 }}<br>
+                          {% else %}
+                          {% endif %}
+                          {% if cmp.address_line3 %}
+                            {{ cmp.address_line3 }}<br>
+                          {% else %}
+                          {% endif %}
+                          {{ cmp.city }}<br>
+                          {{ cmp.state }}<br>
+                          {{ cmp.postcode }}
+                        </p>
+                      {% else %}
+                        <p class="mb-0">Company Registration Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.registration_no }}</p>
+                        <p class="mb-0">Company Email</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.email_address }}</p>
+                        <p class="mb-0">Company Telephone Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.contact1|default_if_none:"-" }}</p>
+                        <p class="mb-0">Company Address</p>
+                        <p class="mb-0" style="font-weight: bold;">-</p>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px;text-align: left;">
+                {% if cmp.submitted %}
+                  {% for rel in cmp.relationships %}
+                    {% if forloop.last %}
+                      {{ rel.relationship_type.relationship_name }}
+                    {% else %}
+                      {{ rel.relationship_type.relationship_name }},
+                    {% endif %}
+                  {% endfor %}
+                {% else %}
+                  <label>-</label>
+                {% endif %}
+              </td>
+              {% if cmp.submitted %}
+                <td style="font-size: 15px; text-align: center;">{{ cmp.payment_due_date|slice:"8:"|default_if_none:"-" }}-{{ cmp.payment_due_date|slice:"5:7"|default_if_none:"-" }}-{{ cmp.payment_due_date|slice:":4"|default_if_none:"-" }}</td>
+              {% else %}
+                <td style="font-size: 15px; text-align: center;">-</td>
+              {% endif %}
+              <td style="font-size: 15px;text-align: center;">
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;" data-toggle="tooltip" data-placement="top" title="View Attachments">
+                    View Forms
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="px-3 py-2 text-muted">
+                      {% if cmp.forms != None %}
+                        {% for form in cmp.forms %}
+                          {% if form.form_code == 'brd-form' %}
+                            <p class="mb-0" style="font-size: 12px">Borang D (Kaedah 13) Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                            <br>
+                          {% elif form.form_code == 'copd-form' %}
+                            <p class="mb-0" style="font-size: 12px">Copy of Partnership Deed Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                            <br>
+                          {% elif form.form_code == '917-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 9 or Section 17</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == '1328-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 12 or Section 28</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == '2478-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 24 or Section 78</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == '4958-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 49 or Section 58</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == 'lrfc-form' %}
+                            <p class="mb-0" style="font-size: 12px">LLP Registration Form/Certificate</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == '8-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 8</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == 'ros-form' %}
+                            <p class="mb-0" style="font-size: 12px">Certificate of Registration from Registrar of Societies (ROS) Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == 'authorization-form' %}
+                            <p class="mb-0 text-uppercase" style="font-size: 12px">Authorization Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == 'icPass-form' %}
+                            <p class="mb-0" style="font-size: 12px">Copy of IC or Passport Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align: left;">{{ cmp.remarks|truncatechars_html:25 }}
+                {% if cmp.remarks|length > 25 %}
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 10px;">
+                    read more
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ cmp.remarks }}</p>
+                    </div>
+                  </div>
+                {% endif %}
+              </td>
+            </tr>
+            {% else %}
+            {% endif %}
+            {% endfor %}
+          </tbody>
+          {% else %}
+          <tbody id="{{page.number}}_rejectedTable" hidden>
+            {% for cmp in page %}
+            {% if cmp.rejected == True %}
+            <tr>
+              <td style="font-size: 15px;text-align: center;">{{ forloop.counter }}.</td>
+              <td style="text-align:left">
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px; text-align: center;">
+                    {{ cmp.company_name }}
+                  </button>
+                  <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                    <div class="px-3 py-2 text-muted">
+                      {% if cmp.submitted %}
+                        <p class="mb-0">Company Registration Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.registration_no }}</p>
+                        <p class="mb-0">Company Email</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.email_address }}</p>
+                        <p class="mb-0">Company Telephone Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.contact1 }}</p>
+                        <p class="mb-0">Company Address</p>
+                        <p class="mb-0" style="font-weight: bold;">
+                          {{ cmp.address_line1 }}<br>
+                          {% if cmp.address_line2 %}
+                            {{ cmp.address_line2 }}<br>
+                          {% else %}
+                          {% endif %}
+                          {% if cmp.address_line3 %}
+                            {{ cmp.address_line3 }}<br>
+                          {% else %}
+                          {% endif %}
+                          {{ cmp.city }}<br>
+                          {{ cmp.state }}<br>
+                          {{ cmp.postcode }}
+                        </p>
+                      {% else %}
+                        <p class="mb-0">Company Registration Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.registration_no }}</p>
+                        <p class="mb-0">Company Email</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.email_address }}</p>
+                        <p class="mb-0">Company Telephone Number</p>
+                        <p class="mb-0" style="font-weight: bold;">{{ cmp.contact1|default_if_none:"-" }}</p>
+                        <p class="mb-0">Company Address</p>
+                        <p class="mb-0" style="font-weight: bold;">-</p>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px;text-align: left;">
+                {% if cmp.submitted %}
+                  {% for rel in cmp.relationships %}
+                    {% if forloop.last %}
+                      {{ rel.relationship_type.relationship_name }}
+                    {% else %}
+                      {{ rel.relationship_type.relationship_name }},
+                    {% endif %}
+                  {% endfor %}
+                {% else %}
+                  <label>-</label>
+                {% endif %}
+              </td>
+              {% if cmp.submitted %}
+                <td style="font-size: 15px; text-align: center;">{{ cmp.payment_due_date|slice:"8:"|default_if_none:"-" }}-{{ cmp.payment_due_date|slice:"5:7"|default_if_none:"-" }}-{{ cmp.payment_due_date|slice:":4"|default_if_none:"-" }}</td>
+              {% else %}
+                <td style="font-size: 15px; text-align: center;">-</td>
+              {% endif %}
+              <td style="font-size: 15px;text-align: center;">
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;" data-toggle="tooltip" data-placement="top" title="View Attachments">
+                    View Forms
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="px-3 py-2 text-muted">
+                      {% if cmp.forms != None %}
+                        {% for form in cmp.forms %}
+                        {% if form.form_code == 'brd-form' %}
+                            <p class="mb-0" style="font-size: 12px">Borang D (Kaedah 13) Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                            <br>
+                          {% elif form.form_code == 'copd-form' %}
+                            <p class="mb-0" style="font-size: 12px">Copy of Partnership Deed Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                            <br>
+                          {% elif form.form_code == '917-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 9 or Section 17</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == '1328-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 12 or Section 28</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == '2478-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 24 or Section 78</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == '4958-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 49 or Section 58</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == 'lrfc-form' %}
+                            <p class="mb-0" style="font-size: 12px">LLP Registration Form/Certificate</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == '8-form' %}
+                            <p class="mb-0" style="font-size: 12px">Form 8</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == 'ros-form' %}
+                            <p class="mb-0" style="font-size: 12px">Certificate of Registration from Registrar of Societies (ROS) Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == 'authorization-form' %}
+                            <p class="mb-0 text-uppercase" style="font-size: 12px">Authorization Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% elif form.form_code == 'icPass-form' %}
+                            <p class="mb-0" style="font-size: 12px">Copy of IC or Passport Form</p>
+                            <span class="badge bg-primary" style="color: #000;">
+                              <a href="{{ host_address }}/media/{{ cmp.company_name }}/{{ form.attachment }}{{ form.attachment_type }}" target="_blank">{{ form.attachment|default_if_none:"-"|truncatechars_html:8 }}{{ form.attachment_type }}</a><br>
+                            </span>
+                          {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align: left;">{{ cmp.remarks|truncatechars_html:25 }}
+                {% if cmp.remarks|length > 25 %}
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 10px;">
+                    read more
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ cmp.remarks }}</p>
+                    </div>
+                  </div>
+                {% endif %}
+              </td>
+            </tr>
+            {% else %}
+            {% endif %}
+            {% endfor %}
+          </tbody>
+          {% endif %}
+          {% endfor %}
+        </table>
+        <div class="d-flex align-items-center justify-content-center">
+          <nav aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item first" id="first_rejectedTableBtn">
+                <button class="page-link" onclick="first('rejectedTable')"><i class="bx bx-chevrons-left"></i></button>
+              </li>
+              <li class="page-item prev" id="prev_rejectedTableBtn">
+                <button class="page-link" onclick="prev('rejectedTable')"><i class="bx bx-chevron-left"></i></button>
+              </li>
+              <div id="divRejectedTable" style="display:inline-flex">
+              {% for page in rejected_company_lists.page_range %}
+                <li class="page-item {% if page == 1 %}active{% endif %}" id="{{page}}_rejectedTableBtn">
+                  <button class="page-link" onclick="pageRejected('{{page}}')">{{page}}</button>
+                </li>
+              {% endfor %}
+              </div>
+              <li class="page-item next" id="next_rejectedTableBtn">
+                <button class="page-link" onclick="next('rejectedTable', '{{rejected_company_lists.num_pages}}')"><i class="bx bx-chevron-right"></i></button>
+              </li>
+              <li class="page-item last" id="last_rejectedTableBtn">
+                <button class="page-link" onclick="last('rejectedTable', '{{rejected_company_lists.num_pages}}')"><i class="bx bx-chevrons-right"></i></button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="modal fade" style="z-index: 5;" id="approvalModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel" style="color: black;">Approval Confirmation</h5>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure to approve,<label id="lblCompanyName" style="font-weight: bold;"></label>?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" id="modalCompanyID" name="modalCompanyID">
+                  <button type="submit" class="btn btn-primary">Approve</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+{% block footerContent %} 
+{% endblock %}
+{% block javascript %}
+<script>
+function populateModal(companyID, companyName){
+  document.getElementById('lblCompanyName').innerHTML = companyName;
+  document.getElementById('modalCompanyID').value = companyID;
+}
+
+function pageCompany(p) {
+  var button = document.getElementById(p+"_companyTableBtn");
+  var div = document.getElementById('divCompanyTable');
+
+  for (let i = 0; i < div.children.length; i++) {
+    div.children[i].classList.remove("active");
+    document.getElementById((i+1)+'_companyTable').hidden = true;
+  }
+  button.classList.add("active");
+  document.getElementById(p+"_companyTable").hidden = false;
+}
+
+function pageRejected(p) {
+  var button = document.getElementById(p+"_rejectedTableBtn");
+  var div = document.getElementById('divRejectedTable');
+
+  for (let i = 0; i < div.children.length; i++) {
+    div.children[i].classList.remove("active");
+    document.getElementById((i+1)+'_rejectedTable').hidden = true;
+  }
+  button.classList.add("active");
+  document.getElementById(p+"_rejectedTable").hidden = false;
+}
+
+function first(t) {
+  table = document.getElementById('1_'+t);
+  button = document.getElementById('1_'+t+'Btn');
+  div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+  for (let i = 0; i < div.children.length; i++) {
+    div.children[i].classList.remove('active');
+    document.getElementById((i+1)+'_'+t).hidden = true;
+  }
+  button.classList.add('active');
+  table.hidden = false;
+}
+
+function last(t, num_pages) {
+  table = document.getElementById(num_pages+'_'+t);
+  button = document.getElementById(num_pages+'_'+t+'Btn');
+  div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+  for (let i = 0; i < div.children.length; i++) {
+    div.children[i].classList.remove('active');
+    document.getElementById((i+1)+'_'+t).hidden = true;
+  }
+  button.classList.add('active');
+  table.hidden = false;
+}
+
+function prev(t) {
+  div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+  for (let i = 0; i < div.children.length; i++) {
+    if (div.children[i].classList.contains('active') && i+1!=1) {
+      div.children[i].classList.remove('active');
+      div.children[i-1].classList.add('active');
+      document.getElementById((i+1)+'_'+t).hidden = true;
+      document.getElementById(i+'_'+t).hidden = false;
+      break
+    }
+  }
+}
+
+function next(t, num_pages) {
+  div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+  for (let i = 0; i < div.children.length; i++) {
+    if (div.children[i].classList.contains('active') && i+1!=num_pages) {
+      div.children[i].classList.remove('active');
+      div.children[i+1].classList.add('active');
+      document.getElementById((i+1)+'_'+t).hidden = true;
+      document.getElementById((i+2)+'_'+t).hidden = false;
+      break
+    }
+  }
+}
+</script>
+<script>
+
+  {% comment %} function initFreshChat() {
+
+    window.fcWidget.init({
+
+        token: "ebaf6da6-8e3a-4fbb-a784-4b0148f5c123",
+
+  host: "https://deartime.freshchat.com",
+
+  widgetUuid: "885f11a8-a011-4d56-b2bc-ec116a2aa44f"
+
+    });
+
+  } {% endcomment %}
+
+  function initialize(i,t){var e;i.getElementById(t)?
+
+  initFreshChat():((e=i.createElement("script")).id=t,e.async=!0,
+
+  e.src="https://deartime.freshchat.com/js/widget.js",e.onload=initFreshChat,i.head.appendChild(e))}
+
+  function initiateCall(){initialize(document,"Freshchat-js-sdk")}
+
+  window.addEventListener?window.addEventListener("load",initiateCall,!1):
+
+  window.attachEvent("load",initiateCall,!1);
+
+</script>
+{% endblock %}

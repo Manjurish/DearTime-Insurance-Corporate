@@ -1,0 +1,11 @@
+{% extends "../InvoiceBase.html" %}
+{% block invoice %}
+<h4>RECEIPT</h4>
+<p style="margin-bottom: 0pt; margin-top: 0pt;">Receipt Date: {{receipt_date}}</p>
+<p style="margin-bottom: 0pt; margin-top: 0pt;">Receipt Number: {{receipt_no}}</p>
+<p style="margin-bottom: 0pt; margin-top: 0pt;">Payment For: {{payment_for}}</p>
+<p style="margin-bottom: 0pt; margin-top: 0pt;">Payor Reference: {{payor_ref}}</p>
+{% endblock %}
+{% block notes %}
+<p>All records and entries shown are deemed to be correct unless DearTime notifies on any discrepancy within 3 working days from the receipt date.</p>
+{% endblock %}

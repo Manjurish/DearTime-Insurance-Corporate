@@ -1,0 +1,423 @@
+{% load static %}
+
+<head>
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="{% static "portal/img/favicon.png" %}" />
+<title>DearTime | Viewing Invoice - {{invoice_no}}</title>
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+  rel="stylesheet"
+/>
+
+<!-- Icons. Uncomment required icon fonts -->
+<link rel="stylesheet" href="{% static "fontawesome-free-6.2.1-web/css/all.css" %}" />
+<link rel="stylesheet" href="{% static "fontawesome-free-6.2.1-web/css/fontawesome.css" %}" />
+<link rel="stylesheet" href="{% static "fontawesome-free-6.2.1-web/css/regular.css" %}" />
+<link rel="stylesheet" href="{% static "portal/fonts/boxicons.css" %}" />
+
+<!-- Core CSS -->
+<link rel="stylesheet" href="{% static "external/css/dropzone.css" %}" class="template-customizer-core-css" />
+<link rel="stylesheet" href="{% static "portal/css/core.css" %}" class="template-customizer-core-css" />
+<link rel="stylesheet" href="{% static "portal/css/theme-default.css" %}" class="template-customizer-theme-css" />
+<link rel="stylesheet" href="{% static "material/css/material-kit.css" %}" class="template-customizer-core-css" />
+<!-- <link rel="stylesheet" href="../assets/css/demo.css" /> -->
+
+<!-- Vendors CSS -->
+<link rel="stylesheet" href="{% static "portal/libs/perfect-scrollbar.css" %}" />
+
+<link rel="stylesheet" href="{% static "portal/css/toastr.css" %}">
+
+<!-- Page CSS -->
+<script src="https://kit.fontawesome.com/c3c32dbdee.js" crossorigin="anonymous"></script>
+<!-- Helpers -->
+<script src="{% static "fontawesome-free-6.2.1-web/js/all.js" %}"></script>
+<script src="{% static "fontawesome-free-6.2.1-web/js/fontawesome.js" %}"></script>
+<script src="{% static "fontawesome-free-6.2.1-web/js/regular.js" %}"></script>
+<script src="{% static "portal/js/helpers.js" %}"></script>
+
+<!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+<!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+<script src="{% static "portal/js/config.js" %}"></script>
+<script src="{% static "material/js/material-kit.js" %}"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="{% static "external/js/dropzone.js" %}"></script>
+<script src="{% static "portal/js/toastr.js" %}"></script>
+
+<style>
+    .break {
+            flex-basis: 100%;
+            height: 0;
+    }
+    .pclassCustom{
+          color: #78716C;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 20px;
+    }
+    .bottomButton{
+            position: absolute; 
+            bottom: 0;
+            width: 100%; 
+            background: #E7E0D6;
+            width: 100%;
+            height: 75px;
+    }
+    .containerCustom {
+          border : 1px solid #CBC2B2;
+          border-radius: 15px;
+          background: #F8F4EE;
+          color: #000;
+      }
+      .form-range{
+          background: #DBEAFE;
+          border-radius: 15px;
+          width: 350px;
+          height: 52px;
+          padding: 10px 16px;
+          color: #BFDBFE;
+      }
+      .buttonClose{
+        border-radius: 50%;
+        padding: 0.5em;
+        width: 30px;
+        height: 30px;
+        border: 1.5px solid #000000;
+        color: #000000;
+        position: relative;
+      }
+      .buttonClose::before {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #000000;
+        width: 2px;
+        left: 12px;
+        top: 5px;
+        bottom: 5px;
+        transform: rotate(45deg);
+    }
+    .buttonClose::after {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #000000;
+        height: 2px;
+        top:12px;
+        left: 5px;
+        right: 5px;
+        transform: rotate(45deg);
+    }
+    .buttonCloseSecondary{
+        border-radius: 50%;
+        padding: 0.5em;
+        width: 30px;
+        height: 30px;
+        border: 1.5px solid #2563EB;
+        color: #000000;
+        position: relative;
+    }
+    .buttonCloseSecondary::before {
+      content: " ";
+      position: absolute;
+      display: block;
+      background-color: #2563EB;
+      width: 2px;
+      left: 12px;
+      top: 5px;
+      bottom: 5px;
+      transform: rotate(45deg);
+    }
+    .buttonCloseSecondary::after {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #2563EB;
+        height: 2px;
+        top:12px;
+        left: 5px;
+        right: 5px;
+        transform: rotate(45deg);
+    }
+    .dropdown .dropdown-toggle.collapsed:after {
+        transform: rotate(180deg);
+        float:right;
+    }
+    .dropdown .dropdown-toggle:after
+    {
+        content: "\f106";
+        font: normal normal normal 14px/1 FontAwesome;
+        border: none;
+        vertical-align: middle;
+        font-weight: 600;
+        float:right;
+    }
+    .tableCustom {
+      --bs-table-bg: transparent;
+      --bs-table-accent-bg: transparent;
+      --bs-table-striped-color: #697a8d;
+      --bs-table-striped-bg: #f9fafb;
+      --bs-table-active-color: #697a8d;
+      --bs-table-active-bg: rgba(67, 89, 113, 0.1);
+      --bs-table-hover-color: #697a8d;
+      --bs-table-hover-bg: rgba(67, 89, 113, 0.06);
+      width: auto;
+      margin-bottom: 1rem;
+      color: #697a8d;
+      vertical-align: middle;
+      border : 2px solid #2563EB;
+      border-radius: 15px;
+      background: #EFF6FF;
+      border-collapse:unset; 
+    }
+    .tableCustom > :not(caption) > * > * {
+      padding: 0.625rem 1.25rem;
+      background-color: var(--bs-table-bg);
+      border-bottom-width: 1px;
+      box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+    }
+    .tableCustom > tbody {
+      vertical-align: inherit;
+    }
+    .tableCustom > thead {
+      vertical-align: bottom;
+    }
+    .tableCustom > :not(:first-child) {
+      border-top: 2px solid #d9dee3;
+    }
+    .tableCustom tr:last-child > td {
+      border-bottom-width: 0px;
+    }
+    .tableCustom:not(.table-dark) th{
+        color: #60A5FA;
+    }
+    .customCheckbox {
+        width: 1.23em;
+        height: 1.23em;
+        margin-top: 0.135em;
+        vertical-align: top;
+    }
+    .collapseDiv{
+        width: 100%;
+        outline: none;
+        background: #F5F5F4;
+        border-radius: 8px;
+        height: 48px;
+      }
+
+      .collapseDiv:hover,.collapseDiv:active,.collapseDiv:focus{
+          width: 100%;
+          outline: none;
+          background: #F5F5F4;
+          border-radius: 8px;
+          height: 48px;
+      }
+      .collapseCustom{
+        --bs-btn-padding-x: 1.5rem;
+        --bs-btn-padding-y: 0.625rem;
+        --bs-btn-font-family: ;
+        --bs-btn-font-size: 0.75rem;
+        --bs-btn-font-weight: 700;
+        --bs-btn-line-height: 1.667;
+        --bs-btn-color: #7b809a;
+        --bs-btn-bg: transparent;
+        --bs-btn-border-width: 1px;
+        --bs-btn-border-color: transparent;
+        --bs-btn-border-radius: 0.5rem;
+        --bs-btn-box-shadow: 0 4px 7px -1px rgba(0, 0, 0, 0.11), 0 2px 4px -1px rgba(0, 0, 0, 0.07);
+        --bs-btn-disabled-opacity: 0.65;
+        --bs-btn-focus-box-shadow: 0 0 0 0.2rem rgba(var(--bs-btn-focus-shadow-rgb), .5);
+        display: inline-block;
+        padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
+        font-family: var(--bs-btn-font-family);
+        font-size: var(--bs-btn-font-size);
+        font-weight: var(--bs-btn-font-weight);
+        line-height: var(--bs-btn-line-height);
+        color: var(--bs-btn-color);
+        text-align: center;
+        vertical-align: middle;
+        user-select: none;
+        border: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
+        border-radius: var(--bs-btn-border-radius);
+        background-color: var(--bs-btn-bg);
+        text-transform: uppercase;
+    }
+</style>
+</head>
+<body>
+  {% if messages %}
+    {% for message in messages %}
+        <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+    {% endfor %}
+  {% endif %}
+  <div class="layout-wrapper layout-content-navbar" style="overflow-x:hidden;background: #F8F4EE;">
+    <div class="layout-container">
+      <div class="content-wrapper">
+        <div class="container-xxl flex-shrink-1" style="padding: 0px;">
+          <nav class="navbar navbar-example navbar-expand-lg bg-light" style="padding: 0px;">
+            <div class="container-fluid">
+              <div class="navbar-brand">
+                <a href="{{ host_address }}/member-list">
+                  <h5 class="fw-bold text-uppercase">{{ company.company_name }}</h5>
+                </a> 
+              </div>
+              <ul class="navbar-nav flex-row align-items-center ms-auto">
+                <li>
+                  <a style="color:black; padding:10px;" href="{{ host_address }}/package-list/{{ companySalt }}">Packages</a>
+                </li>
+                <li style="align-items:left">
+                  <a style="color:black;padding:10px;" href="{{ host_address }}/invoice-list">Invoices</a>
+                </li>
+                <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                  <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                      <img src="{% static "portal/img/user-icon.png" %}" alt class="w-px-30 h-auto rounded-circle">
+                    </div>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <a class="dropdown-item" href="{{host_address}}/change-password">
+                        <i class="bx bx-lock-open-alt me-2"></i>
+                        <span class="align-middle">Change Password</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{{host_address}}/general">
+                        <i class="bx bx-cog me-2" aria-hidden="true"></i>
+                        <span class="align-middle">Settings</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{{host_address}}/logout">
+                        <i class="bx bx-power-off me-2"></i>
+                        <span class="align-middle">Log Out</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+        {% block content %}
+        <div class="container-xxl flex-grow-1">
+          <div class="content-wrapper mt-3">
+            <div class="container mb-4" style="margin: 0px; max-width: 1920px;">
+              <div class="row" style="display:block;">
+                <div>
+                  <h4>{% if flag == 'invoice' %}Invoice{% elif flag == 'receipt' %}Receipt{% endif %}</h4>
+                  {% if invoiceObj %}
+                    {% if invoiceObj.status == 'Pending Payment' or invoiceObj.status == 'Payment In Progress' %}
+                    <button type="button" id="makePaymentBtn" class="btn btn-outline-primary" style="margin: 0px; text-transform: none; left:80%" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+                      Make Payment
+                    </button>
+                    {% endif %}
+                  {% endif %}
+                  <a role="button" href="{{host_address}}/invoice-list" class="btn btn-outline-primary" style="margin: 0px; text-transform: none; left:80%">
+                    Back
+                  </a>
+                  <div class="modal fade" style="z-index: 5;" id="confirmationModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <!-- <form method="POST" action="{{host_address}}/invoice-payment">
+                        {% csrf_token %} -->
+                        <input type="hidden" name="invoiceNo" id="invoiceNo" value="{% if flag == 'invoice' %}{{ invoiceNo }}{% endif %}">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel" style="color: black;">Payment Confirmation</h5>
+                          </div>
+                          <div class="modal-body">
+                            <p>Are you confirm to make payment?</p>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <form name="order" method="post" action="{{ senangpay_url }}" onsubmit="updateInvoiceStatus()">
+                              <input type="hidden" name="detail" value="{{ invoice_no }}">
+                              <input type="hidden" name="amount" value="{{ invoiceObj.total_amount }}">
+                              <input type="hidden" name="order_id" value="{{ invoice_no }}">
+                              <input type="hidden" name="name" value="{{ company.company_name }}">
+                              <input type="hidden" name="email" value="{{ company.email_address }}">
+                              <input type="hidden" name="phone" value="{{ company.contact1 }}">
+                              <input type="hidden" name="hash" value="{{ invoiceObj.hash_value }}">
+                              <!-- <button class="btn btn-primary" onclick="formSenangPayURL()">Make Payment</button> -->
+                              <button class="btn btn-primary" type="submit">Make Payment</button>
+                            </form>
+                          </div>
+                        <!-- </form> -->
+                      </div>
+                    </div>
+                  </div>
+                </div><br>
+                <div style="display:block;height:100vh">
+                    <iframe src="{{host_address}}/media/{{file}}" width="100%" height="100%" style="display:block"></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+   <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="{% static "portal/js/jquery.js" %}"></script>
+    <script src="{% static "portal/js/popper.js" %}"></script>
+    <script src="{% static "portal/js/bootstrap.js" %}"></script>
+    <script src="{% static "portal/js/perfect-scrollbar.js" %}"></script>
+
+    <script src="{% static "portal/js/menu.js" %}"></script>
+    <!-- endbuild -->
+
+    <!-- Main JS -->
+    <script src="{% static "portal/js/main.js" %}"></script>
+
+    <!-- Page JS -->
+    <script src="{% static "portal/js/dashboards-analytics.js" %}"></script>
+
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>
+<script>
+  function formSenangPayURL(){
+    dataDict = {
+      'invoiceNo'  : document.getElementById('invoiceNo').value.replace("/", "\/")
+    }
+    var storageData = JSON.stringify(dataDict);
+    $.ajax({                       // initialize an AJAX request
+          url     : '{{host_address}}' + '/invoice-payment',
+          data    : dataDict,
+          method  : 'POST',
+          success : function (data) { 
+              target_url = data['url'];
+              window.open(target_url, '_blank');
+              const previousURL = document.referrer;
+              window.location.replace(previousURL);
+          },
+          error   : function(XMLHttpRequest, textStatus, errorThrown) {
+            alert(textStatus);
+          }
+      });
+  }
+
+  function updateInvoiceStatus(){
+    dataDict = {
+      'invoiceNo': document.getElementById('invoiceNo').value.replace("/", "\/"),
+      csrfmiddlewaretoken : '{{ csrf_token }}'
+    }
+    var storageData = JSON.stringify(dataDict);
+    $.ajax({                       // initialize an AJAX request
+          url     : '{{host_address}}' + '/invoice-payment',
+          data    : dataDict,
+          method  : 'POST',
+          success : function (data) { 
+              return true;
+          },
+          error   : function(XMLHttpRequest, textStatus, errorThrown) {
+            alert(textStatus);
+          }
+      });
+  }
+</script>

@@ -1,0 +1,29 @@
+{% extends '../EmailTemplateBase.html' %}
+{% load static %}
+{% block content %}
+
+{% if last_reminder %}
+<h3>DearTime Insurance Member Status Review and Generate Invoice</h3>
+{% else %}
+<h3>DearTime Insurance Member Status Review and Generate Invoice - Reminder {{ reminder_no }}</h3>
+{% endif %}
+
+<p>Hi {{ payor }},</p>
+
+{% if last_reminder %}
+
+<p>You have {{ memberCount }} members who have accepted your gesture to buy DearTime's insurance for them. <br><br>
+
+Please proceed to generate the invoice before {{ due_date }}. You may generate the invoice by clicking on the indicated 'GENERATE INVOICE' link at the bottom of this email. <br><br>
+
+Invoices received on {{ due_date }}, will result in the cancellation of the offer to the members. You will be required to make the offer again if you are still interested to purchase insurance for your members. <br><br></p>
+
+{% else %}
+
+<p>You have {{ memberCount }} members who have accepted your kind action in buying DearTime's insurance for them. Please review the member list and proceed to generate the invoice no later than {{ due_date }}.</p>
+
+{% endif %}
+
+<a href="{{ invitationUrl }}">Generate Now</a>
+    
+{% endblock %}

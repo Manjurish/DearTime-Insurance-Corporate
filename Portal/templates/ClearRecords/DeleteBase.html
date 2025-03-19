@@ -1,0 +1,303 @@
+{% extends "../AdminBase.html" %}
+{% block title %}
+<title>DearTime | Delete Members</title>
+{% endblock %}
+{% block css %}
+<style>
+    .blankStateButton {
+      width: 250px;
+      height: 60px;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+      color: #9B8A6C;
+    }
+  
+    .pClassCustomLabel{
+      font-size: 12px;
+    }
+  
+    .pClassCustomDescription{
+      font-size: 14px;
+      color:black;
+    }
+  
+    .table td{
+      padding-left: 0px;
+    }
+    .table th{
+      padding-left: 0px;
+    }
+    .dropdownReject {
+      position: relative;
+      display: inline-block;
+    }
+    .dropdown-contentReject {
+      display: none;
+      position: absolute;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1000;
+      margin: 0;
+      text-align: left;
+      background-clip: padding-box;
+    }
+    .dropdown-contentReject a {
+      --bs-dropdown-min-width: 11rem;
+      --bs-dropdown-padding-x: 0;
+      --bs-dropdown-padding-y: 0.5rem;
+      --bs-dropdown-spacer: 1.625rem;
+      --bs-dropdown-font-size: 0.875rem;
+      --bs-dropdown-color: #7b809a;
+      --bs-dropdown-bg: #fff;
+      --bs-dropdown-border-color: transparent;
+      --bs-dropdown-border-radius: 0.375rem;
+      --bs-dropdown-border-width: 0;
+      --bs-dropdown-inner-border-radius: 0.375rem;
+      --bs-dropdown-divider-bg: transparent;
+      --bs-dropdown-divider-margin-y: 0.5rem;
+      --bs-dropdown-box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --bs-dropdown-link-color: #7b809a;
+      --bs-dropdown-link-hover-color: #344767;
+      --bs-dropdown-link-hover-bg: #f0f2f5;
+      --bs-dropdown-link-active-color: #7b809a;
+      --bs-dropdown-link-active-bg: transparent;
+      --bs-dropdown-link-disabled-color: #6c757d;
+      --bs-dropdown-header-color: #6c757d;
+      --bs-dropdown-header-padding-x: 1rem;
+      --bs-dropdown-header-padding-y: 0.5rem;
+      position: absolute;
+      z-index: 1000;
+      min-width: var(--bs-dropdown-min-width);
+      padding: var(--bs-dropdown-padding-y) var(--bs-dropdown-padding-x);
+      margin: 0;
+      font-size: var(--bs-dropdown-font-size);
+      color: var(--bs-dropdown-color);
+      text-align: left;
+      list-style: none;
+      background-color: var(--bs-dropdown-bg);
+      background-clip: padding-box;
+      border: var(--bs-dropdown-border-width) solid var(--bs-dropdown-border-color);
+      border-radius: var(--bs-dropdown-border-radius);
+  
+      color: black;
+      padding: 12px 16px;
+      display: block;
+    }
+    .dropdown:hover .dropdown-contentReject {display: block;}
+  
+    .modalLabel {
+      font-style: italic;
+      margin:0;
+    }
+    
+    .custom-dropdown {
+      border: thin solid grey;
+      border-radius: 5px;
+      width: 115px;
+      padding: 1px 1px 1px 5px;
+      margin: 0px;
+      text-transform: none;
+      color: #9B8A6C;
+      background: transparent;
+      height: 25px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+</style> 
+  {% endblock %}
+  {% block page_title %}
+  <div class="navbar-brand">
+    <a href="{{ host_address }}/member-list">
+      <h5 class="fw-bold text-uppercase">{{ company.company_name }}</h5>
+    </a> 
+  </div>
+  {% endblock %}
+  {% if messages %}
+  {% for message in messages %}
+      <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+  {% endfor %}
+{% endif %}
+{% block content %}
+{% if messages %}
+  <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+{% endif %}
+
+
+<div class="container-xxl flex-grow-1" style="height:100%;overflow:hidden">
+  <div class="content-wrapper mt-3">
+    <div class="container mb-4" style="margin: 0px; max-width: 1920px;">
+      <div class="row">
+        <div class="col-3" style="width:80%">
+          <form method ="POST" action="{{host_address}}/user-enquiry">
+            {% csrf_token %}
+            <div class="nav-item d-flex align-items-center">
+              <select name = searchBy class = "custom-dropdown">
+                <option value = "email"> Email </option>
+                <option value = "mykad"> Mykad </option>
+                <option value = "phone"> Mobile Phone </option>
+              </select>
+              <div style="border:thin solid lightgrey; border-radius:5px" class="mx-1 col-3">
+                <input type="text" class="form-control border-0 shadow-none" 
+                style="border:thin solid #000"
+                id="search-user" 
+                name="search-user"
+                placeholder ="Enter search value...">
+              </div>
+              <button type="submit" class="btn btn-outline-primary me-1" style=" width:100px; padding:10px 5px 10px 5px; margin: 0px; text-transform: none; color: #9B8A6C;">
+                Search
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="col-8" style="text-align:right;width:20%;">
+          <div class="row">
+            <div class="col">
+              <form action = "{{host_address}}/clear-user" method="POST" id="users_tb_cleared">
+                {% csrf_token %}
+                <input type="hidden" name="memberIdField" id="memberIdField" value="">
+                <button class="btn btn-outline-primary" style="margin: 0px; text-transform: none;" onclick="return displayModal(event)">
+                CLEAR
+                </button>
+              </form>
+            </div>
+            <div class="col">
+              <a role="button" class="btn btn-outline-primary" style="text-align: center;" href="{{host_address}}/company-approval">Back</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-nowrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width:2%; text-align:left">
+              <div class="form-check">
+                <input class="form-check-input" style="border: thin solid #000" type="checkbox" id="selectAllCheckbox" onclick="selectAll();">
+              </div>
+            </th> 
+            <th class="text-uppercase text-muted letter-spacing-2" style="width:10%; text-align:center">Member's Name</th>
+            <th class="text-uppercase text-muted letter-spacing-2" style="width:10%; text-align:center">Email Address</th>
+            <th class="text-uppercase text-muted letter-spacing-2" style="width:10%; text-align:center">MyKad/Passport</th>
+            <th class="text-uppercase text-muted letter-spacing-2" style="width:10%; text-align:center">Mobile No.</th>
+            <th class="text-uppercase text-muted letter-spacing-2" style="width:10%; text-align:center">User Created On</th>
+            <th class="text-uppercase text-muted letter-spacing-2" style="width:10%; text-align:center">Corporate Name</th>
+          </tr>
+        </thead>
+      {% for users in userFound %}
+      {% if not users.has_previous %}
+          <tbody id="1_memberTable">
+            <tr>
+              <td>
+                <div class="form-check">
+                  <input class="form-check-input" style="border: thin solid #000" type="checkbox" id="ClearSelectedUser{{ users.id }}" onclick="clearUsers('{{ users.id }}');">
+                </div>
+              </td> 
+              <td class="text-uppercase text-muted letter-spacing-2" style="width:10%; text-align:center">{{users.name}}</td>
+              <td class="text-uppercase text-muted letter-spacing-2" style="width:10%; text-align:center">{{users.email_address}}</td>
+              <td class="text-uppercase text-muted letter-spacing-2" style="width:10%; text-align:center">{{users.mykad}}</td>
+              <td class="text-uppercase text-muted letter-spacing-2" style="width:10%; text-align:center">{{users.mobile_no}}</td>
+              <td class="text-uppercase text-muted letter-spacing-2" style="width:10%; text-align:center">{{users.created_datetime}}</td>
+              <td class="text-uppercase text-muted letter-spacing-2" style="width:10%; text-align:center">{{users.corporate.company_name}}</td>
+            </tr>
+          </tbody>
+      {% endif %}
+      {% endfor %}
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Clear Confirmation -->
+<div class="modal fade" id="ClearMemberConfirmationModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width: fit-content;">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="row m-3">
+          <div class="container text-center" style="background: #fff;">
+            <p class="fw-bold" style="color: black;">Are you sure?</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-danger" id="confirmClearBtn" onclick="SubmitUserIdForm()">Clear</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block javascript%}
+<script>
+let selectedUserIds = [];
+
+function selectAll() {
+  const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+  for (let i = 0; i < checkboxes.length; i++) {
+    const checkbox = checkboxes[i];
+    if (checkbox.id !== 'selectAllCheckbox') {
+      checkbox.checked = selectAllCheckbox.checked;
+      const userId = checkbox.id.replace('ClearSelectedUser', '');
+      if (selectAllCheckbox.checked) {
+        selectedUserIds.push(userId);
+      } else {
+        const index = selectedUserIds.indexOf(userId);
+        if (index !== -1) {
+          selectedUserIds.splice(index, 1);
+        }
+      }
+    }
+  }
+  updateMemberIdField();
+}
+
+function updateMemberIdField() {
+  const memberIdField = document.getElementById('memberIdField');
+  memberIdField.value = selectedUserIds.join(',');
+}
+
+function SubmitUserIdForm(){
+  document.getElementById('users_tb_cleared').submit();
+}
+
+function displayModal(event){
+  event.preventDefault();
+  $('#ClearMemberConfirmationModal').modal('show');
+  document.getElementById('memberIdField').value = selectedUserIds.join(',');
+  return false;
+}
+
+function clearUsers(memberID){
+  var checkbox = document.getElementById(`ClearSelectedUser${memberID}`);
+  var memberIdField = document.getElementById('memberIdField');
+  if (checkbox){
+    if(checkbox.checked){
+      // Add the selected user ID to the list
+      if (!selectedUserIds.includes(memberID)) {
+        selectedUserIds.push(memberID);
+      }
+    } else {
+      // Remove the user ID from the list if unchecked
+      const index = selectedUserIds.indexOf(memberID);
+      if (index !== -1) {
+        selectedUserIds.splice(index, 1);
+      }
+
+      memberIdField.value = selectedUserIds.join(',');
+    }
+  }
+}
+
+</script>
+{% endblock %}
+
+

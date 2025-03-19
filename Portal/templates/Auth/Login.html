@@ -1,0 +1,27 @@
+{% extends "../LoginBase.html" %}
+{% block quote %}
+<h2 style="color: #000;">Democratising</h2>
+<h2 style="color: #000;"> life insurance so that</h2>
+<h2 style="color: #000;">nobody gets left behind.</h2>
+{% endblock %}
+{% block content %}
+<h5 class="text-large" style="color: black;">Sign In</h5>
+<p>New To DearTime? <a href="{{host_address}}/sign-up" style="color: #3498DB;"><u>Sign up for an account.</u></a></p>
+
+<form id="formAuthentication" method="POST" onsubmit="show_loader()">
+    {% csrf_token %}
+    <div class="input-group input-group-dynamic mb-4 mt-4">
+        <label class="form-label text-capitalize">Email Address</label>
+        <input id="email" type="email" name="email" class="form-control" required >
+    </div>
+    <div class="mb-3 form-password-toggle">
+    <div class="input-group input-group-dynamic mb-4 input-group-merge">
+        <label class="form-label text-capitalize">Password</label>
+        <input id="password" class="form-control" name="password" type="password" required>
+        <span role="button"><i class="bx bx-hide" aria-hidden="true"></i></span>
+    </div>
+    </div>
+        <button type="submit" class=" input-group btn btn-primary btn-block text-capitalize mt-3 mb-2 rounded-pill shadow-sm">Sign in</button>
+    <div class="text-center d-flex justify-content-between mt-4"><a href="{{host_address}}/reset-password" class="text-muted">Forget password?</a></div>
+</form>
+{% endblock %}

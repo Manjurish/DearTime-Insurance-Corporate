@@ -1,0 +1,2756 @@
+{% extends "../BaseNew.html" %}
+{% block title %}
+<title>DearTime | Dashboard</title>
+{% endblock %}
+{% block css %}
+<style>
+  .blankStateButton {
+    width: 250px;
+    height: 60px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #9B8A6C;
+  }
+
+  .pClassCustomLabel{
+    font-size: 12px;
+  }
+
+  .pClassCustomDescription{
+    font-size: 14px;
+    color:black;
+  }
+
+  .table td{
+    padding-left: 0px;
+  }
+  .table th{
+    padding-left: 0px;
+  }
+  .dropdownReject {
+    position: relative;
+    display: inline-block;
+  }
+  .dropdown-contentReject {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1000;
+    margin: 0;
+    text-align: left;
+    background-clip: padding-box;
+  }
+  .dropdown-contentReject a {
+    --bs-dropdown-min-width: 11rem;
+    --bs-dropdown-padding-x: 0;
+    --bs-dropdown-padding-y: 0.5rem;
+    --bs-dropdown-spacer: 1.625rem;
+    --bs-dropdown-font-size: 0.875rem;
+    --bs-dropdown-color: #7b809a;
+    --bs-dropdown-bg: #fff;
+    --bs-dropdown-border-color: transparent;
+    --bs-dropdown-border-radius: 0.375rem;
+    --bs-dropdown-border-width: 0;
+    --bs-dropdown-inner-border-radius: 0.375rem;
+    --bs-dropdown-divider-bg: transparent;
+    --bs-dropdown-divider-margin-y: 0.5rem;
+    --bs-dropdown-box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --bs-dropdown-link-color: #7b809a;
+    --bs-dropdown-link-hover-color: #344767;
+    --bs-dropdown-link-hover-bg: #f0f2f5;
+    --bs-dropdown-link-active-color: #7b809a;
+    --bs-dropdown-link-active-bg: transparent;
+    --bs-dropdown-link-disabled-color: #6c757d;
+    --bs-dropdown-header-color: #6c757d;
+    --bs-dropdown-header-padding-x: 1rem;
+    --bs-dropdown-header-padding-y: 0.5rem;
+    position: absolute;
+    z-index: 1000;
+    min-width: var(--bs-dropdown-min-width);
+    padding: var(--bs-dropdown-padding-y) var(--bs-dropdown-padding-x);
+    margin: 0;
+    font-size: var(--bs-dropdown-font-size);
+    color: var(--bs-dropdown-color);
+    text-align: left;
+    list-style: none;
+    background-color: var(--bs-dropdown-bg);
+    background-clip: padding-box;
+    border: var(--bs-dropdown-border-width) solid var(--bs-dropdown-border-color);
+    border-radius: var(--bs-dropdown-border-radius);
+
+    color: black;
+    padding: 12px 16px;
+    display: block;
+  }
+  .dropdown:hover .dropdown-contentReject {display: block;}
+
+  .modalLabel {
+    font-style: italic;
+    margin:0;
+  }
+
+  .form-check:not(.form-switch) .form-check-input[type="checkbox"], .form-check:not(.form-switch) .form-check-input[type="radio"] {
+    border: 1px solid #000000;
+}
+</style> 
+{% endblock %}
+{% block page_title %}
+<div class="navbar-brand mx-1">
+  <a href="{{ host_address }}/member-list">
+    <h5 class="fw-bold text-uppercase">{{ company.company_name }}</h5>
+  </a> 
+  <form method="POST" id="formFilterCampaign" action="{{host_address}}/member-list">
+    {% csrf_token %}
+    <div class="nav-item d-flex align-items-center w-100">
+      <div style="border:thin solid lightgrey; border-radius:5px" class="mx-1">
+        <select id="searchCampaignCode" name="searchCampaignCode" onchange="this.form.submit()" class="form-control border-0 shadow-none" style="border:thin solid #000; width: 100%">
+          <option value="">All records</option>
+        {% for campaign in campaignList%}
+          <option value="{{campaign}}" {% if campaign_code_filter %}selected{% endif %}>{{campaign}}</option>
+        {% endfor %}
+          <option value="null" {% if campaign_code_filter == "null" %}selected{% endif %}>Without campaign code</option>
+        </select>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
+{% if messages %}
+  {% for message in messages %}
+      <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+  {% endfor %}
+{% endif %}
+{% block content %}
+<div class="container-xxl flex-grow-1" style="height:100%;overflow:hidden">
+  <div class="content-wrapper mt-3">
+    <div class="container mb-4" style="margin: 0px; max-width: 1920px;">
+      <div class="row">
+        <div class="col-3" style="width:20%">
+          <h4>Members</h4>
+        </div>
+        <div class="col-8" style="text-align:right;width:80%;">
+          <a class="btn btn-outline-primary" style="margin: 0px; text-transform: none;" href="{{host_address}}/upload-history/{{companySalt}}">Upload History</a> 
+          <!-- <a class="btn btn-outline-primary" style="margin: 0px; text-transform: none;" href="{{host_address}}/package-list/{{companySalt}}">Package Configuration</a> -->
+          <a class="btn btn-outline-primary" style="margin: 0px; text-transform: none;" href="{{host_address}}/failed-upload-list/{{companySalt}}">Failed Uploads</a>
+          <button class="btn btn-outline-primary me-1" style="margin: 0px; text-transform: none;" onclick="return MemberAction('ImportMember')">
+            Import &nbsp;
+            <span class="tf-icons bx bx-download"></span>
+          </button> 
+          <button class="btn btn-outline-primary" style="margin: 0px; text-transform: none;" onclick="return MemberAction('AddMember')">
+            Add Member
+          </button>
+          <!-- <a href="{{host_address}}/invoice-list" role="button" class="btn btn-outline-primary" style="margin: 0px; text-transform: none;">
+            Invoice List
+          </a> -->
+          {% if bankExist %}
+          <form method="POST" id="sendInvitationForm" style="padding-top:10px">
+            {% csrf_token %}
+            <input type="hidden" id="formtypeInvitation" name="formtypeInvitation">
+            <button type="submit" id="sendInvitationBtn" class="btn btn-outline-primary" style="margin: 0px; text-transform: none;" onclick="toggleFormType('Invitation')" disabled>
+              Send Invitation
+            </button>
+          </form>
+          {% else %}
+          <div id="sendInvitationForm" style="padding-top:10px">
+            <button id="sendInvitationBtn" class="btn btn-outline-primary" style="margin: 0px; text-transform: none;" data-bs-toggle="modal" data-bs-target="#updateBankAccountModal" disabled>
+              Send Invitation
+            </button>
+          </div>
+          {% endif %}
+          
+        </div>
+      </div>
+      <p style="margin:0px; color: #57534E;">All your members at a glance.</p>
+      <br>
+      <!-- <p style="color: #57534E;"><a href="#" style="color: #3498DB;"><u>Quick Invoice</u></a> to automatically generate invoice for members who are pending for payment.</p> -->
+    </div>
+    <div class="container" style="margin: 0px; max-width: 1920px;" >
+      <div class="card-header">
+        <div class="navbar-nav">
+          <div class="row">
+            <form method="POST" id="formFilterMember" action="{{host_address}}/member-list">
+              {% csrf_token %}
+              <div class="col-3">
+                <div class="nav-item d-flex align-items-center">
+                  <i class="bx bx-search fs-4 lh-0 me-3"></i>
+                  <div style="border:thin solid lightgrey; border-radius:5px" class="mx-1 col-8">
+                    <input
+                      id="searchMember"
+                      name="searchMember"
+                      type="text"
+                      class="form-control border-0 shadow-none"
+                      placeholder="Search members by name..."
+                      value="{% if filterMember %}{{filterMember}}{% endif %}"
+                    >
+                  </div>
+                  <div class="nav-item d-flex align-items-center">
+                    <button onclick="toggleFormType('Member')" type="submit" class="btn btn-outline-primary me-1" style="margin: 0px; text-transform: none; color: #9B8A6C;">
+                      Filter
+                    </button> 
+                    <!-- <a href="#" class="me-1" style="margin: 0px; text-transform: none; color: #3498DB;">
+                      Quick Invoice
+                    </a>  -->
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <br>
+        </div>
+      </div>
+      <div class="modal fade" id="updateBankAccountModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: fit-content;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="color: black;">Referral Confirmation</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row m-3">
+                        <div class="text-justify" style="background: #fff;">
+                            <p class="mb-2 text-wrap" style="font-size: 14px; margin: 0;">Please provide your company's bank account details so that you may receive your referral gifts.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="{{host_address}}/referral-without-bank" >Proceed</a>
+                </div>
+            </div>
+        </div>
+    </div>
+      <div class="text-nowrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 8%;">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="defaultCheckAllEmail" onchange="selectAllEmail(this)">
+                </div>
+              </th>
+              <th style="width:2%; text-align:left">#</th>
+              <th class="text-uppercase letter-spacing-2" style="width:12.8%; text-align:left">Full Name<i class='bx bx-up-arrow-alt' ></i></th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.8%; text-align:center">MyKad/Passport</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.8%; text-align:center">Batch No.</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.8%; text-align:left">Status</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.8%; text-align:left">Packages<i class='bx bx-up-arrow-alt' ></i></th>
+              <th class="text-uppercase text-muted letter-spacing-2 pe-1" style="width:12.8%; text-align:left">Quotation (RM)
+                <div class="dropdown"  style="display: inline-block;position:relative;">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; font-size: 15px;">
+                    <i class="bx bx-info-circle"></i>
+                  </button>
+                  <div class="dropdown-menu" style="overflow-y:auto;">
+                    <div class="px-3 py-2 text-muted" style="width: 200px;height: fit-content;
+                    white-space:pre-line;word-wrap: break-word;display:flex;">
+                    <p class="mb-0 pClassCustomLabel">This is just a quotation. The final amount will be provided after the member has accepted the offer.</p>
+                    </div>
+                  </div>
+                </div>
+              </th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.8%; text-align:left">Campaign Code</th>
+              <th style="width: 8%;text-align:center;"></th>
+            </tr>
+          </thead>
+        {% for page in premiumHolderQS %}
+        {% if not page.has_previous %}
+            <tbody id="1_memberTable">
+              {% for individual in page %}
+              <div class="modal fade" id="deleteMemberConfirmationModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog" style="width: fit-content;">
+                    <div class="modal-content">
+                      <div class="modal-body">
+                        <div class="row m-3">
+                            <div class="container text-center" style="background: #fff;">
+                                <p class="fw-bold" style="color: black;">Are you sure?</p>
+                                <p class="mb-2 text-wrap" style="font-size: 12px; margin: 0;">Terminating a member will delete all associated data but will not delete past purchases and invoices.</p>
+                            </div>
+                      </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
+                        <form action="{{host_address}}/terminate-member" method="POST">
+                          {% csrf_token %}
+                          <input type="hidden" id="terminatedMember" name="terminatedMember">
+                          <button class="btn btn-danger" type="submit">Terminate</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              <tr>
+                <td>
+                  
+                  <div class="form-check">
+                    <input class="form-check-input" name="email_checkbox" value="{{ individual.id }}" style="border:thin solid #000" type="checkbox" id="defaultCheck{{ individual.id }}" onclick="appendSendEmailList('{{ individual.id }}','{{individual.campaign_code}}');">
+                  </div>
+                  
+                </td>
+                <td style="font-size: 15px; text-align: left;">{{ forloop.counter }}.</td>
+                <td style="width:12.8%;">
+                  <div class="dropdown">
+                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                      {{ individual.name }}
+                    </button>
+                    <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                      <div class="px-3 py-2 text-muted">
+                        <p class="mb-0 pClassCustomLabel">Email</p>
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.email_address }}</p>
+                        <p class="mb-0 pClassCustomLabel">Nationality</p>
+                        {% if individual.mykad %}
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Malaysian</p>
+                        {% else %}
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.nationality }}</p>
+                        {% endif %}
+                        <div class="row">
+                          <div class="col-8">
+                            <p class="mb-0 pClassCustomLabel">Date of birth</p>
+                            <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.dob|slice:"8:" }}-{{ individual.dob|slice:"5:7" }}-{{ individual.dob|slice:":4" }}</p>
+                          </div>
+                          <div class="col-4">
+                            <p class="mb-0 pClassCustomLabel">Gender</p>
+                            <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.gender }}</p>
+                          </div>
+                        </div>
+                        <p class="mb-0 pClassCustomLabel">Mobile</p>
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.mobile_no }}</p>
+                      </div>
+                    </div>
+                    {% if individual.rejected_reason %}
+                    <div class="dropdownReject">
+                      <i class='bx bx-info-circle' data-bs-toggle="dropdown"></i>
+                        <div class="dropdown-contentReject">
+                          <a class="mb-0 pClassCustomLabel">Rejected Reason</a>
+                          <a class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{% if individual.rejected_reason == 'Rejected by member' %} Member Rejected The Offer {% elif individual.rejected_reason == 'Rejected by medical survey' %} Coverage not eligible due to member's medical / occupational profile {% else %}{{ individual.rejected_reason }}{%endif%}</a>
+                        </div>       
+                    </div>
+                    {% endif %} 
+                    <!-- {% if individual.si_waitinglist %}
+                      <i  class='bx bx-error-circle' style="color:red;" data-bs-toggle="modal" data-bs-target="#proceedSponsoredInsuranceModal" onclick="return populateModal('{{ individual.id }}', '{{ individual.name }}')"></i>
+                    {% else %}
+                    {% endif %} -->
+                  </div>
+                </td>
+                <td style="font-size: 15px; text-align:center; width:12.8%;">
+                  {% if individual.mykad %}
+                    {{ individual.mykad }}
+                  {% else %}
+                    {{ individual.passport }}
+                  {% endif %}
+                </td>
+                <td style="font-size: 15px;text-align:center">{{ individual.batch_no }}</td>
+                <td style="font-size: 15px;">
+                  <span class="badge bg-label-warning border-label-warning me-1">
+                    {{ individual.status }}
+                  </span>
+                </td>
+                <td style="width:12.8%;">
+                  <div class="dropdown">
+                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                      {{ individual.package.package_name }}
+                    </button>
+                    <div class="dropdown-menu">
+                      <div class="px-3 py-2 text-muted">
+                        <p class="mb-0 pClassCustomLabel">Products</p>
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">
+                          {% for key, values in individual.coverage.items %}
+                            {% if values != 0 and values != None %}
+                              {{ key }} - RM {{ values|default_if_none:"-" }}
+                              <br>
+                            {% endif %}
+                          {% endfor %}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td style="font-size: 15px; text-align:center; width:12.8%;">
+                  {% if individual.quotation_premium %}
+                    {{ individual.quotation_premium|floatformat:2 }}
+                  {% else %}
+                  {% endif %}
+                </td>
+
+                <td style="font-size: 15px; text-align:left; width:12.8%;"> <!--campaign code-->
+                  {% if individual.campaign_code %}
+                    <span id="campaign_Code">{{ individual.campaign_code }}</span>
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+                <td style="text-align:center; width:12.8%;">
+                  <div class="dropdown">
+                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                      <i class="bx bx-dots-horizontal-rounded"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                      <!-- <button class="dropdown-item" onclick="return MemberAction('EditMember')"
+                        ><i class="bx bx-edit-alt me-1"></i> Edit</button
+                      >
+                      <a class="dropdown-item" href="javascript:void(0);"
+                        ><i class="bx bx-trash me-1"></i> Delete</a
+                      > -->
+                      <button class="dropdown-item" onclick="return EditMember('{{individual.id}}', '{{individual.employment_no}}', '{{individual.name}}', '{{individual.email_address}}', '{{individual.nationality}}', '{{individual.dob}}','{{individual.gender}}','{{individual.mobile_no}}','{{individual.mykad}}','{{individual.passport}}','{{individual.batch_no}}','{{individual.status}}','{{individual.tentative_premium}}','{{individual.package.id}}')"
+                        >Edit</button
+                      >
+                      <!-- <button class="dropdown-item"
+                        >Invoice</button
+                      > -->
+                      <button class="dropdown-item" style="color:red;" data-bs-toggle="modal" data-bs-target="#deleteMemberConfirmationModal" onclick="return populateTerminatedId('{{ individual.id }}')"
+                        >Terminate</button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+        {% else %}
+        <tbody id="{{page.number}}_memberTable" hidden>
+          {% for individual in page %}
+          <tr>
+            <td>
+              
+              <div class="form-check">
+                <input class="form-check-input" name="email_checkbox" value="{{ individual.id }}" style="border:thin solid #000" type="checkbox" id="defaultCheck{{ individual.id }}" onclick="appendSendEmailList('{{ individual.id }},'{{individual.campaign_code}}');">
+              </div>
+              
+            </td>
+            {% widthratio 5 1 page.previous_page_number as count %}
+            <td style="font-size: 15px;">{{ forloop.counter|add:count }}.</td>
+            <td>
+              <div class="dropdown">
+                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                  {{ individual.name }}
+                </button>
+                <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                  <div class="px-3 py-2 text-muted">
+                    <p class="mb-0 pClassCustomLabel">Email</p>
+                    <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.email_address }}</p>
+                    <p class="mb-0 pClassCustomLabel">Nationality</p>
+                    {% if individual.mykad %}
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Malaysian</p>
+                    {% else %}
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.nationality }}</p>
+                    {% endif %}                    
+                    <div class="row">
+                      <div class="col-8">
+                        <p class="mb-0 pClassCustomLabel">Date of birth</p>
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.dob|slice:"8:" }}-{{ individual.dob|slice:"5:7" }}-{{ individual.dob|slice:":4" }}</p>
+                      </div>
+                      <div class="col-4">
+                        <p class="mb-0 pClassCustomLabel">Gender</p>
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.gender }}</p>
+                      </div>
+                    </div>
+                    <p class="mb-0 pClassCustomLabel">Mobile</p>
+                    <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.mobile_no }}</p>
+                  </div>
+                </div>
+                {% if individual.rejected_reason %}
+                  <div class="dropdownReject">
+                    <i class='bx bx-info-circle' data-bs-toggle="dropdown"></i>
+                      <div class="dropdown-contentReject">
+                        <a class="mb-0 pClassCustomLabel">Rejected Reason</a>
+                        <a class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{% if individual.rejected_reason == 'Rejected by member' %} Member Rejected The Offer {% elif individual.rejected_reason == 'Rejected by medical survey' %} Coverage not eligible due to member's medical / occupational profile {% else %}{{ individual.rejected_reason }}{%endif%}</a>
+                      </div>       
+                  </div>
+                  {% endif %}
+                <!-- {% if individual.si_waitinglist %}
+                  <i  class='bx bx-error-circle' style="color:red;" data-bs-toggle="modal" data-bs-target="#proceedSponsoredInsuranceModal" onclick="return populateModal('{{ individual.id }}', '{{ individual.name }}')"></i>
+
+                {% else %}
+                {% endif %} -->
+              </div>
+            </td>
+            <td style="font-size: 15px; text-align:center">
+              {% if individual.mykad %}
+                {{ individual.mykad }}
+              {% else %}
+                {{ individual.passport }}
+              {% endif %}
+            </td>
+            <td style="font-size: 15px;text-align:center">{{ individual.batch_no }}</td>
+            <td style="font-size: 15px;"><span class="badge bg-label-warning border-label-warning me-1">{{ individual.status }}
+            </span>
+            </td>
+            <td>
+              <div class="dropdown">
+                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                  {{ individual.package.package_name }}
+                </button>
+                <div class="dropdown-menu">
+                  <div class="px-3 py-2 text-muted">
+                    <p class="mb-0 pClassCustomLabel">Products</p>
+                    <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">
+                      {% for key, values in individual.coverage.items %}
+                        {% if values != 0 and values != None %}
+                          {{ key }} - RM {{ values|default_if_none:"-" }}
+                          <br>
+                        {% endif %}
+                      {% endfor %}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td style="font-size: 15px; text-align:right">
+              {% if individual.quotation_premium %}
+                {{ individual.quotation_premium|floatformat:2 }}
+              {% else %}
+              {% endif %}
+            </td>
+            <td>
+              <div class="dropdown">
+                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                  <i class="bx bx-dots-horizontal-rounded"></i>
+                </button>
+                <div class="dropdown-menu">
+                  <!-- <button class="dropdown-item" onclick="return MemberAction('EditMember')"
+                    ><i class="bx bx-edit-alt me-1"></i> Edit</button
+                  >
+                  <a class="dropdown-item" href="javascript:void(0);"
+                    ><i class="bx bx-trash me-1"></i> Delete</a
+                  > -->
+                  <button class="dropdown-item" onclick="return EditMember('{{individual.id}}', '{{individual.employment_no}}', '{{individual.name}}', '{{individual.email_address}}', '{{individual.nationality}}', '{{individual.dob}}','{{individual.gender}}','{{individual.mobile_no}}','{{individual.mykad}}','{{individual.passport}}','{{individual.batch_no}}','{{individual.status}}','{{individual.tentative_premium}}','{{individual.package.id}}')"
+                    >Edit</button
+                  >
+                  <!-- <button class="dropdown-item"
+                    >Invoice</button
+                  > -->
+                  <button class="dropdown-item" style="color:red;" data-bs-toggle="modal" data-bs-target="#deleteMemberConfirmationModal"  onclick="return populateTerminatedId('{{ individual.id }}')">Terminate</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        {% endif %} 
+      {% endfor %}
+        </table>
+        <div class="d-flex align-items-center justify-content-center">
+          <nav aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item first" id="first_memberTableBtn">
+                <button class="page-link" onclick="first('memberTable')"><i class="bx bx-chevrons-left"></i></button>
+              </li>
+              <li class="page-item prev" id="prev_memberTableBtn">
+                <button class="page-link" onclick="prev('memberTable')"><i class="bx bx-chevron-left"></i></button>
+              </li>
+              <div id="divMemberTable" style="display:inline-flex">
+              {% for page in premiumHolderQS.page_range %}
+                <li class="page-item {% if page == 1 %}active{% endif %}" id="{{page}}_memberTableBtn">
+                  <button class="page-link" onclick="pageMember('{{page}}')">{{page}}</button>
+                </li>
+              {% endfor %}
+              </div>
+              <li class="page-item next" id="next_memberTableBtn">
+                <button class="page-link" onclick="next('memberTable', '{{premiumHolderQS.num_pages}}')"><i class="bx bx-chevron-right"></i></button>
+              </li>
+              <li class="page-item last" id="last_memberTableBtn">
+                <button class="page-link" onclick="last('memberTable', '{{premiumHolderQS.num_pages}}')"><i class="bx bx-chevrons-right"></i></button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <!-- <div>
+          <div class="row">
+              <div class="col-8 d-flex">
+                  <p class="text-uppercase text-muted me-2">Selected: <span>1</span></p>
+                  <a href="#" class="me-1" style="margin: 0px; text-transform: none; color: #3498DB;">
+                      Clear Selection
+                  </a> 
+              </div>
+              <div class="col-4">
+                  <a href="#" class="btn rounded-pill btn-info" style="margin: 0px; text-transform: none; width: 165px; height: 35px; font-size: 12px; letter-spacing: -0.02em; ">
+                      Assign Package &nbsp;
+                      <i class='bx bx-chevron-down'></i>
+                  </a> 
+              </div>
+          </div>
+      </div> -->
+    </div>
+  </div>
+
+  <div class="content-wrapper mt-3">
+    <div class="container mb-4" style="margin: 0px; max-width: 1920px;">
+      <div class="row">
+        <div class="col-8">
+          <h4>Pending Payment</h4>
+        </div>
+        <div class="col-4" style="text-align: right;">
+          <form method="POST" id="invoiceForm" action="{{host_address}}/generate-invoice">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-primary" id="invoiceBtn" style="margin: 0px; text-transform: none;" onclick="show_loader('1');" disabled>
+              Generate Invoice
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="margin: 0px; max-width: 1920px;" >
+      <div class="card-header">
+        <div class="navbar-nav">
+          <div class="row">
+            <form method="POST" id="formFilterPending" action="{{host_address}}/member-list">
+              {% csrf_token %}
+              <div class="col-3">
+                <div class="nav-item d-flex align-items-center">
+                  <i class="bx bx-search fs-4 lh-0 me-3"></i>
+                  <div style="border:thin solid lightgrey; border-radius:5px" class="mx-1 col-8">
+                    <input
+                      id="searchPending"
+                      name="searchPending"
+                      type="text"
+                      class="form-control border-0 shadow-none"
+                      placeholder="Search members by name..."
+                      value="{% if filterPending %}{{filterPending}}{% endif %}"
+                      style="border:thin solid #000"
+                    >
+                  </div>
+
+                  {% comment %} <div style="border:thin solid lightgrey; border-radius:5px" class="mx-1 col-8">
+                    <select id="searchCampaignCode" name="searchCampaignCode" class="form-control border-0 shadow-none" style="border:thin solid #000"> {% endcomment %}
+                      {% comment %} uncomment it if need changes {% endcomment %}
+                      {% comment %} <option value="">All pending records</option>
+                      <option value="not_null" {% if filterCampaignCode == "not_null" %}selected{% endif %}>With campaign records</option>
+                      <option value="null" {% if filterCampaignCode == "null" %}selected{% endif %}>Without campaign code</option>
+                    </select>
+                  </div> {% endcomment %}
+                  
+                  <div class="nav-item d-flex align-items-center">
+                    <button onclick="toggleFormType('Pending')" type="submit" class="btn btn-outline-primary me-1" style="margin: 0px; text-transform: none; color: #9B8A6C;">
+                      Filter
+                    </button> 
+                    <!-- <a href="#" class="me-1" style="margin: 0px; text-transform: none; color: #3498DB;">
+                      Quick Invoice
+                    </a>  -->
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <br>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="margin: 0px; max-width: 1920px;">
+      <div class="text-nowrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 8%;">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="defaultCheckAllPayment" onchange="selectAllPayment(this)">
+                </div>
+              </th>
+              <th style="width:2%">#</th>
+              <th class="text-uppercase letter-spacing-2" style="width:11.2%; text-align:left">Full Name<i class='bx bx-up-arrow-alt' ></i></th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:11.2%; text-align:center">MyKad/Passport</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:11.2%; text-align:center">Batch No.</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:11.2%; text-align:left">Status</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:11.2%; text-align:left">Packages<i class='bx bx-up-arrow-alt' ></i></th>
+              <th class="text-uppercase text-muted letter-spacing-2 pe-1" style="width:11.2%; text-align:left">Premium (RM)</th>
+              <th class="text-uppercase text-muted letter-spacing-2 pe-1" style="width:11.2%; text-align:left">AD Premium (RM)</th>
+              <th class="text-uppercase text-muted letter-spacing-2 pe-1" style="width:11.2%; text-align:left">Campaign Code</th>
+              <th style="width:8%;"></th>
+            </tr>
+          </thead>
+          {% for page in payment %}
+          {% if not page.has_previous %}
+          <tbody id="1_pendingTable">
+            {% for individual in page %}
+            <tr>
+              <td>
+                <div class="form-check">
+                  <input class="form-check-input" name="payment_checkbox" value='{"id":{{individual.id}},"premium":{{individual.tentative_premium}}, "campaign_code":"{{individual.campaign_code|default:""}}"}' style="border:thin solid #000" type="checkbox" id="defaultCheckPayment{{ individual.id }}" onclick="appendPaymentList('{{ individual.id }}', '{{ individual.tentative_premium }}', '{{ individual.campaign_code|default:""}}');">
+                </div>
+              </td>
+              <td style="font-size: 15px;">{{ forloop.counter }}.</td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.name }}
+                  </button>
+                  {% if individual.ad_premium %}
+                    <div class="dropdownReject">
+                      <i class="bx bx-info-circle" data-bs-toggle="dropdown"></i>
+                      <div class="dropdown-contentReject">
+                        <div class="row">
+                          <div class="col-12">
+                            <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Premium Adjustment Amount:</p>
+                            <p class="mb-0 pClassCustomDescription letter-normal">{{ individual.ad_premium }}</p>
+                          </div>
+                        </div>
+                        {% comment %} <div class="row">
+                          <div class="col-12">
+                            <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Premium Adjustment Code:</p>
+                            <p class="mb-0 pClassCustomDescription letter-normal"></p>
+                          </div>
+                        </div> {% endcomment %}
+                        <div class="row">
+                          <div class="col-12">
+                            <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Remark:</p>
+                            <p class="mb-0 pClassCustomDescription letter-normal">{{ individual.remark }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                  <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Email</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.email_address }}</p>
+                      <p class="mb-0 pClassCustomLabel">Nationality</p>
+                      {% if individual.mykad %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Malaysian</p>
+                      {% else %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.nationality }}</p>
+                      {% endif %}
+                      <div class="row">
+                        <div class="col-8">
+                          <p class="mb-0 pClassCustomLabel">Date of birth</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.dob|slice:"8:" }}-{{ individual.dob|slice:"5:7" }}-{{ individual.dob|slice:":4" }}</p>
+                        </div>
+                        <div class="col-4">
+                          <p class="mb-0 pClassCustomLabel">Gender</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.gender }}</p>
+                        </div>
+                      </div>
+                      <p class="mb-0 pClassCustomLabel">Mobile</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.mobile_no }}</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align:center">
+                {% if individual.mykad %}
+                  {{ individual.mykad }}
+                {% else %}
+                  {{ individual.passport }}
+                {% endif %}
+              </td>
+              <td style="font-size: 15px;text-align:center">{{ individual.batch_no }}</td>
+              <td style="font-size: 15px;"><span class="badge bg-label-warning border-label-warning me-1">{{ individual.status }}</span></td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.package.package_name }}
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Products</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">
+                        {% for key, values in individual.coverage.items %}
+                            {% if values != 0 and values != None %}
+                              {{ key }} - RM {{ values|default_if_none:"-" }}
+                              <br>
+                            {% endif %}
+                          {% endfor %}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align:center">
+                <!-- 0.00 -->
+                {% if individual.tentative_premium %}
+                  {{ individual.tentative_premium|floatformat:2 }}
+                {% else %}
+                {% endif %}
+              </td>
+              <td style="font-size: 15px; text-align:center"> <!-- to be included ad premium-->
+                {% if individual.ad_premium %}
+                  {{ individual.ad_premium|floatformat:2 }}
+                {% else %}
+                -
+                {% endif %}
+              </td>
+ 
+              <td style="font-size: 15px; text-align:center"> <!--campaign code-->
+                {% if individual.campaign_code %}
+                  <span id="campaign_Code">{{ individual.campaign_code }}</span>
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+            </tr> 
+            {% endfor %}
+          </tbody>
+          {% else %}
+          <tbody id="{{page.number}}_pendingTable" hidden>
+            {% for individual in page %}
+            <tr>
+              <td>
+                <div class="form-check">
+                  <input class="form-check-input" name="payment_checkbox" value='{"id":{{individual.id}},"premium":{{individual.tentative_premium}}, "campaign_code":"{{individual.campaign_code|default:""}}"}'  style="border:thin solid #000" type="checkbox" id="defaultCheckPayment{{ individual.id }}" onclick="appendPaymentList('{{ individual.id }}', '{{ individual.tentative_premium }}','{{ individual.campaign_code|default:""}}');">
+                </div>
+              </td>
+              {% widthratio 5 1 page.previous_page_number as count %}
+              <td style="font-size: 15px;">{{ forloop.counter|add:count }}.</td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.name }}
+                  </button>
+                  {% if individual.ad_premium %}
+                    <div class="dropdownReject">
+                      <i class="bx bx-info-circle" data-bs-toggle="dropdown"></i>
+                      <div class="dropdown-contentReject">
+                        <div class="row">
+                          <div class="col-12">
+                            <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Premium Adjustment Amount:</p>
+                            <p class="mb-0 pClassCustomDescription letter-normal">{{ individual.ad_premium }}</p>
+                          </div>
+                        </div>
+                        {% comment %} <div class="row">
+                          <div class="col-12">
+                            <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Premium Adjustment Code:</p>
+                            <p class="mb-0 pClassCustomDescription letter-normal"></p>
+                          </div>
+                        </div> {% endcomment %}
+                        <div class="row">
+                          <div class="col-12">
+                            <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Remark:</p>
+                            <p class="mb-0 pClassCustomDescription letter-normal">{{ individual.remark }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                  <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Email</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.email_address }}</p>
+                      <p class="mb-0 pClassCustomLabel">Nationality</p>
+                      {% if individual.mykad %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Malaysian</p>
+                      {% else %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.nationality }}</p>
+                      {% endif %}                      
+                      <div class="row">
+                        <div class="col-8">
+                          <p class="mb-0 pClassCustomLabel">Date of birth</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.dob|slice:"8:" }}-{{ individual.dob|slice:"5:7" }}-{{ individual.dob|slice:":4" }}</p>
+                        </div>
+                        <div class="col-4">
+                          <p class="mb-0 pClassCustomLabel">Gender</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.gender }}</p>
+                        </div>
+                      </div>
+                      <p class="mb-0 pClassCustomLabel">Mobile</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.mobile_no }}</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px;">
+                {% if individual.mykad %}
+                  {{ individual.mykad }}
+                {% else %}
+                  {{ individual.passport }}
+                {% endif %}
+              </td>
+              <td style="font-size: 15px;text-align:center">{{ individual.batch_no }}</td>
+              <td style="font-size: 15px;"><span class="badge bg-label-warning border-label-warning me-1">{{ individual.status }}</span></td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.package.package_name }}
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Products</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">
+                        {% for key, values in individual.coverage.items %}
+                            {% if values != 0 and values != None %}
+                              {{ key }} - RM {{ values|default_if_none:"-" }}
+                              <br>
+                            {% endif %}
+                          {% endfor %}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align:right">
+                {% if individual.tentative_premium %}
+                  {{ individual.tentative_premium|floatformat:2 }}
+                {% else %}
+                {% endif %}
+              </td>
+              <td style="font-size: 15px; text-align:center"> <!-- to be included ad premium-->
+                {% if individual.ad_premium %}
+                  {{ individual.ad_premium|floatformat:2 }}
+                {% else %}
+                -
+                {% endif %}
+              </td>
+              <td style="font-size: 15px; text-align:left; width:12.8%;"> <!--campaign code-->
+                {% if individual.campaign_code %}
+                  <span id="campaign_Code">{{ individual.campaign_code }}</span>
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          {% endif %}
+          {% endfor %}
+        </table>
+        <div class="d-flex align-items-center justify-content-center">
+          <nav aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item first" id="first_pendingTableBtn">
+                <button class="page-link" onclick="first('pendingTable')"><i class="bx bx-chevrons-left"></i></button>
+              </li>
+              <li class="page-item prev" id="prev_pendingTableBtn">
+                <button class="page-link" onclick="prev('pendingTable')"><i class="bx bx-chevron-left"></i></button>
+              </li>
+              <div id="divPendingTable" style="display:inline-flex">
+              {% for page in payment.page_range %}
+                <li class="page-item {% if page == 1 %}active{% endif %}" id="{{page}}_pendingTableBtn">
+                  <button class="page-link" onclick="pagePending('{{page}}')">{{page}}</button>
+                </li>
+              {% endfor %}
+              </div>
+              <li class="page-item next" id="next_pendingTableBtn">
+                <button class="page-link" onclick="next('pendingTable', '{{payment.num_pages}}')"><i class="bx bx-chevron-right"></i></button>
+              </li>
+              <li class="page-item last" id="last_pendingTableBtn">
+                <button class="page-link" onclick="last('pendingTable', '{{payment.num_pages}}')"><i class="bx bx-chevrons-right"></i></button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-wrapper mt-3">
+    <div class="container mb-4" style="margin: 0px; max-width: 1920px;">
+      <div class="row">
+        <div class="col-8">
+          <h4>Paid & Activated</h4>
+        </div>
+        <div class="col-4" style="text-align: right;">
+          <form method="POST" id="paidForm" action="{{host_address}}/member-renewal">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-primary" id="renewalBtn" style="margin: 0px; text-transform: none;" onclick="show_loader('1')" disabled>
+            Next Premium Due
+          </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <div class="container" style="margin: 0px; max-width: 1920px;" >
+      <div class="card-header">
+        <div class="navbar-nav">
+          <div class="row">
+            <form method="POST" id="formFilterPaid" action="{{host_address}}/member-list">
+              {% csrf_token %}
+              <div class="col-3">
+                <div class="nav-item d-flex align-items-center">
+                  <i class="bx bx-search fs-4 lh-0 me-3"></i>
+                  <div style="border:thin solid lightgrey; border-radius:5px" class="mx-1 col-8">
+                    <input
+                      id="searchPaid"
+                      name="searchPaid"
+                      type="text"
+                      class="form-control border-0 shadow-none"
+                      placeholder="Search members by name..."
+                      value="{% if filterPaid %}{{filterPaid}}{% endif %}"
+                      style="border:thin solid #000"
+                    >
+                  </div>
+                  <div class="nav-item d-flex align-items-center">
+                    <button onclick="toggleFormType('Paid')" type="submit" class="btn btn-outline-primary me-1" style="margin: 0px; text-transform: none; color: #9B8A6C;">
+                      Filter
+                    </button> 
+                    <!-- <a href="#" class="me-1" style="margin: 0px; text-transform: none; color: #3498DB;">
+                      Quick Invoice
+                    </a>  -->
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <br>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="margin: 0px; max-width: 1920px;">
+      <div class="text-nowrap">
+        <table class="table">
+          <thead>
+            <tr>
+              
+              <th style="width: 8%;">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheckAllPaid" 
+                    onchange="selectAllPaid(this, '{{ company.payment_due_date }}', '{{ currentDate }}', '{{ gracePeriod }}');">                    
+                </div>
+              </th>
+              <th style="width:2%;">#</th>
+              <th class="text-uppercase letter-spacing-2" style="width:12.9%; text-align:left">Full Name<i class='bx bx-up-arrow-alt' ></i></th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.9%; text-align:center">MyKad/Passport</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.9%; text-align:center">Batch No.</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.9%; text-align:left">Status</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.9%; text-align:left">Packages<i class='bx bx-up-arrow-alt' ></i></th>
+              <th class="text-uppercase text-muted letter-spacing-2 pe-1" style="width:12.9%; text-align:left">Premium (RM)</th>
+              <th class="text-uppercase text-muted letter-spacing-2 pe-1" style="width:12.9%; text-align:left">Campaign Code</th>
+              <th style="width:8%;"></th>
+            </tr>
+          </thead>
+          {% for page in paid %}
+          {% if not page.has_previous %}
+          <tbody id="1_paidTable">
+            {% for individual in page %}
+            <tr>
+              <td>
+                {% comment %} <div class="form-check" hidden>
+                  <input class="form-check-input" name="paid_checkbox" style="border:thin solid #000" type="checkbox" id="defaultCheck{{ individual.id }}" onclick=" return appendSendEmailList('{{ individual.id }}');">
+                </div> {% endcomment %}
+                <div class="form-check">
+                  <input class="form-check-input" name="paid_checkbox" value="{{ individual.id }}" style="border:thin solid #000" type="checkbox" id="defaultCheckPaid{{ individual.id }}" onclick="appendPaidList('{{ individual.id }}', '{{ company.payment_due_date }}', '{{ individual.preferredDate }}', '{{ gracePeriod }}' );">
+                </div>
+              </td>
+              <td style="font-size: 15px;">{{ forloop.counter }}.</td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.name }}
+                  </button>
+                  <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Email</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.email_address }}</p>
+                      <p class="mb-0 pClassCustomLabel">Nationality</p>
+                      {% if individual.mykad %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Malaysian</p>
+                      {% else %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.nationality }}</p>
+                      {% endif %}
+                      <div class="row">
+                        <div class="col-8">
+                          <p class="mb-0 pClassCustomLabel">Date of birth</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.dob|slice:"8:" }}-{{ individual.dob|slice:"5:7" }}-{{ individual.dob|slice:":4" }}</p>
+                        </div>
+                        <div class="col-4">
+                          <p class="mb-0 pClassCustomLabel">Gender</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.gender }}</p>
+                        </div>
+                      </div>
+                      <p class="mb-0 pClassCustomLabel">Mobile</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.mobile_no }}</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align:center">
+                {% if individual.mykad %}
+                  {{ individual.mykad }}
+                {% else %}
+                  {{ individual.passport }}
+                {% endif %}
+              </td>
+              <td style="font-size: 15px;text-align:center">{{ individual.batch_no }}</td>
+              <td style="font-size: 15px;"><span class="badge bg-label-success border-label-success me-1">{{ individual.status }}</span></td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.package.package_name }}
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Products</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">
+                        {% for key, values in individual.coverage.items %}
+                            {% if values != 0 and values != None %}
+                              {{ key }} - RM {{ values|default_if_none:"-" }}
+                              <br>
+                            {% endif %}
+                          {% endfor %}
+                    </p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align:left">
+                {% if individual.tentative_premium %}
+                  {{ individual.tentative_premium }}
+                {% else %}
+                {% endif %}
+              </td>
+              
+              <td style="font-size: 15px; text-align:left"> <!--campaign code-->
+                {% if individual.campaign_code %}
+                  <span id="campaign_Code">{{ individual.campaign_code }}</span>
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+            </tr> 
+            </tr>
+            {% endfor %}
+          </tbody>
+        {% else %}
+        <tbody id="{{page.number}}_paidTable" hidden>
+          {% for individual in page %}
+          <tr>
+            <td>
+              {% comment %} <div class="form-check" hidden>
+                <input class="form-check-input" style="border:thin solid #000" type="checkbox" id="defaultCheck{{ individual.id }}" onclick=" return appendSendEmailList('{{ individual.id }}');">
+              </div> {% endcomment %}
+              <div class="form-check">
+                <input class="form-check-input" style="border:thin solid #000" type="checkbox" id="defaultCheckPaid{{ individual.id }}" onclick="appendPaidList('{{ individual.id }}', '{{ company.payment_due_date }}', '{{ individual.preferredDate }}', '{{ gracePeriod }}');">
+              </div>
+            </td>
+            {% widthratio 5 1 page.previous_page_number as count %}
+            <td style="font-size: 15px;">{{ forloop.counter|add:count }}.</td>
+            <td>
+              <div class="dropdown">
+                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                  {{ individual.name }}
+                </button>
+                <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                  <div class="px-3 py-2 text-muted">
+                    <p class="mb-0 pClassCustomLabel">Email</p>
+                    <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.email_address }}</p>
+                    <p class="mb-0 pClassCustomLabel">Nationality</p>
+                    {% if individual.mykad %}
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Malaysian</p>
+                    {% else %}
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.nationality }}</p>
+                    {% endif %}                    
+                    <div class="row">
+                      <div class="col-8">
+                        <p class="mb-0 pClassCustomLabel">Date of birth</p>
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.dob|slice:"8:" }}-{{ individual.dob|slice:"5:7" }}-{{ individual.dob|slice:":4" }}</p>
+                      </div>
+                      <div class="col-4">
+                        <p class="mb-0 pClassCustomLabel">Gender</p>
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.gender }}</p>
+                      </div>
+                    </div>
+                    <p class="mb-0 pClassCustomLabel">Mobile</p>
+                    <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.mobile_no }}</p>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td style="font-size: 15px;">
+              {% if individual.mykad %}
+                {{ individual.mykad }}
+              {% else %}
+                {{ individual.passport }}
+              {% endif %}
+            </td>
+            <td style="font-size: 15px;text-align:center">{{ individual.batch_no }}</td>
+            <td style="font-size: 15px;"><span class="badge bg-label-success border-label-success me-1">{{ individual.status }}</span></td>
+            <td>
+              <div class="dropdown">
+                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                  {{ individual.package.package_name }}
+                </button>
+                <div class="dropdown-menu">
+                  <div class="px-3 py-2 text-muted">
+                    <p class="mb-0 pClassCustomLabel">Products</p>
+                    <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">
+                      {% for key, values in individual.coverage.items %}
+                          {% if values != 0 and values != None %}
+                            {{ key }} - RM {{ values|default_if_none:"-" }}
+                            <br>
+                          {% endif %}
+                        {% endfor %}
+                  </p>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td style="font-size: 15px; text-align:right">
+              {% if individual.tentative_premium %}
+                {{ individual.tentative_premium }}
+              {% else %}
+              {% endif %}
+            </td>
+            <td style="font-size: 15px; text-align:left; width:12.8%;"> <!--campaign code-->
+              {% if individual.campaign_code %}
+                <span id="campaign_Code">{{ individual.campaign_code }}</span>
+              {% else %}
+                -
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>       
+        {% endif %}
+        {% endfor %}
+        </table>
+        <div class="d-flex align-items-center justify-content-center">
+          <nav aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item first" id="first_paidTableBtn">
+                <button class="page-link" onclick="first('paidTable')"><i class="bx bx-chevrons-left"></i></button>
+              </li>
+              <li class="page-item prev" id="prev_paidTableBtn">
+                <button class="page-link" onclick="prev('paidTable')"><i class="bx bx-chevron-left"></i></button>
+              </li>
+              <div id="divPaidTable" style="display:inline-flex">
+              {% for page in paid.page_range %}
+                <li class="page-item {% if page == 1 %}active{% endif %}" id="{{page}}_paidTableBtn">
+                  <button class="page-link" onclick="pagePaid('{{page}}')">{{page}}</button>
+                </li>
+              {% endfor %}
+              </div>
+              <li class="page-item next" id="next_paidTableBtn">
+                <button class="page-link" onclick="next('paidTable', '{{paid.num_pages}}')"><i class="bx bx-chevron-right"></i></button>
+              </li>
+              <li class="page-item last" id="last_paidTableBtn">
+                <button class="page-link" onclick="last('paidTable', '{{paid.num_pages}}')"><i class="bx bx-chevrons-right"></i></button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-wrapper mt-3">
+    <div class="container mb-4" style="margin: 0px; max-width: 1920px;">
+      <div class="row">
+        <div class="col-8">
+          <h4>Next Premium Due</h4>
+        </div>
+        <div class="col-4" style="text-align: right;">
+          <form method="POST" id="renewalForm" action="{{host_address}}/generate-invoice">
+            {% csrf_token %}
+            <input type="hidden" id="renew" name="renew" value="renew">
+            <button type="submit" class="btn btn-outline-primary" id="invoiceRenewalBtn" style="margin: 0px; text-transform: none;" onclick="show_loader('1')" disabled>
+              Generate Invoice
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" style="z-index: 5;" id="approvalModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel" style="color: black;">Next Premium Due Confirmation</h5>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure to renew the premium, RM<label id="lblPremium" style="font-weight: bold;"></label>?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <form method="POST" id="paymentForm" action="{{host_address}}/#">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="margin: 0px; max-width: 1920px;" >
+      <div class="card-header">
+        <div class="navbar-nav">
+          <div class="row">
+            <form method="POST" id="formFilterRenewal" action="{{host_address}}/member-list">
+              {% csrf_token %}
+              <div class="col-3">
+                <div class="nav-item d-flex align-items-center">
+                  <i class="bx bx-search fs-4 lh-0 me-3"></i>
+                  <div style="border:thin solid lightgrey; border-radius:5px" class="mx-1 col-8">
+                    <input
+                      id="searchRenewal"
+                      name="searchRenewal"
+                      type="text"
+                      class="form-control border-0 shadow-none"
+                      placeholder="Search members by name..."
+                      value="{% if filterRenewal %}{{filterRenewal}}{% endif %}"
+                      style="border:thin solid #000"
+                    >
+                  </div>
+                  <div class="nav-item d-flex align-items-center">
+                    <button onclick="toggleFormType('Renewal')" type="submit" class="btn btn-outline-primary me-1" style="margin: 0px; text-transform: none; color: #9B8A6C;">
+                      Filter
+                    </button> 
+                    <!-- <a href="#" class="me-1" style="margin: 0px; text-transform: none; color: #3498DB;">
+                      Quick Invoice
+                    </a>  -->
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <br>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="margin: 0px; max-width: 1920px;">
+      <div class="text-nowrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 8%;">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="defaultCheckAllRenewal" onchange="selectAllNextPremiumDue(this)">
+                </div>
+              </th>
+              <th style="width:2%">#</th>
+              <th class="text-uppercase letter-spacing-2" style="width:12.9%; text-align:left">Full Name<i class='bx bx-up-arrow-alt' ></i></th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.9%; text-align:center">MyKad/Passport</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.9%; text-align:center">Batch No.</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.9%; text-align:left">Status</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.9%; text-align:left">Packages<i class='bx bx-up-arrow-alt' ></i></th>
+              <th class="text-uppercase text-muted letter-spacing-2 pe-1" style="width:12.9%; text-align:left">Premium (RM)</th>
+              <th class="text-uppercase text-muted letter-spacing-2 pe-1" style="width:12.9%; text-align:left">Campaign Code</th>
+              <th style="width:8%;"></th>
+            </tr>
+          </thead>
+          {% for page in renewal %}
+          {% if not page.has_previous %}
+          <tbody id="1_renewalTable">
+            {% for individual in page %}
+            <tr>
+              <td>
+                <div class="form-check">
+                  <input class="form-check-input" name="nextPremiumDue_checkbox" value='{"id":{{individual.id}},"premium":{{individual.tentative_premium}}}' style="border:thin solid #000" type="checkbox" id="defaultCheckRenewal{{ individual.id }}" onclick="appendRenewalList('{{ individual.id }}', '{{ individual.tentative_premium }}');">
+                </div>
+              </td>
+              <td style="font-size: 15px;">{{ forloop.counter }}.</td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.name }}
+                  </button>
+                  <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Email</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.email_address }}</p>
+                      <p class="mb-0 pClassCustomLabel">Nationality</p>
+                      {% if individual.mykad %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Malaysian</p>
+                      {% else %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.nationality }}</p>
+                      {% endif %}
+                      <div class="row">
+                        <div class="col-8">
+                          <p class="mb-0 pClassCustomLabel">Date of birth</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.dob|slice:"8:" }}-{{ individual.dob|slice:"5:7" }}-{{ individual.dob|slice:":4" }}</p>
+                        </div>
+                        <div class="col-4">
+                          <p class="mb-0 pClassCustomLabel">Gender</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.gender }}</p>
+                        </div>
+                      </div>
+                      <p class="mb-0 pClassCustomLabel">Mobile</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.mobile_no }}</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align:center">
+                {% if individual.mykad %}
+                  {{ individual.mykad }}
+                {% else %}
+                  {{ individual.passport }}
+                {% endif %}
+              </td>
+              <td style="font-size: 15px;text-align:center">{{ individual.batch_no }}</td>
+              <td style="font-size: 15px;"><span class="badge bg-label-warning border-label-warning me-1">{{ individual.status }}</span></td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.package.package_name }}
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Products</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">
+                        {% for key, values in individual.coverage.items %}
+                            {% if values != 0 and values != None %}
+                              {{ key }} - RM {{ values|default_if_none:"-" }}
+                              <br>
+                            {% endif %}
+                          {% endfor %}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align:left">
+                <!-- 0.00 -->
+                {% if individual.tentative_premium %}
+                  {{ individual.tentative_premium|floatformat:2 }}
+                {% else %}
+                {% endif %}
+              </td>
+              
+              <td style="font-size: 15px; text-align:left"> <!--campaign code-->
+                {% if individual.campaign_code %}
+                  <span id="campaign_Code">{{ individual.campaign_code }}</span>
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          {% else %}
+          <tbody id="{{page.number}}_renewalTable" hidden>
+            {% for individual in page %}
+            <tr>
+              <td>
+                <div class="form-check">
+                  <input class="form-check-input" name="nextPremiumDue_checkbox" value='{"id":{{individual.id}},"premium":{{individual.tentative_premium}}}' style="border:thin solid #000" type="checkbox" id="defaultCheckRenewal{{ individual.id }}" onclick="appendRenewalList('{{ individual.id }}', '{{ individual.tentative_premium }}');">
+                </div>
+              </td>
+              {% widthratio 5 1 page.previous_page_number as count %}
+              <td style="font-size: 15px;">{{ forloop.counter|add:count }}.</td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.name }}
+                  </button>
+                  <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Email</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.email_address }}</p>
+                      <p class="mb-0 pClassCustomLabel">Nationality</p>
+                      {% if individual.mykad %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Malaysian</p>
+                      {% else %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.nationality }}</p>
+                      {% endif %}                      
+                      <div class="row">
+                        <div class="col-8">
+                          <p class="mb-0 pClassCustomLabel">Date of birth</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.dob|slice:"8:" }}-{{ individual.dob|slice:"5:7" }}-{{ individual.dob|slice:":4" }}</p>
+                        </div>
+                        <div class="col-4">
+                          <p class="mb-0 pClassCustomLabel">Gender</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.gender }}</p>
+                        </div>
+                      </div>
+                      <p class="mb-0 pClassCustomLabel">Mobile</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.mobile_no }}</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px;">
+                {% if individual.mykad %}
+                  {{ individual.mykad }}
+                {% else %}
+                  {{ individual.passport }}
+                {% endif %}
+              </td>
+              <td style="font-size: 15px;text-align:center">{{ individual.batch_no }}</td>
+              <td style="font-size: 15px;"><span class="badge bg-label-warning border-label-warning me-1">{{ individual.status }}</span></td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.package.package_name }}
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Products</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">
+                        {% for key, values in individual.coverage.items %}
+                            {% if values != 0 and values != None %}
+                              {{ key }} - RM {{ values|default_if_none:"-" }}
+                              <br>
+                            {% endif %}
+                          {% endfor %}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align:right">
+                {% if individual.tentative_premium %}
+                  {{ individual.tentative_premium|floatformat:2 }}
+                {% else %}
+                {% endif %}
+              </td>
+              <td></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          {% endif %}
+          {% endfor %}
+        </table>
+        <div class="d-flex align-items-center justify-content-center">
+          <nav aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item first" id="first_renewalTableBtn">
+                <button class="page-link" onclick="first('renewalTable')"><i class="bx bx-chevrons-left"></i></button>
+              </li>
+              <li class="page-item prev" id="prev_renewalTableBtn">
+                <button class="page-link" onclick="prev('renewalTable')"><i class="bx bx-chevron-left"></i></button>
+              </li>
+              <div id="divrenewalTable" style="display:inline-flex">
+              {% for page in payment.page_range %}
+                <li class="page-item {% if page == 1 %}active{% endif %}" id="{{page}}_renewalTableBtn">
+                  <button class="page-link" onclick="pageRenewal('{{page}}')">{{page}}</button>
+                </li>
+              {% endfor %}
+              </div>
+              <li class="page-item next" id="next_renewalTableBtn">
+                <button class="page-link" onclick="next('renewalTable', '{{payment.num_pages}}')"><i class="bx bx-chevron-right"></i></button>
+              </li>
+              <li class="page-item last" id="last_renewalTableBtn">
+                <button class="page-link" onclick="last('renewalTable', '{{payment.num_pages}}')"><i class="bx unrejectMemberbx-chevrons-right"></i></button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-wrapper mt-3">
+    <div class="container mb-4" style="margin: 0px; max-width: 1920px;">
+      <div class="row">
+        <div class="col-8">
+          <h4>Rejected</h4>
+        </div>
+        <div class="col-4" style="text-align: right;">
+          <button class="btn btn-outline-primary" id="reofferBtn" style="margin: 0px; text-transform: none;" data-bs-toggle="modal" data-bs-target="#unrejectMemberConfirmationModal" onclick=" " disabled> 
+            Re-offer
+          </button>
+        </div>
+        
+    </div>
+    <div class="container" style="margin: 0px; max-width: 1920px;" >
+      <div class="card-header">
+        <div class="navbar-nav">
+          <div class="row">
+            <form method="POST" id="formFilterRejected" action="{{host_address}}/member-list">
+              {% csrf_token %}
+              <div class="col-3">
+                <div class="nav-item d-flex align-items-center">
+                  <i class="bx bx-search fs-4 lh-0 me-3"></i>
+                  <div style="border:thin solid lightgrey; border-radius:5px" class="mx-1 col-8">
+                    <input
+                      id="searchRejected"
+                      name="searchRejected"
+                      type="text"
+                      class="form-control border-0 shadow-none"
+                      placeholder="Search members by name..."
+                      value="{% if filterRejected %}{{filterRejected}}{% endif %}"
+                      style="border:thin solid #000"
+                    >
+                  </div>
+                  <div class="nav-item d-flex align-items-center">
+                    <button onclick="toggleFormType('Rejected')" type="submit" class="btn btn-outline-primary me-1" style="margin: 0px; text-transform: none; color: #9B8A6C;">
+                      Filter
+                    </button> 
+                    <!-- <a href="#" class="me-1" style="margin: 0px; text-transform: none; color: #3498DB;">
+                      Quick Invoice
+                    </a>  -->
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <br>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="margin: 0px; max-width: 1920px;">
+      <div class="text-nowrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 8%;">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="defaultCheckAllRejected" onchange="selectAllReject(this)">
+                </div>
+              </th>
+              <th style="width:2%;">#</th>
+              <th class="text-uppercase letter-spacing-2" style="width:12.9%; text-align:left">Full Name<i class='bx bx-up-arrow-alt' ></i></th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.9%; text-align:center">MyKad/Passport</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.9%; text-align:center">Batch No.</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.9%; text-align:left">Status</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.9%; text-align:left">Packages<i class='bx bx-up-arrow-alt' ></i></th>
+              <th class="text-uppercase text-muted letter-spacing-2 pe-1" style="width:12.9%; text-align:left">Premium (RM)</th>
+              <th class="text-uppercase text-muted letter-spacing-2 pe-1" style="width:12.9%; text-align:left">Campaign Code</th>
+              <th style="width:8%"></th>
+            </tr>
+          </thead>
+          {% for page in rejected %}
+          {% if not page.has_previous %}
+          <tbody id="1_rejectedTable">
+            {% for individual in page %}
+            <div class="modal fade" id="unrejectMemberConfirmationModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog" style="width: fit-content;">
+                  <div class="modal-content">
+                    <div class="modal-body">
+                      <div class="row m-3">
+                          <div class="container text-center" style="background: #fff;">
+                              <p class="fw-bold" style="color: black;">Are you sure?</p>
+                              <!-- <p class="mb-2 text-wrap" style="font-size: 12px; margin: 0;">Terminating a member will delete all associated data but will not delete past purchases and invoices.</p> -->
+                              <p class="mb-2 text-wrap" style="font-size: 12px; margin: 0;">Member will be moved to Member Table with previous package.</p>
+                          </div>
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
+                      <form action="{{host_address}}/reoffer-member" id="reofferForm" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" id="unrejectMember" name="unrejectMember">
+                        <input type="hidden" id="reofferMember" name="reofferMember">
+                        <input type="hidden" name="reofferType" value="unreject">
+                        <button class="btn btn-danger" type="submit">Unreject</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <tr>
+              <td>
+                <div class="form-check">
+                  <input class="form-check-input" name="rejected_checkbox" value="{{ individual.id }}" style="border:thin solid #000" type="checkbox" id="defaultCheckRejected{{ individual.id }}" onclick="appendRejectedList('{{ individual.id }}');">
+                </div>
+              </td>
+              <td style="font-size: 15px;">{{ forloop.counter }}.</td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.name }}
+                  </button>
+                  <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Email</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.email_address }}</p>
+                      <p class="mb-0 pClassCustomLabel">Nationality</p>
+                      {% if individual.mykad %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Malaysian</p>
+                      {% else %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.nationality }}</p>
+                      {% endif %}                      
+                      <div class="row">
+                        <div class="col-8">
+                          <p class="mb-0 pClassCustomLabel">Date of birth</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.dob|slice:"8:" }}-{{ individual.dob|slice:"5:7" }}-{{ individual.dob|slice:":4" }}</p>
+                        </div>
+                        <div class="col-4">
+                          <p class="mb-0 pClassCustomLabel">Gender</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.gender }}</p>
+                        </div>
+                      </div>
+                      <p class="mb-0 pClassCustomLabel">Mobile</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.mobile_no }}</p>
+                    </div>
+                  </div>
+                  {% if individual.rejected_reason %}
+                  <div class="dropdownReject">
+                    <i class='bx bx-info-circle' data-bs-toggle="dropdown"></i>
+                      <div class="dropdown-contentReject">
+                        <a class="mb-0 pClassCustomLabel">Rejected Reason</a>
+                        <a class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{% if individual.rejected_reason == 'Rejected by member' %} Member Rejected The Offer {% elif individual.rejected_reason == 'Rejected by medical survey' %} Coverage not eligible due to member's medical / occupational profile {% else %}{{ individual.rejected_reason }}{%endif%}</a>
+                      </div>       
+                  </div>
+                  {% endif %}  
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align:center">
+                {% if individual.mykad %}
+                  {{ individual.mykad }}
+                {% else %}
+                  {{ individual.passport }}
+                {% endif %}
+              </td>
+              <td style="font-size: 15px;text-align:center">{{ individual.batch_no }}</td>
+              <td style="font-size: 15px;"><span class="badge bg-label-warning border-label-warning me-1">{% if individual.status == 'Reject' and individual.rejected_reason != 'Rejected by medical survey' %} Rejected {% elif individual.status == 'Reject' and individual.rejected_reason == 'Rejected by medical survey'%}Ineligible{%else%}{{ individual.status }}{%endif%}</span></td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.package.package_name }}
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Products</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">
+                        {% for key, values in individual.coverage.items %}
+                            {% if values != 0 and values != None %}
+                              {{ key }} - RM {{ values|default_if_none:"-" }}
+                              <br>
+                            {% endif %}
+                          {% endfor %}
+                    </p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align:left">
+                {% if individual.tentative_premium %}
+                  {{ individual.tentative_premium }}
+                {% else %}
+                {% endif %}
+              </td>
+
+              <td style="font-size: 15px; text-align:left"> <!--campaign code-->
+                {% if individual.campaign_code %}
+                  <span id="campaign_Code">{{ individual.campaign_code }}</span>
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+              <!-- <td></td> -->
+              <!-- <td style="text-align:center">
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                    <i class="bx bx-dots-horizontal-rounded"></i>
+                  </button>
+                  <div class="dropdown-menu"> -->
+                    <!-- <button class="dropdown-item" onclick="return MemberAction('EditMember')"
+                      ><i class="bx bx-edit-alt me-1"></i> Edit</button
+                    >
+                    <a class="dropdown-item" href="javascript:void(0);"
+                      ><i class="bx bx-trash me-1"></i> Delete</a
+                    > -->
+                    <!-- <button class="dropdown-item" onclick="return EditMember('{{individual.id}}', '{{individual.employment_no}}', '{{individual.name}}', '{{individual.email_address}}', '{{individual.nationality}}', '{{individual.dob}}','{{individual.gender}}','{{individual.mobile_no}}','{{individual.mykad}}','{{individual.passport}}','{{individual.batch_no}}','{{individual.status}}','{{individual.tentative_premium}}','{{individual.package.id}}')"
+                      >Edit</button> -->
+                    <!-- <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#unrejectMemberConfirmationModal" onclick="return populateRenewRejectId('{{ individual.id }}')"
+                    >Re-offer</button>
+                </div>
+              </td> -->
+            </tr>
+            {% endfor %}
+          </tbody>
+          {% else %}
+          <tbody id="{{page.number}}_rejectedTable" hidden>
+            {% for individual in page %}
+            <tr>
+              <div class="form-check">
+                <input class="form-check-input" name="rejected_checkbox" value="{{ individual.id }}" style="border:thin solid #000" type="checkbox" id="defaultCheckRejected{{ individual.id }}" onclick="appendRejectedList('{{ individual.id }}');">
+              </div>
+              {% widthratio 5 1 page.previous_page_number as count %}
+              <td style="font-size: 15px;">{{ forloop.counter|add:count }}.</td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.name }}
+                  </button>
+                  <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Email</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.email_address }}</p>
+                      <p class="mb-0 pClassCustomLabel">Nationality</p>
+                      {% if individual.mykad %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Malaysian</p>
+                      {% else %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.nationality }}</p>
+                      {% endif %}                     
+                      <div class="row">
+                        <div class="col-8">
+                          <p class="mb-0 pClassCustomLabel">Date of birth</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.dob|slice:"8:" }}-{{ individual.dob|slice:"5:7" }}-{{ individual.dob|slice:":4" }}</p>
+                        </div>
+                        <div class="col-4">
+                          <p class="mb-0 pClassCustomLabel">Gender</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.gender }}</p>
+                        </div>
+                      </div>
+                      <p class="mb-0 pClassCustomLabel">Mobile</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.mobile_no }}</p>
+                    </div>
+                  </div>
+                  {% if individual.rejected_reason %}
+                  <div class="dropdownReject">
+                    <i class='bx bx-info-circle' data-bs-toggle="dropdown"></i>
+                      <div class="dropdown-contentReject">
+                        <a class="mb-0 pClassCustomLabel">Rejected Reason</a>
+                        <a class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{% if individual.rejected_reason == 'Rejected by member' %} Member Rejected The Offer {% elif individual.rejected_reason == 'Rejected by medical survey' %} Coverage not eligible due to member's medical / occupational profile {% else %}{{ individual.rejected_reason }}{%endif%}</a>
+                      </div>       
+                  </div>
+                  {% endif %}  
+                </div>
+              </td>
+              <td style="font-size: 15px;">
+                {% if individual.mykad %}
+                  {{ individual.mykad }}
+                {% else %}
+                  {{ individual.passport }}
+                {% endif %}
+              </td>
+              <td style="font-size: 15px;text-align:center">{{ individual.batch_no }}</td>
+              <td style="font-size: 15px;"><span class="badge bg-label-warning border-label-warning me-1">{% if individual.status == 'Reject' and individual.rejected_reason != 'Rejected by medical survey' %} Rejected {% elif individual.status == 'Reject' and individual.rejected_reason == 'Rejected by medical survey'%}Ineligible{%else%}{{ individual.status }}{%endif%}</span></td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.package.package_name }}
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Products</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">
+                        {% for key, values in individual.coverage.items %}
+                            {% if values != 0 and values != None %}
+                              {{ key }} - RM {{ values|default_if_none:"-" }}
+                              <br>
+                            {% endif %}
+                          {% endfor %}
+                    </p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align:right">
+                {% if individual.tentative_premium %}
+                  {{ individual.tentative_premium }}
+                {% else %}
+                {% endif %}
+              </td>
+              <!-- <td style="text-align:center">
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                    <i class="bx bx-dots-horizontal-rounded"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#unrejectMemberConfirmationModal" onclick="return populateRenewRejectId('{{ individual.id }}')"
+                    >Re-offer</button>
+                </div>
+              </td> -->
+            </tr>
+            {% endfor %}
+          </tbody>
+          {% endif %}
+          {% endfor %}
+        </table>
+        <div class="d-flex align-items-center justify-content-center">
+          <nav aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item first" id="first_rejectedTableBtn">
+                <button class="page-link" onclick="first('rejectedTable')"><i class="bx bx-chevrons-left"></i></button>
+              </li>
+              <li class="page-item prev" id="prev_rejectedTableBtn">
+                <button class="page-link" onclick="prev('rejectedTable')"><i class="bx bx-chevron-left"></i></button>
+              </li>
+              <div id="divRejectedTable" style="display:inline-flex">
+              {% for page in rejected.page_range %}
+                <li class="page-item {% if page == 1 %}active{% endif %}" id="{{page}}_rejectedTableBtn">
+                  <button class="page-link" onclick="pageRejected('{{page}}')">{{page}}</button>
+                </li>
+              {% endfor %}
+              </div>
+              <li class="page-item next" id="next_rejectedTableBtn">
+                <button class="page-link" onclick="next('rejectedTable', '{{rejected.num_pages}}')"><i class="bx bx-chevron-right"></i></button>
+              </li>
+              <li class="page-item last" id="last_rejectedTableBtn">
+                <button class="page-link" onclick="last('rejectedTable', '{{rejected.num_pages}}')"><i class="bx bx-chevrons-right"></i></button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="content-wrapper mt-3 mb-5">
+    <div class="container mb-4" style="margin: 0px; max-width: 1920px;">
+      <div class="row">
+        <div class="col-8">
+          <h4>Terminated</h4>
+        </div>
+        <div class="col-4" style="text-align: right;">
+          <button class="btn btn-outline-primary" id="unterminateBtn" style="margin: 0px; text-transform: none;" data-bs-toggle="modal" data-bs-target="#unterminateMemberConfirmationModal" onclick="return populateUnterminatedId('{{ individual.id }}')" disabled> 
+            Unterminate
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="margin: 0px; max-width: 1920px;" >
+      <div class="card-header">
+        <div class="navbar-nav">
+          <div class="row">
+            <form method="POST" id="formFilterTerminated" action="{{host_address}}/member-list">
+              {% csrf_token %}
+              <div class="col-3">
+                <div class="nav-item d-flex align-items-center">
+                  <i class="bx bx-search fs-4 lh-0 me-3"></i>
+                  <div style="border:thin solid lightgrey; border-radius:5px" class="mx-1 col-8">
+                    <input
+                      id="searchTerminated"
+                      name="searchTerminated"
+                      type="text"
+                      class="form-control border-0 shadow-none"
+                      placeholder="Search members by name..."
+                      value="{% if filterTerminated %}{{filterTerminated}}{% endif %}"
+                      style="border:thin solid #000"
+                    >
+                  </div>
+                  <div class="nav-item d-flex align-items-center">
+                    <button onclick="toggleFormType('Terminated')" type="submit" class="btn btn-outline-primary me-1" style="margin: 0px; text-transform: none; color: #9B8A6C;">
+                      Filter
+                    </button> 
+                    <!-- <a href="#" class="me-1" style="margin: 0px; text-transform: none; color: #3498DB;">
+                      Quick Invoice
+                    </a>  -->
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <br>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="margin: 0px; max-width: 1920px;">
+      <div class="text-nowrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 8%;">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="defaultCheckAllTerminated" onchange="selectAllTerminated(this)">
+                </div>
+              </th>
+              <th></th>
+              <th style="width:2%;">#</th>
+              <th class="text-uppercase letter-spacing-2" style="width:12.9%; text-align:left">Full Name<i class='bx bx-up-arrow-alt' ></i></th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.9%; text-align:center">MyKad/Passport</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.9%; text-align:center">Batch No.</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.9%; text-align:left">Status</th>
+              <th class="text-uppercase text-muted letter-spacing-2" style="width:12.9%; text-align:left">Packages<i class='bx bx-up-arrow-alt' ></i></th>
+              <th class="text-uppercase text-muted letter-spacing-2 pe-1" style="width:12.9%; text-align:left">Premium (RM)</th>
+              <th class="text-uppercase text-muted letter-spacing-2 pe-1" style="width:12.9%; text-align:left">Campaign Code</th>
+              <th style="width:8%"></th>
+            </tr>
+          </thead>
+          {% for page in terminated %}
+          {% if not page.has_previous %}
+          <tbody id="1_terminatedTable">
+            {% for individual in page %}
+            <div class="modal fade" id="unterminateMemberConfirmationModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog" style="width: fit-content;">
+                  <div class="modal-content">
+                    <div class="modal-body">
+                      <div class="row m-3">
+                          <div class="container text-center" style="background: #fff;">
+                              <p class="fw-bold" style="color: black;">Are you sure?</p>
+                              <!-- <p class="mb-2 text-wrap" style="font-size: 12px; margin: 0;">Terminating a member will delete all associated data but will not delete past purchases and invoices.</p> -->
+                              <p class="mb-2 text-wrap" style="font-size: 12px; margin: 0;">Unterminating a member will restore all associated data.</p>
+                          </div>
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
+                      <form action="{{host_address}}/reoffer-member" id="unterminateForm" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" id="unterminatedMember" name="unterminatedMember">
+                        <input type="hidden" id="unterminateMember" name="unterminateMember">
+                        <input type="hidden" name="reofferType" value="unterminate">
+                        <button class="btn btn-danger" type="submit">Unterminate</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <tr>
+              <td>
+                <div class="form-check">
+                  <input class="form-check-input" name="terminated_checkbox" value="{{ individual.id }}" style="border:thin solid #000" type="checkbox" id="defaultCheckTerminated{{ individual.id }}" onclick=" appendTerminatedList('{{ individual.id }}')">
+                </div>
+              </td>
+              <td></td>
+              <td style="font-size: 15px;">{{ forloop.counter }}.</td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.name }}
+                  </button>
+                  <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Email</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.email_address }}</p>
+                      <p class="mb-0 pClassCustomLabel">Nationality</p>
+                      {% if individual.mykad %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Malaysian</p>
+                      {% else %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.nationality }}</p>
+                      {% endif %}                      
+                      <div class="row">
+                        <div class="col-8">
+                          <p class="mb-0 pClassCustomLabel">Date of birth</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.dob|slice:"8:" }}-{{ individual.dob|slice:"5:7" }}-{{ individual.dob|slice:":4" }}</p>
+                        </div>
+                        <div class="col-4">
+                          <p class="mb-0 pClassCustomLabel">Gender</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.gender }}</p>
+                        </div>
+                      </div>
+                      <p class="mb-0 pClassCustomLabel">Mobile</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.mobile_no }}</p>
+                    </div>
+                  </div>
+                  {% if individual.rejected_reason %}
+                  <div class="dropdownReject">
+                      <i class='bx bx-info-circle' data-bs-toggle="dropdown"></i>
+                      <div class="dropdown-contentReject">
+                        <a class="mb-0 pClassCustomLabel">Rejected Reason</a>
+                        <a class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.rejected_reason }}</a>
+                      </div>       
+                  </div>
+                  {% else %}
+                  <div class="dropdownReject">
+                    <i class='bx bx-info-circle' data-bs-toggle="dropdown"></i>
+                    <div class="dropdown-contentReject">
+                      <a class="mb-0 pClassCustomLabel">Rejected Reason</a>
+                      <a class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Corporate Rescinded The Offer</a>
+                    </div>       
+                  </div>
+                  {% endif %}
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align:center">
+                {% if individual.mykad %}
+                  {{ individual.mykad }}
+                {% else %}
+                  {{ individual.passport }}
+                {% endif %}
+              </td>
+              <td style="font-size: 15px;text-align:center">{{ individual.batch_no }}</td>
+              <td style="font-size: 15px;"><span class="badge bg-label-danger border-label-danger me-1">{% if individual.status == 'Terminated' %} Rejected {%else%}{{ individual.status }}{%endif%}</span></td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.package.package_name }}
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Products</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">
+                        {% for key, values in individual.coverage.items %}
+                            {% if values != 0 and values != None %}
+                              {{ key }} - RM {{ values|default_if_none:"-" }}
+                              <br>
+                            {% endif %}
+                          {% endfor %}
+                    </p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align:left">
+                {% if individual.tentative_premium %}
+                  {{ individual.tentative_premium }}
+                {% else %}
+                {% endif %}
+              </td>
+
+              <td style="font-size: 15px; text-align:left"> <!--campaign code-->
+                {% if individual.campaign_code %}
+                  <span id="campaign_Code">{{ individual.campaign_code }}</span>
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+              <!-- <td></td> -->
+              <!-- <td style="text-align:center">
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                    <i class="bx bx-dots-horizontal-rounded"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#unterminateMemberConfirmationModal" onclick="return populateUnterminatedId('{{ individual.id }}')"
+                      >Unterminate</button>
+                </div>
+              </td> -->
+            </tr>
+            {% endfor %}
+          </tbody>
+          {% else %}
+          <tbody id="{{page.number}}_terminatedTable" hidden>
+            {% for individual in page %}
+            <tr>
+              <td>
+                <div class="form-check">
+                  <input class="form-check-input" name="terminated_checkbox" value="{{ individual.id }}" style="border:thin solid #000" type="checkbox" id="defaultCheckTerminated{{ individual.id }}" onclick=" appendTerminatedList('{{ individual.id }}')">
+                </div>
+              </td>
+              {% widthratio 5 1 page.previous_page_number as count %}
+              <td style="font-size: 15px;">{{ forloop.counter|add:count }}.</td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.name }}
+                  </button>
+                  <div class="dropdown-menu" style="height: 150px; overflow-y: scroll;">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Email</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.email_address }}</p>
+                      <p class="mb-0 pClassCustomLabel">Nationality</p>
+                      {% if individual.mykad %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Malaysian</p>
+                      {% else %}
+                        <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.nationality }}</p>
+                      {% endif %}                     
+                      <div class="row">
+                        <div class="col-8">
+                          <p class="mb-0 pClassCustomLabel">Date of birth</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.dob|slice:"8:" }}-{{ individual.dob|slice:"5:7" }}-{{ individual.dob|slice:":4" }}</p>
+                        </div>
+                        <div class="col-4">
+                          <p class="mb-0 pClassCustomLabel">Gender</p>
+                          <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.gender }}</p>
+                        </div>
+                      </div>
+                      <p class="mb-0 pClassCustomLabel">Mobile</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.mobile_no }}</p>
+                    </div>
+                  </div>
+                  {% if individual.rejected_reason %}
+                    <div class="dropdownReject">
+                      <i class='bx bx-info-circle' data-bs-toggle="dropdown"></i>
+                        <div class="dropdown-contentReject">
+                          <a class="mb-0 pClassCustomLabel">Rejected Reason</a>
+                          <a class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">{{ individual.rejected_reason }}</a>
+                        </div>       
+                    </div>
+                  {% else %}
+                    <div class="dropdownReject">
+                      <i class='bx bx-info-circle' data-bs-toggle="dropdown"></i>
+                      <div class="dropdown-contentReject">
+                        <a class="mb-0 pClassCustomLabel">Rejected Reason</a>
+                        <a class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">Corporate Rescinded The Offer</a>
+                      </div>       
+                    </div>
+                  {% endif %}
+                </div>
+              </td>
+              <td style="font-size: 15px;">
+                {% if individual.mykad %}
+                  {{ individual.mykad }}
+                {% else %}
+                  {{ individual.passport }}
+                {% endif %}
+              </td>
+              <td style="font-size: 15px;text-align:center">{{ individual.batch_no }}</td>
+              <td style="font-size: 15px;"><span class="badge bg-label-danger border-label-danger me-1">{% if individual.status == 'Terminated' %} Rejected {%else%}{{ individual.status }}{%endif%}</span></td>
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" style="margin-bottom: 0px; text-decoration: underline; font-size: 15px;">
+                    {{ individual.package.package_name }}
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="px-3 py-2 text-muted">
+                      <p class="mb-0 pClassCustomLabel">Products</p>
+                      <p class="mb-0 pClassCustomDescription letter-normal" style="font-weight: bold;">
+                        {% for key, values in individual.coverage.items %}
+                            {% if values != 0 and values != None %}
+                              {{ key }} - RM {{ values|default_if_none:"-" }}
+                              <br>
+                            {% endif %}
+                          {% endfor %}
+                    </p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 15px; text-align:right">
+                {% if individual.tentative_premium %}
+                  {{ individual.tentative_premium }}
+                {% else %}
+                {% endif %}
+              </td>
+              <!-- <td style="text-align:center">
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                    <i class="bx bx-dots-horizontal-rounded"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#unterminateMemberConfirmationModal" onclick="return populateUnterminatedId('{{ individual.id }}')"
+                      >Unterminate</button>
+                </div>
+              </td> -->
+            </tr>
+            {% endfor %}
+          </tbody>
+          {% endif %}
+          {% endfor %}
+        </table>
+        <div class="d-flex align-items-center justify-content-center">
+          <nav aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item first" id="first_terminatedTableBtn">
+                <button class="page-link" onclick="first('terminatedTable')"><i class="bx bx-chevrons-left"></i></button>
+              </li>
+              <li class="page-item prev" id="prev_terminatedTableBtn">
+                <button class="page-link" onclick="prev('terminatedTable')"><i class="bx bx-chevron-left"></i></button>
+              </li>
+              <div id="divTerminatedTable" style="display:inline-flex">
+              {% for page in terminated.page_range %}
+                <li class="page-item {% if page == 1 %}active{% endif %}" id="{{page}}_terminatedTableBtn">
+                  <button class="page-link" onclick="pageTerminated('{{page}}')">{{page}}</button>
+                </li>
+              {% endfor %}
+              </div>
+              <li class="page-item next" id="next_terminatedTableBtn">
+                <button class="page-link" onclick="next('terminatedTable', '{{terminated.num_pages}}')"><i class="bx bx-chevron-right"></i></button>
+              </li>
+              <li class="page-item last" id="last_terminatedTableBtn">
+                <button class="page-link" onclick="last('terminatedTable', '{{terminated.num_pages}}')"><i class="bx bx-chevrons-right"></i></button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <div class="loading_overlay" id="loading-overlay-2">
+  <div id="loading-bird-2" class="loading-bird"></div>
+</div> -->
+{% endblock %}
+{% block footerContent %} 
+{% endblock %}
+{% block javascript %}
+<script>
+  checkedMember = 0
+  function appendSendEmailList(memberID){
+    var checkbox = document.getElementById('defaultCheck'+memberID).checked;
+    if(checkbox){
+      var inputHidden = document.createElement("input");
+      inputHidden.setAttribute("type", "hidden");
+      inputHidden.setAttribute("id", 'member'+memberID+'_POST');
+      inputHidden.setAttribute("name", 'member'+memberID+'_POST');
+      inputHidden.setAttribute("value", memberID);
+
+      document.getElementById("sendInvitationForm").appendChild(inputHidden); 
+      checkedMember++;
+    }
+    else{ 
+      var getElement = document.getElementById('member'+memberID+'_POST');
+      getElement.remove();
+      checkedMember--;
+    }
+    if(checkedMember > 0) {
+      document.getElementById('sendInvitationBtn').disabled = false;
+    } else {
+      document.getElementById('sendInvitationBtn').disabled = true;
+      //document.getElementById('defaultCheckAllEmail').checked = false;
+    }
+  }
+
+premiumTotalCost = 0;
+checkedPayment = 0;
+hasCampaignCode = null; 
+
+function appendPaymentList(memberID, premiumprice, campaignCode) {
+    const checkbox = document.getElementById('defaultCheckPayment' + memberID).checked;
+    var exists = '';
+    if (campaignCode && campaignCode.trim() !== ''){
+      exists = true;
+    }
+    else{
+      exists = false;
+    }
+
+    if (checkbox) {
+      //first entry
+      if (hasCampaignCode === null) {
+          hasCampaignCode = exists;
+          console.log(hasCampaignCode);
+      }
+
+      if (hasCampaignCode !== exists) {
+        document.getElementById('invoiceBtn').disabled = true;
+        premiumTotalCost += parseFloat(premiumprice);
+        document.getElementById('lblPremium').innerHTML = premiumTotalCost;
+  
+        const inputHidden = document.createElement("input");
+        inputHidden.type = "hidden";
+        inputHidden.id = 'paymentmember' + memberID + '_POST';
+        inputHidden.name = 'paymentmember' + memberID + '_POST';
+        inputHidden.value = memberID;
+  
+        document.getElementById("invoiceForm").appendChild(inputHidden);
+        checkedPayment++;
+        console.log(premiumTotalCost);
+        return;
+      }
+
+      premiumTotalCost += parseFloat(premiumprice);
+      document.getElementById('lblPremium').innerHTML = premiumTotalCost;
+
+      const inputHidden = document.createElement("input");
+      inputHidden.type = "hidden";
+      inputHidden.id = 'paymentmember' + memberID + '_POST';
+      inputHidden.name = 'paymentmember' + memberID + '_POST';
+      inputHidden.value = memberID;
+
+      document.getElementById("invoiceForm").appendChild(inputHidden);
+      checkedPayment++;
+      console.log(premiumTotalCost);
+    } 
+    else {
+      premiumTotalCost -= premiumprice;
+      document.getElementById('lblPremium').innerHTML = premiumTotalCost;
+
+      const getElement = document.getElementById('paymentmember' + memberID + '_POST');
+      if (getElement) {
+          getElement.remove();
+      }
+      checkedPayment--;
+      console.log(premiumTotalCost);
+
+      if (checkedPayment === 0) {
+        hasCampaignCode = null; 
+        console.log(hasCampaignCode);
+      }
+    }
+
+    if(checkedPayment > 0) {
+      document.getElementById('invoiceBtn').disabled = false;
+    } else {
+      document.getElementById('invoiceBtn').disabled = true;
+    }
+}
+
+  function appendRenewalList(memberID, premiumprice){
+    var checkbox = document.getElementById('defaultCheckRenewal'+memberID).checked;
+    if(checkbox){
+      premiumTotalCost = parseFloat(premiumTotalCost) + parseFloat(premiumprice);
+      document.getElementById('lblPremium').innerHTML = premiumTotalCost;
+      var inputHidden = document.createElement("input");
+      inputHidden.setAttribute("type", "hidden");
+      inputHidden.setAttribute("id", 'paymentmember'+memberID+'_POST');
+      inputHidden.setAttribute("name", 'paymentmember'+memberID+'_POST');
+      inputHidden.setAttribute("value", memberID);
+
+      document.getElementById("renewalForm").appendChild(inputHidden);
+      checkedPayment++;
+    }
+    else {
+      premiumTotalCost = premiumTotalCost - premiumprice;
+      document.getElementById('lblPremium').innerHTML = premiumTotalCost;
+      var getElement = document.getElementById('paymentmember'+memberID+'_POST');
+      getElement.remove();
+      checkedPayment--;
+    }
+
+    if(checkedPayment > 0) {
+      document.getElementById('invoiceRenewalBtn').disabled = false;
+    } else {
+      document.getElementById('invoiceRenewalBtn').disabled = true;
+    }
+  }
+
+  checkedPaid = 0
+  function appendPaidList(memberID, companyPaymentDueDate, preferredDate, GracePeriod ){
+    var checkbox = document.getElementById('defaultCheckPaid'+memberID).checked;
+    if(checkbox){
+      var inputHidden = document.createElement("input");
+      inputHidden.setAttribute("type", "hidden");
+      inputHidden.setAttribute("id", 'paidmember'+memberID+'_POST');
+      inputHidden.setAttribute("name", 'paidmember'+memberID+'_POST');
+      inputHidden.setAttribute("value", memberID);
+
+      document.getElementById("paidForm").appendChild(inputHidden);
+      checkedPaid++;
+    }
+    else {
+      var getElement = document.getElementById('paidmember'+memberID+'_POST');
+      getElement.remove();
+      checkedPaid--;
+    }
+
+    // calculate difference between payment due date and current date
+    var dueDate = new Date(companyPaymentDueDate);
+    if (preferredDate != ''){
+      var currentDate = new Date(preferredDate);
+    }
+   else{
+      var currentDate = new Date();
+   }
+    dueDate.setHours(0, 0, 0, 0);
+    currentDate.setHours(0, 0, 0, 0);
+    if (dueDate.getMonth() <= currentDate.getMonth()) {
+      const yearDifference = currentDate.getFullYear() - dueDate.getFullYear();
+      if (yearDifference <= 0) {
+        dueDate.setFullYear(currentDate.getFullYear());
+        var diffTime = Math.floor((dueDate - currentDate) / (1000 * 60 * 60 * 24) + 1);
+      }
+    } else {
+      var diffTime = Math.floor((dueDate - currentDate) / (1000 * 60 * 60 * 24) + 1);
+    }
+    // var diffTime = Math.floor((dueDate - today) / (1000 * 60 * 60 * 24) + 1);
+
+    var gracePeriod = parseInt(GracePeriod);
+
+    // enable button when there is 10 or lesser days left to payment due date
+    if(checkedPaid > 0 && (diffTime <= 10 && gracePeriod < diffTime)) {
+      document.getElementById('renewalBtn').disabled = false;
+    }
+    else{
+      document.getElementById('renewalBtn').disabled = true;
+    }
+  }
+
+  var selectedRejectedMemberIDs = [];
+  function appendRejectedList(memberID){
+    var checkbox = document.getElementById('defaultCheckRejected' + memberID).checked;
+    var unrejectMember = document.getElementById("unrejectMember");
+    var existingInput = document.getElementById('reofferMember'); 
+
+    if (checkbox) {
+        var existingInput = document.getElementById('reofferMember');     
+        selectedRejectedMemberIDs.push(memberID);
+        existingInput.value = selectedRejectedMemberIDs;
+        checkedMember++;
+
+      } else {
+        var index = selectedRejectedMemberIDs.indexOf(memberID);
+        if (index !== -1) {
+          selectedRejectedMemberIDs.splice(index, 1);
+        existingInput.value = selectedRejectedMemberIDs;
+        checkedMember--;
+        }
+      }    
+    
+    if(checkedMember > 0) {
+      document.getElementById('reofferBtn').disabled = false;
+    } else {
+      document.getElementById('reofferBtn').disabled = true;
+      }
+  }
+  var selectedTerminatedMemberIDs = [];
+  function appendTerminatedList(memberID){
+    var checkbox = document.getElementById('defaultCheckTerminated'+memberID).checked;
+    var existingInput = document.getElementById('unterminateMember');  
+    if(checkbox){
+      var existingInput = document.getElementById('unterminateMember');     
+      selectedTerminatedMemberIDs.push(memberID);
+      existingInput.value = selectedTerminatedMemberIDs;
+      checkedMember++;
+    }else{
+      var index = selectedTerminatedMemberIDs.indexOf(memberID);
+      if (index !== -1) {
+        selectedTerminatedMemberIDs.splice(index, 1);
+      existingInput.value = selectedTerminatedMemberIDs;
+      checkedMember--;
+      }
+    }
+    if(checkedMember > 0) {
+      document.getElementById('unterminateBtn').disabled = false;
+    } else {
+      document.getElementById('unterminateBtn').disabled = true;
+    }
+  }
+
+  function pageMember(p) {
+    var button = document.getElementById(p+"_memberTableBtn");
+    var div = document.getElementById('divMemberTable');
+
+    for (let i = 0; i < div.children.length; i++) {
+      div.children[i].classList.remove("active");
+      document.getElementById((i+1)+'_memberTable').hidden = true;
+    }
+    button.classList.add("active");
+    document.getElementById(p+"_memberTable").hidden = false;
+  }
+
+  function pagePending(p) {
+    var button = document.getElementById(p+"_pendingTableBtn");
+    var div = document.getElementById('divPendingTable');
+
+    for (let i = 0; i < div.children.length; i++) {
+      div.children[i].classList.remove("active");
+      document.getElementById((i+1)+'_pendingTable').hidden = true;
+    }
+    button.classList.add("active");
+    document.getElementById(p+"_pendingTable").hidden = false;
+  }
+
+  function pagePaid(p) {
+    var button = document.getElementById(p+"_paidTableBtn");
+    var div = document.getElementById('divPaidTable');
+
+    for (let i = 0; i < div.children.length; i++) {
+      div.children[i].classList.remove("active");
+      document.getElementById((i+1)+'_paidTable').hidden = true;
+    }
+    button.classList.add("active");
+    document.getElementById(p+"_paidTable").hidden = false;
+  }
+
+  function pageRejected(p) {
+    var button = document.getElementById(p+"_rejectedTableBtn");
+    var div = document.getElementById('divRejectedTable');
+
+    for (let i = 0; i < div.children.length; i++) {
+      div.children[i].classList.remove("active");
+      document.getElementById((i+1)+'_rejectedTable').hidden = true;
+    }
+    button.classList.add("active");
+    document.getElementById(p+"_rejectedTable").hidden = false;
+  }
+
+  function pageTerminated(p) {
+    var button = document.getElementById(p+"_terminatedTableBtn");
+    var div = document.getElementById('divTerminatedTable');
+
+    for (let i = 0; i < div.children.length; i++) {
+      div.children[i].classList.remove("active");
+      document.getElementById((i+1)+'_terminatedTable').hidden = true;
+    }
+    button.classList.add("active");
+    document.getElementById(p+"_terminatedTable").hidden = false;
+  }
+
+  function first(t) {
+    table = document.getElementById('1_'+t);
+    button = document.getElementById('1_'+t+'Btn');
+    div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+    for (let i = 0; i < div.children.length; i++) {
+      div.children[i].classList.remove('active');
+      document.getElementById((i+1)+'_'+t).hidden = true;
+    }
+    button.classList.add('active');
+    table.hidden = false;
+  }
+
+  function last(t, num_pages) {
+    table = document.getElementById(num_pages+'_'+t);
+    button = document.getElementById(num_pages+'_'+t+'Btn');
+    div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+    for (let i = 0; i < div.children.length; i++) {
+      div.children[i].classList.remove('active');
+      document.getElementById((i+1)+'_'+t).hidden = true;
+    }
+    button.classList.add('active');
+    table.hidden = false;
+  }
+
+  function prev(t) {
+    div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+    for (let i = 0; i < div.children.length; i++) {
+      if (div.children[i].classList.contains('active') && i+1!=1) {
+        div.children[i].classList.remove('active');
+        div.children[i-1].classList.add('active');
+        document.getElementById((i+1)+'_'+t).hidden = true;
+        document.getElementById(i+'_'+t).hidden = false;
+        break
+      }
+    }
+  }
+
+  function next(t, num_pages) {
+    div = document.getElementById('div'+t.charAt(0).toUpperCase()+t.slice(1));
+    for (let i = 0; i < div.children.length; i++) {
+      if (div.children[i].classList.contains('active') && i+1!=num_pages) {
+        div.children[i].classList.remove('active');
+        div.children[i+1].classList.add('active');
+        document.getElementById((i+1)+'_'+t).hidden = true;
+        document.getElementById((i+2)+'_'+t).hidden = false;
+        break
+      }
+    }
+  }
+
+  function toggleFormType(formType) {
+    if (formType == 'Invitation') {
+      document.getElementById('formtype'+formType).value = 'invitation';
+
+    } else {
+      var tables = ['Member', 'Pending', 'Renewal', 'Paid', 'Rejected', 'Terminated'];
+      var form = document.getElementById('formFilter'+formType);
+      for (let i = 0; i < tables.length; i++) {
+        if (document.getElementById('formtype'+tables[i]) == null) {
+          var inputHidden  = document.createElement("input");
+          var inputHidden2 = document.createElement("input");
+          inputHidden.setAttribute("type", "hidden");
+          inputHidden.setAttribute("id", 'formtype'+tables[i]);
+          inputHidden.setAttribute("name", 'formtype'+tables[i]);
+          inputHidden.setAttribute("value", 'filter');
+          inputHidden2.setAttribute("type", "hidden");
+          inputHidden2.setAttribute("id", 'search_'+tables[i]);
+          inputHidden2.setAttribute("name", 'search'+tables[i]);
+          inputHidden2.setAttribute("value", document.getElementById('search'+tables[i]).value);
+          form.appendChild(inputHidden);
+          form.appendChild(inputHidden2);
+        } else {
+          document.getElementById('formtype'+tables[i]).value = 'filter';
+          document.getElementById('search_'+tables[i]).value = document.getElementById('search'+tables[i]).value;
+        }
+      }
+    }
+  }
+
+  function openRenewalModal() {
+    var modal = document.getElementById('renewalApprovalModal');
+    modal.style.display = "block";
+  }
+  function populateTerminatedId(terminatedMemberID){
+    var terminatedMember = document.getElementById("terminatedMember");
+    terminatedMember.value = terminatedMemberID
+  }
+
+  function populateUnterminatedId(unterminatedMemberID){
+    var unterminatedMember = document.getElementById("unterminatedMember");
+    unterminatedMember.value = unterminatedMemberID
+  }
+
+  function populateRenewRejectId(renewRejectMemberID){
+    var unrejectMember = document.getElementById("unrejectMember");
+    unrejectMember.value = renewRejectMemberID
+  }
+
+  function populateModal(memberID, memberName){
+    var insuredName = document.getElementsByName('lblInsuredName');
+    for(var i=0; i < insuredName.length; i++){
+      insuredName[i].innerHTML = memberName;
+    }
+    // document.getElementsByName('lblInsuredName')[0].innerHTML = memberName;
+    // document.getElementsByName('lblInsuredName')[1].innerHTML = memberName;
+    // document.getElementsByName('lblInsuredName')[2].innerHTML = memberName;
+    document.getElementById('memberIDWithdraw').value = memberID;
+    document.getElementById('memberIDProceed').value = memberID;
+  }
+  // document.getElementById("loading").style.display="none";
+  // function show_loader() {
+  //   document.getElementById("loading").style.display="block";
+  // }
+
+  function selectAllEmail(self){
+    var checkboxes = document.getElementsByName('email_checkbox');
+    if(self.checked) {
+      for(var i = 0;i<checkboxes.length;i++){
+        if(checkboxes[i].type == 'checkbox'){
+          checkboxes[i].checked = true;
+          document.getElementById('sendInvitationBtn').disabled = false;
+          appendSendEmailList(checkboxes[i].value);
+        }
+      }
+    }else{
+      for(var i = 0;i<checkboxes.length;i++){
+        if(checkboxes[i].type == 'checkbox'){
+          checkboxes[i].checked = false;
+          document.getElementById('sendInvitationBtn').disabled = true;
+        }
+      }
+    }
+  }
+  function selectAllPayment(self){
+    var checkboxes = document.getElementsByName('payment_checkbox');
+    var hasCampaignCode = null;
+    if(self.checked) {
+      for(var i = 0;i<checkboxes.length;i++){
+        if(checkboxes[i].type == 'checkbox'){
+          checkboxes[i].checked = true;
+          document.getElementById('invoiceBtn').disabled = false;
+          payment = JSON.parse(checkboxes[i].value);
+          exists = payment.campaign_code;
+          if (hasCampaignCode === null){
+            hasCampaignCode = exists;
+            appendPaymentList(payment.id,payment.premium,payment.campaign_code);
+          }
+          else if (hasCampaignCode != exists){
+            document.getElementById('invoiceBtn').disabled = true;
+            return;
+          }
+        }
+      }
+    }else{
+      for(var i = 0;i<checkboxes.length;i++){
+        if(checkboxes[i].type == 'checkbox'){
+          checkboxes[i].checked = false;
+          document.getElementById('invoiceBtn').disabled = true;
+        }
+      }
+    }
+  }
+
+  function selectAllPaid(self, companyPaymentDueDate, preferredDate, GracePeriod) {
+    var checkboxes = document.getElementsByName('paid_checkbox');
+    if(self.checked) {
+      for(var i = 0;i<checkboxes.length;i++){
+        if(checkboxes[i].type == 'checkbox'){
+          checkboxes[i].checked = true;
+          document.getElementById('renewalBtn').disabled = false;
+          appendPaidList(checkboxes[i].value, companyPaymentDueDate, preferredDate, GracePeriod);
+        }
+      }
+    }else{
+      for(var i = 0;i<checkboxes.length;i++){
+        if(checkboxes[i].type == 'checkbox'){
+          checkboxes[i].checked = false;
+          document.getElementById('renewalBtn').disabled = true;
+        }
+      }
+    }
+  }
+  function selectAllNextPremiumDue(self){
+    var checkboxes = document.getElementsByName('nextPremiumDue_checkbox');
+    if(self.checked) {
+      for(var i = 0;i<checkboxes.length;i++){
+        if(checkboxes[i].type == 'checkbox'){
+          checkboxes[i].checked = true;
+          document.getElementById('invoiceRenewalBtn').disabled = false;
+          payment = JSON.parse(checkboxes[i].value);
+          appendRenewalList(payment.id,payment.premium);
+        }
+      }
+    }else{
+      for(var i = 0;i<checkboxes.length;i++){
+        if(checkboxes[i].type == 'checkbox'){
+          checkboxes[i].checked = false;
+          document.getElementById('invoiceRenewalBtn').disabled = true;
+        }
+      }
+    }
+  }
+  function selectAllReject(self){
+    var checkboxes = document.getElementsByName('rejected_checkbox');
+    if(self.checked) {
+      selectedRejectedMemberIDs = [];
+      checkedMember = 0; 
+      for(var i = 0;i<checkboxes.length;i++){
+        if(checkboxes[i].type == 'checkbox'){
+          checkboxes[i].checked = true;
+          appendRejectedList(checkboxes[i].value)
+        }
+      }document.getElementById('reofferBtn').disabled = false;
+    }else{
+      selectedRejectedMemberIDs = [];
+      checkedMember = 0; 
+      for(var i = 0;i<checkboxes.length;i++){
+        if(checkboxes[i].type == 'checkbox'){
+          checkboxes[i].checked = false;
+        }
+      }document.getElementById('reofferBtn').disabled = true;
+    }
+  }
+  function selectAllTerminated(self){
+    var checkboxes = document.getElementsByName('terminated_checkbox');
+    if(self.checked) {
+      selectedTerminatedMemberIDs = [];
+      checkedMember = 0; 
+      for(var i = 0;i<checkboxes.length;i++){
+        if(checkboxes[i].type == 'checkbox'){
+          checkboxes[i].checked = true;
+          appendTerminatedList(checkboxes[i].value)
+        }
+      }document.getElementById('unterminateBtn').disabled = false;
+    }else{
+      selectedTerminatedMemberIDs = [];
+      checkedMember = 0; 
+      for(var i = 0;i<checkboxes.length;i++){
+        if(checkboxes[i].type == 'checkbox'){
+          checkboxes[i].checked = false;
+          
+        }
+      }document.getElementById('unterminateBtn').disabled = true;
+    }
+  }
+</script>
+{% endblock %}
